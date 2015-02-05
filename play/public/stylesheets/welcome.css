@@ -1,0 +1,318 @@
+.post-text {
+    width: 90%;
+}
+
+.post {
+    margin-left: 20px !important;
+}
+
+#dialog {
+    z-index: 99999
+}
+
+.masthead {
+    min-width: 660px;
+}
+
+input.span5 {
+    margin-bottom: 13px;
+    margin-top:0px;
+}
+
+.signup-form {
+    border-right:solid 1px #EEE;
+    width: 50%;
+    margin-right: 10px;
+    float: left;
+    clear: left;
+    position: relative;
+}
+
+.social-signup {
+    display: block;
+    float: right;
+}
+
+.social-signup-wrapper, .social-connected-wrapper{
+    display: inline-block;
+    float: right;
+}
+
+.gradient-background {
+    min-height: 375px;
+}
+
+.fb-signup {
+    width: 235px;
+    border: solid 1px #3B5998;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    margin-left: auto;
+}
+
+.fb-register-text {
+    padding-left: 10px;
+    display: inline-block;
+    color: white;
+    background: repeat-y left top url(//static.melio.co/FBsocial.gif);
+    font-size: 16px;
+}
+
+.twit-register-fill {
+    background: -webkit-linear-gradient(top, #60badd 0%,#3a83b2 100%);
+    background: -moz-linear-gradient(top, #60badd 0%, #3a83b2 100%);
+    background: -o-linear-gradient(top, #60badd 0%,#3a83b2 100%);
+    background: -ms-linear-gradient(top, #60badd 0%,#3a83b2 100%);
+    background: linear-gradient(top, #60badd 0%,#3a83b2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60badd', endColorstr='#3a83b2',GradientType=0 );
+    border-radius: 4px;
+    border: solid 1px #7BBFD6;
+}
+
+.twit-signup {
+    width: 235px;
+    border: solid 1px #3D679D;
+    border-radius: 4px;
+    margin-left: auto;
+}
+
+.register-bold {
+    font-weight: bold;
+}
+
+.or {
+    position: absolute;
+    right: 263px;
+    top: 47px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.connected {
+    width: 300px;
+
+}
+
+.social-connected-wrapper {
+    padding: 10px;
+    background: #EDF0FC;
+    border-radius: 5px;
+    position: relative;
+}
+
+.social-user-anchor:hover {
+    text-decoration: underline;
+}
+
+.connect_status {
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.social_descr {
+    margin-top: -5px;
+}
+
+.register-tip {
+    color: black;
+    font-weight: bold;
+}
+
+.username-taken {
+    font-size: 12px;
+    color: red;
+}
+
+.container {
+    position: relative;
+    background: white;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#ddd));
+    background:-moz-linear-gradient(top,#fff 0,#ddd 100%);
+    background: -ms-linear-gradient(top,#fff 0,#ddd 100%);
+    background: -o-linear-gradient(top,#fff 0,#ddd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#dddddd',GradientType=0);
+    background: -webkit-linear-gradient(top,#fff 0,#ddd 100%);
+    width: 700px;
+    margin: 0 auto;
+    margin-top: 47px;
+    border-radius: 6px;
+    border-left: solid 1px #eee;
+    border-right: solid 1px #eee;
+    border-bottom: solid 1px #ccc;
+}
+
+.gradient {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:0px;
+    background:radial-gradient(ellipse at center,rgba(255,255,255,0.21) 0,rgba(255,255,255,0) 70%,rgba(255,255,255,0) 100%);
+}
+
+.logo {
+    height: 50px;
+}
+
+.logo-img {
+    height: 100%;
+}
+
+.main-wrapper {
+    padding: 15px;
+}
+
+.main-header {
+    border-bottom: 1px solid #A9A9A9;
+}
+
+.main-description {
+    line-height: 20px;
+    display: inline-block;
+    font-size: 20px;
+    text-rendering: optimizeLegibility;
+    text-shadow: 0 1px 0 rgba(255,255,255,.6);
+    -webkit-font-smoothing: antialiased;
+    margin-left: 7px;
+}
+
+.signup-form-wrapper {
+    width: 565px;
+    margin: 0 auto;
+    margin-top: 12px;
+}
+
+input.signup-input {
+    margin-bottom: 0px;
+    height: 29px;
+    width: 100%;
+}
+
+input.signup-input:focus, input.signup-input:active {
+    outline: 0;
+    outline-style: none;
+    outline-width: 0;
+}
+
+.signup-form-submit {
+    margin-top: 10px;
+}
+
+.btn-form-submit {
+    width: 105%;
+    height: 34px;
+    padding: 4px 12px;
+}
+
+.something-wrong {
+    margin-top: 10px;
+}
+
+.login-link-wrapper {
+    position: absolute;
+    top: 18px;
+    right: 30px;
+    width: 250px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    font: normal 14px/1.4 "Helvetica Neue","HelveticaNeue",Helvetica,Arial,sans-serif;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    color: white;
+}
+
+.login-link {
+
+}
+
+a.login-link:hover {
+}
+
+.trending-topics-container {
+    /*position: relative;
+    background: white;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#ddd));
+    background:-moz-linear-gradient(top,#fff 0,#ddd 100%);
+    background: -ms-linear-gradient(top,#fff 0,#ddd 100%);
+    background: -o-linear-gradient(top,#fff 0,#ddd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#dddddd',GradientType=0);
+    background: -webkit-linear-gradient(top,#fff 0,#ddd 100%);
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 6px;
+    border-left: solid 1px #eee;
+    border-right: solid 1px #eee;
+    border-bottom: solid 1px #ccc;
+    */
+}
+
+.trending-group-avatar {
+    width: 256px;
+    height: 256px;
+    /*position: absolute;
+    left: -30px;*/
+}
+
+.trending-topics-wrapper {
+    padding: 15px;
+    padding-left: 30px;
+    overflow: auto;
+}
+
+.trending-group-wrapper {
+    display: block;
+    float: left;
+    width: 256px;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.trending-topics-header {
+}
+
+.trending-group-name {
+    font-weight: bold;
+    font-color: black;
+    font-size: 15px;
+}
+
+.trending-group-content {
+    position: relative;
+}
+
+.trending-group-header {
+    text-align: left;
+}
+
+.trending-group-descr {
+    text-align: left;
+}
+
+.trending-group-content {
+    background: white;
+
+}
+
+.trending-group-bottom {
+    height: 60px;
+    padding: 15px;
+    font: normal 13px Roboto,arial,sans-serif;
+}
+
+.trending-topics-text {
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.46);
+}
+
+.signup-submit {
+    float: right;
+    height: 32px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 0px;
+}
