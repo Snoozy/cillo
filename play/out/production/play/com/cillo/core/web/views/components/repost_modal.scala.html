@@ -1,0 +1,33 @@
+<div class="modal hide fade" id="repost-dialog" style="top:350px;">
+    <div class="modal-header" style="text-align:center;">
+        <button class="close" data-dismiss="modal">x</button>
+        <h3>Repost</h3>
+    </div>
+    <div class="modal-body" style="top:25%">
+        <span class="modal-subheader">Repost onto:</span>
+        <div class="repost-select-wrapper">
+            <form class="repost-form">
+                <label class="radio">
+                    <input type="radio" id="radio-friends" name="repost_radio" value="repost_friends" id="repost_friends">
+                    <span class="repost-option-text">Friends</span>
+                </label>
+                <label class="radio" style="margin-top:15px;">
+                    <input type="radio" id="radio-group" name="repost_radio" value="repost_group" id="repost_group">
+                    <span class="repost-option-text" style="vertical-align:top">Group</span>
+                    <input type="text" class="repost-group-input" placeholder="Group name">
+                </label>
+            </form>
+            <div class="repost-error-no-group displaynone" style="color:red;">
+                            You need to specify a group to repost to.
+            </div>
+            <div class="group-exist-error displaynone" style="color:red;">
+                            Please specify a valid group.
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="repost-submit-button-wrapper">
+            <img class="success-check displaynone" src="//static.cillo.co/green-check.png" height="50" width="50"><button class="btn btn-primary repost-submit-button">Repost</button>
+        </div>
+    </div>
+</div>

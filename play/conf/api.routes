@@ -1,0 +1,44 @@
+# Routes
+
+
+# GET
+
+GET         /debug/health                    com.cillo.core.api.controllers.AuthController.healthCheck
+
+GET         /v1/groups/:id/describe          com.cillo.core.api.controllers.GroupController.describe(id: Int)
+GET         /v1/posts/:id/describe           com.cillo.core.api.controllers.PostController.describe(id: Int)
+
+GET         /v1/posts/:id/comments           com.cillo.core.api.controllers.PostController.topComments(id: Int)
+
+GET         /v1/users/describe               com.cillo.core.api.controllers.UserController.describe
+GET         /v1/users/:id/groups             com.cillo.core.api.controllers.UserController.getGroups(id: Int)
+GET         /v1/users/:id/posts              com.cillo.core.api.controllers.UserController.getPosts(id: Int)
+GET         /v1/users/:id/comments           com.cillo.core.api.controllers.UserController.getComments(id: Int)
+
+GET         /v1/groups/:id/feed              com.cillo.core.api.controllers.GroupController.getGroupTrendingPosts(id: Int)
+
+GET         /v1/me/feed                      com.cillo.core.api.controllers.UserController.getFeed
+GET         /v1/me/describe                  com.cillo.core.api.controllers.UserController.describeSelf
+
+# POST
+
+POST        /v1/users/register               com.cillo.core.api.controllers.UserController.create
+POST        /v1/groups/create                com.cillo.core.api.controllers.GroupController.create
+
+POST        /v1/me/settings                  com.cillo.core.api.controllers.SettingController.updateSelf
+POST        /v1/group/:id/settings           com.cillo.core.api.controllers.SettingController.updateGroup(id: Int)
+
+POST        /v1/auth/login                   com.cillo.core.api.controllers.AuthController.login
+POST        /v1/auth/logout                  com.cillo.core.api.controllers.AuthController.logout
+
+POST        /v1/posts/create                 com.cillo.core.api.controllers.PostController.create
+POST        /v1/comments/create              com.cillo.core.api.controllers.CommentController.create
+POST        /v1/media/upload                 com.cillo.core.api.controllers.MediaController.upload
+
+POST        /v1/groups/:id/follow            com.cillo.core.api.controllers.GroupController.followGroup(id: Int)
+POST        /v1/groups/:id/unfollow          com.cillo.core.api.controllers.GroupController.unfollowGroup(id: Int)
+
+POST        /v1/comments/:id/upvote          com.cillo.core.api.controllers.VoteController.upvoteComment(id: Int)
+POST        /v1/comments/:id/downvote        com.cillo.core.api.controllers.VoteController.downvoteComment(id: Int)
+POST        /v1/posts/:id/upvote             com.cillo.core.api.controllers.VoteController.upvotePost(id: Int)
+POST        /v1/posts/:id/downvote           com.cillo.core.api.controllers.VoteController.downvotePost(id: Int)

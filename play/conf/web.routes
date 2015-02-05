@@ -1,0 +1,28 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+#GET
+
+GET         /                      com.cillo.core.web.controllers.IndexController.homePage
+GET         /register              com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
+GET         /user/:username        com.cillo.core.web.controllers.UserController.userPage(username: String)
+GET         /login                 com.cillo.core.web.controllers.LoginController.cleanLoginPage
+GET         /boards/create         com.cillo.core.web.controllers.GroupController.createGroupPage
+GET         /:name/posts/:id       com.cillo.core.web.controllers.PostController.viewPostPage(name: String, id: Int)
+
+GET         /debug/health          com.cillo.core.web.controllers.IndexController.healthCheck
+
+#POST
+POST        /a/post                com.cillo.core.web.controllers.PostController.post
+POST        /register              com.cillo.core.web.controllers.RegisterController.attemptRegister
+POST        /login                 com.cillo.core.web.controllers.LoginController.attemptLogin
+POST        /boards/create         com.cillo.core.web.controllers.GroupController.attemptCreateGroup
+
+#Group catchalls
+GET         /:name                 com.cillo.core.web.controllers.GroupController.groupPage(name: String)
+GET         /:name/settings        com.cillo.core.web.controllers.GroupController.groupSettingsPage(name: String)
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file          controllers.Assets.at(path="/public", file)

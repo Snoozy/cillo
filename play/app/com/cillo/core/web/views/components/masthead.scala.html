@@ -1,0 +1,23 @@
+@(user: Option[com.cillo.core.data.db.models.User] = None, searchBar: Boolean = false, fixed: Boolean = true)
+
+<div class="masthead" style="@if(!fixed){position:relative;}">
+    <nav class="navbar navbar-default" style="margin-bottom: 0px; min-height: 45px;">
+        <div class="navbar-header">
+            <a class="navbar-brand navbar-logo" style="position : absolute; left: 50%; margin-left:-61px;" href="/">
+                <img src="//static.melio.co/melio3.png" width="105px" height="32px">
+            </a>
+        </div>
+        @if(searchBar) {
+        <div class="navbar-form navbar-left" style="margin-bottom: 4px; margin-top: 6px;padding-left:30px;">
+            <div class="form-group input-group">
+                <input type="text" class="form-control" placeholder="Search" style="height:31px;padding:6px 10px;width:200px;">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default" style="line-height: 1.128571">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
+        }
+    </nav>
+</div>

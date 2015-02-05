@@ -1,0 +1,633 @@
+@(posts: Seq[com.cillo.core.data.db.models.Post], user: com.cillo.core.data.db.models.User, groups: Seq[com.cillo.core.data.db.models.Group])(implicit request: RequestHeader)
+
+@import com.cillo.utils.Etc
+@import com.cillo.core.web.views.html.components
+@import play.filters.csrf.CSRF
+
+@components.base("Cillo"){
+
+}{
+    <body class="main-background">
+        <div class="page" style="margin: 0px;">
+            @components.masthead(Some(user), true)
+            <div id="content">
+                <div class="container-fluid inner-background" style="padding-top:35px;border-radius:15px;margin-top:5px;margin-left:auto;margin-right:auto;width:75%;min-width:900px;border-top-left-radius:0px;border-top-right-radius:0px;padding-left:0px;padding-right:0px;">
+                    <div class="main-row">
+                        <div class="span3 groups-container" style="float:left;width:250px;background-color:white;margin-left:20px;margin-top:20px;">
+                            <b style="margin-left:40%;font-size:16px;margin-bottom:5px;">Boards</b>
+                            <span style="font-size:13px;margin-left:14%;">
+                                <a href="/browse" style="color:blue;">Browse</a>
+                            </span>
+                            <br/>
+                            @if(groups.size > 0) {
+                                @for(g <- groups) {
+                                    <div class="group">
+                                        <a href="/@g.name" style="display:inline;">
+                                            <img class="avatar" style="margin-left:5%%;" alt="Group Picture" src="set@g.photo">
+                                        </a>
+                                        <span>
+                                            <a href="/@g.name" style="margin-left:3%%;">
+                                                <strong style="font-size:16px;margin-left:-10px;">@g.name</strong>
+                                            </a>
+                                        </span>
+                                        <p class="description">
+                                        @Etc.ellipsize(g.description, 50)
+                                        </p>
+                                    </div>
+                                    <br/>
+                                }
+                            } else {
+                                <br/>
+                                <div class="no-groups">
+                                    You are not following any groups.
+                                </div>
+                            }
+                            <br/>
+                        </div>
+                        <div class="span6 posts-container" style="float:left;margin-left:10px;width:calc(100% - 300px);margin-top:20px;padding:0px;margin-bottom:20px;">
+                            <div class="posts-wrapper" style="text-align:left;">
+                                <ol class="posts" style="margin:0;list-style-type:none;">
+                                        <!--First post is the ui for creating a post. -->
+                                    <li class="post first-post">
+                                        <div class="posting-wrapper">
+                                            <input class="post-title form-control displaynone" placeholder="Title (optional)" type="text">
+                                            <textarea data-expanded-height="50" class="post-form form-control" name="post-form" style="overflow-y:;width:100%;height:34px;" placeholder="Create a post..."></textarea>
+                                            <div class="picture_upload btn btn-default displaynone" style="padding:4px 10px;">
+                                                <span class="glyphicon glyphicon-camera"></span>
+                                                <input type="file" name="picture upload" id="picture_file_upload" class="file-input" tabindex="-1">
+                                            </div>
+                                            <button class="btn btn-primary post-submit displaynone" style="margin-left:13%;margin-top:8px;">Post</button>
+                                            <div class="post-group-wrapper">
+                                                <input class="post-group form-control displaynone" placeholder="Board" type="text">
+                                                <span class="post-group-text displaynone">on Board:</span>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+                                    </li>
+
+                                    @for(post <- posts) {
+                                        @components.post(post, user)
+                                    }
+
+                                </ol>
+                                <div id="neverending_spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @components.repost_modal()
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/history.js/1.7.1/native.history.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/typeahead.bundle.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/core.bundle.js"></script>
+
+        <script type="text/javascript" charset="utf-8">
+        var ie = (function(){
+
+        var undef,
+        v = 3,
+        div = document.createElement('div'),
+        all = div.getElementsByTagName('i');
+
+        while (
+        div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+        all[0]
+        );
+
+        return v > 4 ? v : undef;
+
+        }());
+        </script>
+
+        <script type="text/javascript" charset="utf-8">
+
+        $(document).ready(function() {
+
+            var csrf_token = @CSRF.getToken(request);
+
+            $(".post-submit").click(function() {
+                if ($('.post-form').val() == "" || $('.post-group' ).val() == ""){
+                    return false;
+                }
+
+                var post_content = $('.post-form').val();
+                var post_title = $('.post-title').val();
+                var post_group = $('.post-group').val();
+
+                $.ajax({
+                    url: "/a/post",
+                    type: "POST",
+                    dataType: "json",
+                    data: {"data" : post_content,
+                            "title" : post_title,
+                            "group_name" : post_group,
+                            "csrfToken" : csrf_token},
+                    success: function(response, textStatus, jqXHR) {
+                        $(response.item_html).insertAfter('.first-post').fadeIn(200);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert("Unexpected internal server error. Please try again later.");
+                    },
+                    complete: function() {
+                        $('textarea.post-form').val('');
+                        $('.post-title').val('');
+                        $('.post-group').val('');
+                    }
+                });
+                return false;
+            });
+
+            @*
+            var substringMatcher = function(strs) {
+                return function findMatches(q, cb) {
+                    var matches, substrRegex;
+
+                    // an array that will be populated with substring matches
+                    matches = [];
+
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
+
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    $.each(strs, function(i, str) {
+                        if (substrRegex.test(str)) {
+                            // the typeahead jQuery plugin expects suggestions to a
+                            // JavaScript object, refer to typeahead docs for more info
+                            matches.push({ value: str });
+                        }
+                    });
+
+                    cb(matches);
+                };
+            };
+
+            $('.post-groupas').typeahead({
+               highlight: true
+            },{
+                source: substringMatcher(groups)
+            });
+               *@
+
+        var groups = [@if(groups.nonEmpty){"@groups.head.name"@for(g <- groups.tail){,"@g.name"}}];
+
+        $('.post-group').autocomplete({
+            source: groups
+        });
+
+            $('#picture_file_upload').change(function() {
+                readURL(this, '.post-form');
+                $(this).val('');
+            });
+
+            $('.posts-wrapper').on('click', '.action-link-reposted', function() {
+                var repost_id = $(this).closest('.post').data('repost-item-id');
+                if (confirm('Are you sure you want to delete this post?')) {
+                    var $this = $(this);
+                    $.ajax({
+                        url: '/a/delete_post',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'p' : repost_id},
+                        success: function() {
+                            $this.closest('.post').fadeOut(500, function() {$this.remove();});
+                            return false;
+                        }
+                    });
+                }
+                return false;
+            });
+
+            $('.modal').draggable({
+                handle: '.modal-header'
+            });
+
+            /*
+            $('#photo-input').fileupload({
+                dataType: 'json',
+                submit: function(e, data) {
+                    var caption = $('.photo-caption').val();
+                    data.formData = {'caption': caption};
+                },
+                replaceFileInput: false,
+                maxNumberOfFiles: 1,
+                add: function(e, data) {
+                    $('.photo-post-submit').unbind('click');
+                    $('.photo-post-submit').click(function() {
+                        data.submit();
+                    });
+                },
+                start: function(e) {
+                    $('.photo-post-submit').unbind('click');
+                    $('.loading-gif').show();
+                },
+                done: function(e, data) {
+                    $('.loading-gif').hide();
+                    var response = data.result;
+                    if (response.status == 'OK')
+                        $(response.item_html).insertAfter('.first-post').fadeIn("slow");
+                    else {
+                        alert('Something went wrong. :(');
+                    return false;
+                    }
+                    $('.photo-caption').val('');
+                    $('#photo-input').replaceWith($('#photo-input').val('').clone(true));
+                    $('.post-tabs a:first').tab('show');
+                }
+            });
+            */
+
+            function htmlWithBreaks(text) {
+                var htmls = [];
+                var lines = text.split(/\n/);
+                for (var i = 0 ; i < lines.length ; i++) {
+                    htmls.push(
+                        jQuery(document.createElement('div')).text(lines[i]).html()
+                    );
+                }
+                return htmls.join("<br>");
+            }
+
+            var $curr_edit_post_text = null;
+
+            /*
+            $('.posts-wrapper').on('click', '.post-edit', function() {
+                var post_type = $(this).closest('.post').data('item-type');
+
+                if (post_type == 'text') {
+
+            $curr_edit_post_text = $(this).closest('.post-header').siblings('.post-content').children('.post-text');
+            var post_text = $.trim($curr_edit_post_text.text());
+
+            } else if (post_type == 'picture') {
+
+            $curr_edit_post_text = $(this).closest('.post-header').siblings('.post-content').children('.post-caption');
+            var post_text = $.trim($curr_edit_post_text.text());
+
+            }
+
+
+            $('.edit-post-textarea').val(post_text);
+            var post_id = $(this).closest('.post').data('item-id');
+            $('.edit-post-id').text(post_id);
+            $('.edit-post-textarea').trigger('oninput');
+            $('#edit-modal').modal();
+            return false;
+            });
+
+
+            $('.edit-post-save').on('click', function() {
+            post_save = $.trim($(this).siblings('.edit-post-textarea').val());
+            post_id = $(this).siblings('.edit-post-id').text();
+            $this = $(this);
+            $.ajax({
+            url:'/a/edit_post',
+            type: 'POST',
+            dataType: 'json',
+            data: {'p' : post_id,
+            'data' : post_save},
+            success: function(response) {
+            $curr_edit_post_text.html(htmlWithBreaks(post_save));
+            },
+            error: function() {
+            alert('Oops, looks like something went wrong! Please try again later.');
+            },
+            complete: function() {
+            $('#edit-modal').modal('toggle');
+            }
+            });
+            return false;
+            });
+            */
+
+            $('.posts-wrapper').on('click', '.post-delete', function(e) {
+                if (confirm('Are you sure you want to delete this post?')) {
+                    var post_id = $(this).closest('.post').data('item-id');
+                    var $this = $(this);
+                    $.ajax({
+                        url: '/a/delete_post',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'p' : post_id},
+                        success: function() {
+                            $this.closest('.post').fadeOut(500, function() {$this.remove();});
+                            return false;
+                        }
+                    });
+                }
+                return false;
+            });
+
+            $(document).on('click', '.action-link-repost', function(e) {
+                e.preventDefault();
+                var post_id = $(this).closest('.post').data('item-id');
+                $('#repost-dialog').modal();
+                $('.repost-submit-button').click(function() {
+                    if (!($('#radio-friends').is(':checked') || $('#radio-group').is(':checked'))) {
+                        return false;
+                    }
+                    if ($('#radio-group').is(':checked') && ($('.repost-group-input').val() == '')) {
+                        $('.repost-error-no-group').show();
+                    }
+                    if ($('#radio-group').is(':checked')) {
+                        var group_name = $('.repost-group-input').val();
+                        $.ajax({
+                            url: '/a/check_group',
+                            data: {'g': group_name},
+                            dataType: 'json',
+                            success: function() {
+                                $.ajax({
+                                    url: '/post',
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: {'r' : post_id,
+                                    'g' : group_name},
+                                    success: function() {
+                                        $('.success-check').show();
+                                        setTimeout(function() {
+                                            $('#repost-dialog').modal('hide');
+                                            $('.success-check').hide();
+                                        }, 1000);
+                                    }
+                                });
+                            },
+                            error: function() {
+                                $('.group-exist-error').show();
+                            }
+                        });
+                    }
+                });
+
+            });
+
+            $('.posts-wrapper').on({
+                mouseenter: function() {
+                    $(this).children('.post-wrapper').find('.post-functions').show();
+                    return true;
+                },
+                mouseleave: function() {
+                    $(this).children('.post-wrapper').find('.post-functions').hide();
+                    return true;
+                }
+            }, 'li');
+
+            $('input[placeholder], textarea[placeholder]').placeholder();
+
+            $('textarea').autosize();
+
+            colorVotes('post');
+
+            colorVotes('comment');
+
+            $(document).on('keypress', '.comment-val', function (event) {
+                if (event.keyCode == 13 && event.shiftKey) {
+                    var content = this.value;
+                    var caret = getCaret(this);
+                    this.value = content.substring(0,caret)+"\n"+content.substring(carent,content.length-1);
+                    event.stopPropagation();
+                } else if(event.keyCode == 13) {
+                    $(this).parent().submit();
+                }
+            });
+
+            function getCaret(el) {
+                if (el.selectionStart) {
+                    return el.selectionStart;
+                } else if (document.selection) {
+                    el.focus();
+
+                    var r = document.selection.createRange();
+                    if (r == null) {
+                        return 0;
+                    }
+
+                    var re = el.createTextRange(),
+                    rc = re.duplicate();
+                    re.moveToBookmark(r.getBookmark());
+                    rc.setEndPoint('EndToStart', re);
+
+                    return rc.text.length;
+                }
+                return 0;
+            }
+
+            $(".masthead-search").submit(function(){
+                var query = encodeURIComponent($(".search-query").val());
+                if (query == ""){
+                    return false;
+                }
+                window.location.href = "${request.application_url}/search?q=" + query;
+                return false;
+            });
+
+            $(".masthead-nav.friends").tooltip({
+                title : "View friend activity",
+                placement : 'bottom'
+            });
+
+            $(".masthead-nav.create").tooltip({
+                title:'Create a group',
+                placement : 'bottom'
+            });
+
+            $(".search-submit").tooltip({
+                title : "Search",
+                placement : 'bottom',
+            });
+
+            $('.masthead-nav.browse').tooltip({
+                title: 'Browse all groups',
+                placement: 'bottom'
+            });
+
+            $(".btn.user-profile").tooltip({
+                title: 'Profile',
+                placement: 'bottom',
+            });
+
+            $(".btn.settings").tooltip({
+                title: 'Options',
+                placement: 'bottom',
+            });
+
+            $('.post-form').focus(function(){
+                $(this).css('min-height', '70px');
+                $(this).css('height', 'auto');
+                $(this).trigger('autosize.resize');
+                $('.picture_upload').removeClass('displaynone');
+                $('.post-title').removeClass('displaynone');
+                $('.post-group').removeClass('displaynone');
+                $('.post-group-text').removeClass('displaynone');
+                $(".post-submit").show();
+            });
+
+            $('textarea').autosize();
+
+            $('.posts-wrapper').on('click', '.action-link-comment', function() {
+
+                $('.comment-form').remove();
+
+                var comment_form_placement = $(this).closest('.post-actions').siblings('.comments-container');
+
+                $('<div class="comment-form"><form class="comment-input"><textarea class="form-control comment-val input-xlarge" data-expanded-height="40" placeholder="Write a comment..." style="height:34px;width:100%;overflow:auto;resize:none;margin-bottom:0px;"></textarea><input type="submit" style="position:absolute;left:-9999px;width:1px;height:1px;"/></form></div>').insertBefore(comment_form_placement);
+
+                $('.comment-val').autosize();
+
+                $(comment_form_placement).prev().find('.comment-val').focus();
+
+                $(".comment-input").submit(function(event) {
+                    event.preventDefault();
+                    var $this = $(this);
+                    var comment = $(this).find('.comment-val').val();
+                    var post_id = $(this).closest('.post').data('item-id');
+                    var $comment_form = $(this).parent();
+                    $.ajax({
+                        url:'/comment',
+                        type: 'POST',
+                        dataType: 'json',
+                        data : {'p' : post_id,
+                        'data' : comment,
+                        'reply_id' : 0
+                        },
+                        success: function(response, textStatus, jqXHR) {
+                            $this.parent().siblings('.comments-container').append(response.item_html).fadeIn(200);
+                        },
+                        complete: function() {
+                            $comment_form.find('.comment-val').val('');
+                            $comment_form.find('.comment-val').height('20px');
+                        }
+                    });
+
+                });
+                return false;
+
+            });
+
+            $(document).on('click', '.action-link-like', function() {
+                var $this = $(this);
+                var post_id = $this.closest('.post').data('item-id');
+
+                if ($this.hasClass('liked')) {
+                    return false;
+                }
+
+                $.ajax({
+                    url: '/a/upvote',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'p' : post_id,
+                        'type' : 0},
+                    beforeSend: function() {
+                        var amount = 1;
+                        if ($this.parent().siblings('.dislike').children('.action-link-dislike').hasClass('disliked')) {
+                            $this.parent().siblings('.dislike').children('.action-link-dislike').removeClass('disliked');
+                            amount = 2;
+                        }
+                        $this.parent().siblings('.post-like-count').text(parseInt($this.parent().siblings('.post-like-count').text()) + amount);
+
+                        $this.addClass('liked');
+                    },
+                    error: function() {
+                    }
+                });
+                colorVotes('post');
+                return false;
+            });
+
+            $(document).on('click', '.action-link-dislike', function() {
+                var $this = $(this);
+                var post_id = $this.closest('.post').data('item-id');
+
+                if ($this.hasClass('disliked')) {
+                return false;
+                }
+
+                $.ajax({
+                    url: '/a/downvote',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'p' : post_id,
+                        'type' : 0},
+                    beforeSend: function() {
+                        var amount = 1;
+                        if ($this.parent().siblings('.like').children('.action-link-like').hasClass('liked')) {
+                            $this.parent().siblings('.like').children('.action-link-like').removeClass('liked');
+                            amount = 2;
+                        }
+                        $this.parent().siblings('.post-like-count').text(parseInt($this.parent().siblings('.post-like-count').text()) - amount);
+
+                        $this.addClass('disliked');
+                    },
+                    error: function() {
+                    }
+                });
+                colorVotes('post');
+                return false;
+            });
+
+            $(document).on('click', '.c-action.like', function() {
+                var $this = $(this);
+                var comment_id = $(this).siblings('.post-id').html();
+
+                $.ajax({
+                    url: '/a/upvote',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'p' : comment_id,
+                    'type': '1'},
+                    success: function() {
+                        var amount = 1;
+                        if ($this.siblings('.c-action.dislike').hasClass('disliked')) {
+                            amount = 2;
+                            $this.siblings('.c-action.dislike').removeClass('disliked');
+                        }
+
+                        $this.addClass('liked');
+                        $this.siblings('.like-count').text(parseInt($this.siblings('.like-count').text()) + amount);
+                        colorVotes('comment');
+                    },
+                    error: function() {
+                    }
+                });
+                return false;
+
+            });
+
+            $(document).on('click', '.c-action.dislike', function() {
+                var $this = $(this);
+                var comment_id = $this.siblings('.post-id').html();
+
+                $.ajax({
+                    url: '/a/downvote',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'p': comment_id,
+                        'type' : '1'},
+                    success: function() {
+                        var amount = 1;
+                        if ($this.siblings('.c-action.like').hasClass('liked')) {
+                            amount = 2;
+                            $this.siblings('.c-action.like').removeClass('liked');
+                        }
+                        $this.addClass('disliked');
+                        $this.siblings('.like-count').text(parseInt($this.siblings('.like-count').text()) - amount);
+
+                        colorVotes('comment');
+                    }
+                });
+                return false;
+            });
+
+        });
+        </script>
+
+    </body>
+}
