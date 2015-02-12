@@ -900,7 +900,7 @@ form.form-search {
 }
 
 .masthead {
-    min-width:1125px;
+    min-width: 900px;
     position:fixed;
     top: 0px;
     left:0px;
@@ -972,6 +972,9 @@ hr {
 .post-form {
     width:350px;
     resize: none;
+}
+
+.post-form-expanded {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
@@ -1671,4 +1674,44 @@ body {
 
 .timestamp-wrapper {
     margin-top: -4px;
+}
+
+.navbar-user-wrapper {
+    float: right;
+    margin-right: 50px;
+    margin-top: 6px;
+}
+
+.navbar-user-avatar-wrapper {
+    display: inline-block;
+}
+
+.navbar-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}
+
+.navbar-user-info {
+    display: inline-block;
+    margin-left: 1px;
+}
+
+.navbar-user-info-text {
+    font-weight: 500;
+    font-size: 16px;
+    color: #000000;
+}
+
+.navbar-user-wrapper:hover .navbar-user-info-text, .navbar-user-wrapper:focus .navbar-user-info-text {
+    text-decoration: underline;
+    color: #1065C4;
+}
+
+.navbar-user-anchor:focus {
+    outline: none;
+}
+
+.input-group-btn {
+    width: inherit;
 }

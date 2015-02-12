@@ -2,11 +2,11 @@ package com.cillo.core.data.db.models
 
 import anorm.SqlParser._
 import anorm._
+import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.utils.Etc.{bool2int, int2bool}
 import play.api.Play.current
 import play.api.db._
 import play.api.libs.json._
-import com.cillo.core.data.db.models.Comment.commentParser
 
 case class Post (
     post_id: Option[Int],

@@ -1,17 +1,17 @@
 package com.cillo.utils.play
 
-import com.cillo.utils.Etc
-import play.api.mvc._
-import com.cillo.core.data.db.models.User
 import com.cillo.core.data.cache.Memcached
-import play.api.libs.json._
+import com.cillo.core.data.db.models.User
+import com.cillo.utils.Etc
 import com.cillo.utils.security.SecureRand
+import play.api.libs.json._
+import play.api.mvc._
 
 object Auth {
 
     def AuthAction(f: (Option[User]) => (Request[AnyContent]) => Result) = Action { implicit request: Request[AnyContent] =>
         try {
-            val user = parseUserFromCookie orElse parseUserFromQueryString orElse parseUserFromHeader
+            val user = parseUserFromPostData orElse parseUserFromQueryString orElse parseUserFromCookie orElse parseUserFromHeader
             f(user)(request)
         } catch {
             case e: AuthTokenCookieExpired =>
@@ -40,7 +40,8 @@ object Auth {
     private def getNewUserSessionId(id: Int): String = {
         val newSeshId = SecureRand.newSessionId()
         val currTime = System.currentTimeMillis().toString
-        Memcached.set(newSeshId, "{\"creation_time\" : " + currTime + ", \"user_id\" : " + id + "}")
+        val json: JsValue = Json.obj("creation_time" -> currTime, "user_id" -> id)
+        Memcached.set(newSeshId, Json.stringify(json))
         newSeshId
     }
 
@@ -62,7 +63,7 @@ object Auth {
         val token = request.body.asFormUrlEncoded.getOrElse(return None).getOrElse("auth_token", return None).head
         val memcachedRes: Option[String] = Option(Memcached.get(token))
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
-            throw AuthTokenCookieExpired("Cookie auth token expired.")
+            return None
         val session = Json.parse(memcachedRes.get)
         val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
         val user = User.find(user_id)

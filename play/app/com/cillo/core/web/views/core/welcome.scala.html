@@ -1,7 +1,7 @@
 @(groups: Seq[com.cillo.core.data.db.models.Group])(implicit request: RequestHeader)
 
 @import com.cillo.core.web.views.html.components
-@import helper._
+@import views.html.helper._
 
 @components.base("Welcome to Cillo - Login or Sign Up") {
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/welcome.css")"/>
@@ -9,97 +9,6 @@
     <style>
         .form-group {
             margin-bottom: 6px;
-        }
-        html {
-            pointer-events: none;
-            cursor: default;
-        }
-        .page {
-            -webkit-filter: blur(4px);
-            -moz-filter: blur(4px);
-            filter: blur(4px);
-        }
-        .coming-soon-wrapper {
-            z-index : 9;
-            position: absolute;
-            width: 560px;
-            left: 50%;
-            margin-top:55px;
-            margin-left: -280px;
-        }
-        .coming-soon-text {
-            color: #fff;
-            font-size: 80px;
-        text-shadow: 1px 1px 0 #000,
-        -1px 1px 0 #000,
-        1px -1px 0 #000,
-        -1px -1px 0 #000,
-        0px 1px 0 #000,
-        0px -1px 0 #000,
-        -1px 0px 0 #000,
-        1px 0px 0 #000,
-        2px 2px 0 #000,
-        -2px 2px 0 #000,
-        2px -2px 0 #000,
-        -2px -2px 0 #000,
-        0px 2px 0 #000,
-        0px -2px 0 #000,
-        -2px 0px 0 #000,
-        2px 0px 0 #000,
-        1px 2px 0 #000,
-        -1px 2px 0 #000,
-        1px -2px 0 #000,
-        -1px -2px 0 #000,
-        2px 1px 0 #000,
-        -2px 1px 0 #000,
-        2px -1px 0 #000,
-        -2px -1px 0 #000;
-        }
-        .one {
-        opacity: 0;
-        -webkit-animation: dot 1.3s infinite;
-        -webkit-animation-delay: 0.0s;
-        animation: dot 1.3s infinite;
-        animation-delay: 0.0s;
-        }
-
-        .two {
-        opacity: 0;
-        -webkit-animation: dot 1.3s infinite;
-        -webkit-animation-delay: 0.2s;
-        animation: dot 1.3s infinite;
-        animation-delay: 0.2s;
-        }
-
-        .three {
-        opacity: 0;
-        -webkit-animation: dot 1.3s infinite;
-        -webkit-animation-delay: 0.3s;
-        animation: dot 1.3s infinite;
-        animation-delay: 0.3s;
-        }
-        @@-webkit-keyframes dot {
-        0% {
-        opacity: 0;
-        }
-        50% {
-        opacity: 0;
-        }
-        100% {
-        opacity: 1;
-        }
-        }
-
-        @@keyframes dot {
-        0% {
-        opacity: 0;
-        }
-        50% {
-        opacity: 0;
-        }
-        100% {
-        opacity: 1;
-        }
         }
     </style>
 
@@ -184,9 +93,6 @@
 } {
 
     <body class="main-background" style="margin:0" onload="setupBlocks();">
-        <div class="coming-soon-wrapper">
-            <span class="coming-soon-text">Coming Soon<span class="one">.</span><span class="two">.</span><span class="three">.</span>​</span>
-        </div>
         <!----Page Start---->
         <div class="page" style="">
             <div class="login-link-wrapper">

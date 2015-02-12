@@ -1,6 +1,6 @@
 package com.cillo.core.api.controllers
 
-import com.cillo.core.data.db.models.{CommentTree, Post, Group}
+import com.cillo.core.data.db.models.{CommentTree, Group, Post}
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
 import play.api.mvc._

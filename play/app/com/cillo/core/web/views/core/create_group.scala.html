@@ -1,6 +1,5 @@
 @(user: com.cillo.core.data.db.models.User, error: String = "", name: String = "", descr: String ="")(implicit request: RequestHeader)
 
-@import helper._
 @import com.cillo.core.web.views.html.components
 
 @components.base("Create a board") {
@@ -75,7 +74,6 @@
                             <label placeholder="Board Description" class="active-ph"></label>
                             <p class="help-block">Describe your board.</p>
                         </div>
-                        @CSRF.formField
                         <div class="register-form-button">
                             <button type="submit" class="btn btn-blue" style="width: 200px ;">Create Board</button>
                         </div>

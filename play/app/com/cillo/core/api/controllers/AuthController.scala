@@ -10,14 +10,6 @@ import play.api.mvc._
 
 object AuthController extends Controller {
 
-    def healthCheck = Action {
-        Ok("Healthy")
-    }
-
-    def rejectHttp = Action {
-        BadRequest(Json.obj("error" -> "Https required."))
-    }
-
     def login = AuthAction { implicit user => implicit request =>
         user match {
             case Some(_) => val json: JsValue = Json.obj("error" -> "User is already logged in.")

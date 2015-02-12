@@ -1,9 +1,9 @@
 package com.cillo.core.web.controllers
 
-import com.cillo.utils.play.Auth.AuthAction
-import play.api.mvc._
 import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html.core
+import com.cillo.utils.play.Auth.AuthAction
+import play.api.mvc._
 
 object GroupController extends Controller {
 

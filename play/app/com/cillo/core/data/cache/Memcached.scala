@@ -17,11 +17,11 @@ object Memcached {
         builder.setCommandFactory(new BinaryCommandFactory())
     }
 
-    def get(key: String): String = {
+    def get(key: String, duration: Int = 2592000): String = {
         if (!addr.isDefined)
             throw new MemcachedAddressUndefined("Memcached address has not been set.")
         val client = builder.build()
-        val res: String = client.getAndTouch(key, 2592000)
+        val res: String = client.getAndTouch(key, duration)
         client.shutdown()
         res
     }

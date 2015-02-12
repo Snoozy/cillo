@@ -1,6 +1,5 @@
 @()(implicit request: RequestHeader)
 @import com.cillo.core.web.views.html.components
-@import helper._
 
 @components.base("Login to Cillo") {
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/welcome.css")"/>
@@ -46,7 +45,6 @@
             <form action="/login" method="POST">
                 <input class="form-control" type="text" name="username" value="" placeholder="Username">
                 <input class="form-control" type="password" name="password" style="margin-top: 5px;" value="" placeholder="Password">
-                @CSRF.formField
                 <p><input class="btn btn-blue" type="submit" name="login.submitted" value="Login" style="width:95%;margin-bottom:-50px;margin-left:2%;"></p>
                 <br/>
             </form>

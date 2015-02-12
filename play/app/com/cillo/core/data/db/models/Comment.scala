@@ -5,7 +5,7 @@ import anorm._
 import com.cillo.utils.EncodeDecode
 import play.api.Play.current
 import play.api.db._
-import play.api.libs.json.{JsObject, Json, JsValue}
+import play.api.libs.json.{JsObject, JsValue, Json}
 
 case class Comment (
     comment_id: Option[Int],

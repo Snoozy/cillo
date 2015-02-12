@@ -16,7 +16,8 @@ libraryDependencies ++= Seq(
     filters,
     "com.googlecode.xmemcached" % "xmemcached" % "2.0.0",
     "com.amazonaws" % "aws-java-sdk-s3" % "1.9.0",
-    "io.argonaut" %% "argonaut" % "6.0.4"
+    "io.argonaut" %% "argonaut" % "6.0.4",
+    "com.mohiva" %% "play-html-compressor" % "0.3.1"
 )
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  

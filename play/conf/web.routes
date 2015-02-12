@@ -11,7 +11,7 @@ GET         /login                 com.cillo.core.web.controllers.LoginControlle
 GET         /boards/create         com.cillo.core.web.controllers.GroupController.createGroupPage
 GET         /:name/posts/:id       com.cillo.core.web.controllers.PostController.viewPostPage(name: String, id: Int)
 
-GET         /debug/health          com.cillo.core.web.controllers.IndexController.healthCheck
+GET        /debug/health        com.cillo.core.web.controllers.EtcController.healthCheck
 
 #POST
 POST        /a/post                com.cillo.core.web.controllers.PostController.post

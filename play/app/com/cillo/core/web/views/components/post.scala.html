@@ -1,8 +1,8 @@
 @(post: com.cillo.core.data.db.models.Post, user: com.cillo.core.data.db.models.User)
 
-@import com.cillo.core.data.db.models.{Post, User, Group, PostVote, CommentTree}
-@import com.cillo.utils.Etc
+@import com.cillo.core.data.db.models.{CommentTree, Group, Post, PostVote, User}
 @import com.cillo.core.web.views.html.components
+@import com.cillo.utils.Etc
 
 @poster = @{User.find(post.user_id).get}
 @group = @{Group.find(post.group_id).get}

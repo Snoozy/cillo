@@ -3,7 +3,7 @@
 
 # GET
 
-GET         /debug/health                    com.cillo.core.api.controllers.AuthController.healthCheck
+GET        /debug/health        com.cillo.core.api.controllers.EtcController.healthCheck
 
 GET         /v1/groups/:id/describe          com.cillo.core.api.controllers.GroupController.describe(id: Int)
 GET         /v1/posts/:id/describe           com.cillo.core.api.controllers.PostController.describe(id: Int)

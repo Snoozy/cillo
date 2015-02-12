@@ -8,16 +8,30 @@
             </a>
         </div>
         @if(searchBar) {
-        <div class="navbar-form navbar-left" style="margin-bottom: 4px; margin-top: 6px;padding-left:30px;">
-            <div class="form-group input-group">
-                <input type="text" class="form-control" placeholder="Search" style="height:31px;padding:6px 10px;width:200px;">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default" style="line-height: 1.128571">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
+            <div class="navbar-form navbar-left" style="margin-bottom : 4 px ; margin-top : 6 px ; padding-left : 50 px ;">
+                <div class="form-group input-group">
+                    <input type="text" class="form-control" placeholder="Search" style="height : 31 px ; padding : 6 px 10 px ; width : 200 px ;">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default" style="line-height : 1.128571">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
             </div>
-        </div>
+        }
+        @if(user.isDefined) {
+            <div class="navbar-user-wrapper">
+                <a href="/user/@user.get.username" class="navbar-user-anchor">
+                    <div class="navbar-user-avatar-wrapper">
+                        <img class="navbar-user-avatar" src="@user.get.photo">
+                    </div>
+                    <div class="navbar-user-info">
+                        <span class="navbar-user-info-text">
+                        @user.get.name
+                        </span>
+                    </div>
+                </a>
+            </div>
         }
     </nav>
 </div>

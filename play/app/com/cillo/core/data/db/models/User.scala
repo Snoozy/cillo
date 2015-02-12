@@ -2,8 +2,8 @@ package com.cillo.core.data.db.models
 
 import anorm.SqlParser._
 import anorm._
-import com.cillo.core.data.db.models.Post.postParser
 import com.cillo.core.data.db.models.Comment.commentParser
+import com.cillo.core.data.db.models.Post.postParser
 import com.cillo.utils.Etc.makeDigest
 import play.api.Play.current
 import play.api.db._
@@ -26,7 +26,7 @@ case class User(
 object User {
 
     private val DefaultPhoto = 1
-    private val DefaultPhotoString = "DEFAULT USER PHOTO"
+    private val DefaultPhotoString = "0.png"
     private val ImageURLBase = "https://static.cillo.co/image/"
 
     private[models] val userParser: RowParser[User] = {

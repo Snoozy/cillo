@@ -9,7 +9,7 @@ CREATE TABLE user (
     email VARCHAR(255),
     time BIGINT NOT NULL,
     reputation INT,
-    photo INT NOT NULL,
+    photo INT DEFAULT NULL,
     bio VARCHAR(200),
     PRIMARY KEY (user_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;

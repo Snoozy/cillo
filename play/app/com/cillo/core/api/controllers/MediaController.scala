@@ -7,7 +7,6 @@ import com.cillo.core.data.db.models.Media
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
 import play.api.mvc._
-import play.api.Logger
 
 /**
  * Controls the upload of media to through the API. Returns a media id that can be supplied with a post to attach

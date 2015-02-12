@@ -1,9 +1,8 @@
 package com.cillo.core.web.controllers
 
-import com.cillo.utils.play.Auth.AuthAction
-import play.api.mvc._
 import com.cillo.core.web.views.html
-import com.cillo.utils.play.Auth._
+import com.cillo.utils.play.Auth.{AuthAction, _}
+import play.api.mvc._
 
 object LoginController extends Controller {
 

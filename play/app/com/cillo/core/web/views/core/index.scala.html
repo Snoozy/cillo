@@ -1,8 +1,7 @@
 @(posts: Seq[com.cillo.core.data.db.models.Post], user: com.cillo.core.data.db.models.User, groups: Seq[com.cillo.core.data.db.models.Group])(implicit request: RequestHeader)
 
-@import com.cillo.utils.Etc
 @import com.cillo.core.web.views.html.components
-@import play.filters.csrf.CSRF
+@import com.cillo.utils.Etc
 
 @components.base("Cillo"){
 
@@ -111,7 +110,6 @@
 
         $(document).ready(function() {
 
-            var csrf_token = @CSRF.getToken(request);
 
             $(".post-submit").click(function() {
                 if ($('.post-form').val() == "" || $('.post-group' ).val() == ""){
@@ -128,8 +126,8 @@
                     dataType: "json",
                     data: {"data" : post_content,
                             "title" : post_title,
-                            "group_name" : post_group,
-                            "csrfToken" : csrf_token},
+                    "group_name" : post_group
+                    },
                     success: function(response, textStatus, jqXHR) {
                         $(response.item_html).insertAfter('.first-post').fadeIn(200);
                     },
@@ -466,6 +464,7 @@
                 $('.post-title').removeClass('displaynone');
                 $('.post-group').removeClass('displaynone');
                 $('.post-group-text').removeClass('displaynone');
+            $ ( '.post-form' ).addClass ( 'post-form-expanded' ) ;
                 $(".post-submit").show();
             });
 

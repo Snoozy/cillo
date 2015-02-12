@@ -1,7 +1,5 @@
 @(name: String = "")(password : String = "")(email: String = "")(implicit request: RequestHeader)
 
-@import helper._
-
 @com.cillo.core.web.views.html.components.base("Sign Up for Cillo") {
 
 }{
@@ -32,7 +30,6 @@
                             <label for="usernameInput">Username</label>
                             <input type="text" class="form-control" id="usernameInput" name="username">
                         </div>
-                        @CSRF.formField
                         <div class="register-form-button">
                             <button type="submit" class="btn btn-blue" style="width: 200px ;">Sign Up</button>
                         </div>
