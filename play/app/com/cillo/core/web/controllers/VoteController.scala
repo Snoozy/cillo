@@ -7,6 +7,7 @@ import play.api.mvc._
 
 object VoteController extends Controller {
 
+
     def upvotePost(post_id: Int) = votePost(post_id, 1)
 
     def downvotePost(post_id: Int) = votePost(post_id, -1)
