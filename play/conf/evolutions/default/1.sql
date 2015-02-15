@@ -22,7 +22,7 @@ CREATE TABLE `group` (
     description VARCHAR(500),
     creator_id INT,
     followers INT,
-    photo INT NOT NULL,
+    photo INT,
     privacy TINYINT,
     CONSTRAINT `user__group_fk` FOREIGN KEY (`creator_id`) REFERENCES user(`user_id`),
     PRIMARY KEY (group_id)

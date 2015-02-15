@@ -25,7 +25,6 @@ case class User(
 
 object User {
 
-    private val DefaultPhoto = 1
     private val DefaultPhotoString = "0.png"
     private val ImageURLBase = "https://static.cillo.co/image/"
 
@@ -37,14 +36,18 @@ object User {
             get[String]("email") ~
             get[Long]("time") ~
             get[Option[Int]]("reputation") ~
-            get[Int]("photo") ~
+            get[Option[Int]]("photo") ~
             get[String]("bio") map{
             case user_id ~ username ~ name ~ password ~ email ~ time ~ reputation ~ photo ~ bio =>
-                val p = Media.find(photo)
-                if (p.isDefined)
-                    User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + p.get.media_name, photo, bio, None)
-                else
-                    User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, photo, bio, None)
+                if (photo.isDefined) {
+                    val p = Media.find(photo.get)
+                    if (p.isDefined)
+                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + p.get.media_name, photo.get, bio, None)
+                    else
+                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio, None)
+                } else {
+                    User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio, None)
+                }
         }
     }
 
@@ -64,9 +67,9 @@ object User {
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO user (username, name, password, email, bio, time, reputation, photo) VALUES ({username}, {name}," +
-                " {password}, {email}, {bio}, {time}, 0, {photo})").on('username -> username, 'name -> name,
-                    'password -> makeDigest(password), 'email -> email, 'bio -> bio.getOrElse(""), 'time -> time, 'photo -> User.DefaultPhoto).executeInsert()
+            SQL("INSERT INTO user (username, name, password, email, bio, time, reputation) VALUES ({username}, {name}," +
+                " {password}, {email}, {bio}, {time}, 0)").on('username -> username, 'name -> name,
+                    'password -> makeDigest(password), 'email -> email, 'bio -> bio.getOrElse(""), 'time -> time).executeInsert()
         }
     }
 

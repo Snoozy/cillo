@@ -1,4 +1,4 @@
-@(user: Option[com.cillo.core.data.db.models.User] = None, searchBar: Boolean = false, fixed: Boolean = true)
+@(user: Option[com.cillo.core.data.db.models.User] = None, searchBar: Boolean = false, fixed: Boolean = true, buttons: Boolean = true)
 
 <div class="masthead" style="@if(!fixed){position:relative;}">
     <nav class="navbar navbar-default" style="margin-bottom: 0px; min-height: 45px;">
@@ -8,14 +8,16 @@
             </a>
         </div>
         @if(searchBar) {
-            <div class="navbar-form navbar-left" style="margin-bottom : 4 px ; margin-top : 6 px ; padding-left : 50 px ;">
+            <div class="navbar-form navbar-left" style="margin-bottom : 4 px ; margin-top : 6 px ; padding-left : 70 px ;">
                 <div class="form-group input-group">
-                    <input type="text" class="form-control" placeholder="Search" style="height : 31 px ; padding : 6 px 10 px ; width : 200 px ;">
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default" style="line-height : 1.128571">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </span>
+                    <form class="navbar-search">
+                        <input type="text" class="form-control search-query" placeholder="Search" style="height : 31 px ; padding : 6 px 10 px ; width : 200 px ;">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default" style="line-height : inherit ;">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </form>
                 </div>
             </div>
         }
@@ -28,6 +30,29 @@
                     <div class="navbar-user-info">
                         <span class="navbar-user-info-text">
                         @user.get.name
+                        </span>
+                    </div>
+                </a>
+            </div>
+        }
+        @if(buttons) {
+            <div class="navbar-button-wrapper">
+                <a href="/boards/browse" class="navbar-button-anchor">
+                    <div class="navbar-button-div">
+                        <span class="navbar-button-text">
+                            Browse
+                        </span>
+                    </div>
+                </a>
+            </div>
+            <div class="navbar-button-separator-wrapper">
+                <span class="navbar-button-separator">|</span>
+            </div>
+            <div class="navbar-button-wrapper">
+                <a href="/boards/create" class="navbar-button-anchor">
+                    <div class="navbar-button-div">
+                        <span class="navbar-button-text">
+                            Create
                         </span>
                     </div>
                 </a>

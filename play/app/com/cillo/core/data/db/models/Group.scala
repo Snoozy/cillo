@@ -21,8 +21,7 @@ case class Group (
 
 object Group {
 
-    private val DefaultPhoto = 1
-    private val DefaultPhotoString = "DEFAULT GROUP PHOTO"
+    private val DefaultPhotoString = "0.png"
     private val ImageURLBase = "https://static.cillo.co/image/"
 
     private[models] val groupParser: RowParser[Group] = {
@@ -33,13 +32,18 @@ object Group {
             get[Int]("creator_id") ~
             get[Int]("followers") ~
             get[Int]("privacy") ~
-            get[Int]("photo") map {
+            get[Option[Int]]("photo") map {
             case group_id ~ name ~ time ~ description ~ creator_id ~ followers ~ privacy ~ photo =>
-                val p = Media.find(photo)
-                if (p.isDefined)
-                    Group(group_id, name, time, description, creator_id, followers, privacy, ImageURLBase + p.get.media_name, photo)
-                else
-                    Group(group_id, name, time, description, creator_id, followers, privacy, ImageURLBase + DefaultPhotoString, photo)
+                if (photo.isDefined) {
+                    val p = Media.find(photo.get)
+                    if (p.isDefined)
+                        Group(group_id, name, time, description, creator_id, followers, privacy, ImageURLBase + p.get.media_name, photo.get)
+                    else
+                        Group(group_id, name, time, description, creator_id, followers, privacy, ImageURLBase + DefaultPhotoString, 0)
+                } else {
+                    Group(group_id, name, time, description, creator_id, followers, privacy, ImageURLBase + DefaultPhotoString, 0)
+                }
+
         }
     }
 
@@ -55,7 +59,7 @@ object Group {
         }
     }
 
-    def create(name: String, desc: Option[String], creator_id: Int, privacy: Int = 0, photo: Int = DefaultPhoto): Option[Long] = {
+    def create(name: String, desc: Option[String], creator_id: Int, privacy: Int = 0, photo: Option[Int] = None): Option[Long] = {
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>

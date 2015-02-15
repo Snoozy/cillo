@@ -10,6 +10,7 @@ import httplib, urllib, sys, ntpath, gzip, argparse, os
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-js", "--javascript", action="store_true", help="marks file as js file")
+parser.add_argument("-css", "--stylesheet", action="store_true", help="marks file as css file")
 parser.add_argument("path", help="path of file to be uploaded")
 args = parser.parse_args()
 
@@ -40,10 +41,14 @@ def upload():
     conn = S3Connection(aws_key, aws_secret)
     bucket = conn.get_bucket('cillo-static')
     key = Key(bucket)
-    key.key = ntpath.basename(path)
     if args.javascript:
+        key.key = 'js/' + ntpath.basename(path)        
         key.set_contents_from_filename('/tmp/' + ntpath.basename(path), headers=headers)
+    elif args.stylesheet:
+        key.key = 'css/' + ntpath.basename(path)        
+        key.set_contents_from_filename(path, headers=headers)
     else:
+        key.key = ntpath.basename(path)
         key.set_contents_from_filename(path, headers=headers)
     
 def optimize_js():

@@ -19,18 +19,6 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
-
-(function ($) {
-    $('div[data-placeholder]').on('keydown keypress input focus', function () {
-        if (this.textContent || this.childNodes.length !== 0) {
-            this.dataset.divPlaceholderContent = 'true';
-        }
-        else {
-            delete(this.dataset.divPlaceholderContent);
-        }
-    });
-})(jQuery);
-
 function setEndOfContenteditable(contentEditableElement) {
     var range, selection;
     if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
@@ -3122,3 +3110,379 @@ function insertParam(key, value) {
         }
     });
 }(jQuery));
+
+(function ($) {
+
+    function htmlWithBreaks(text) {
+        var htmls = [];
+        var lines = text.split(/\n/);
+        for (var i = 0; i < lines.length; i++) {
+            htmls.push(
+                jQuery(document.createElement('div')).text(lines[i]).html()
+            );
+        }
+        return htmls.join("<br>");
+    }
+
+    $('.posts-wrapper').on('click', '.post-delete', function (e) {
+        if (confirm('Are you sure you want to delete this post?')) {
+            var post_id = $(this).closest('.post').data('item-id');
+            var $this = $(this);
+            $.ajax({
+                url: '/a/delete_post',
+                type: 'POST',
+                dataType: 'json',
+                data: {'p': post_id},
+                success: function () {
+                    $this.closest('.post').fadeOut(500, function () {
+                        $this.remove();
+                    });
+                    return false;
+                }
+            });
+        }
+        return false;
+    });
+
+    $(document).on('click', '.action-link-repost', function (e) {
+        e.preventDefault();
+        var post_id = $(this).closest('.post').data('item-id');
+        $('#repost-dialog').modal();
+        $('.repost-submit-button').click(function () {
+            if (!($('#radio-friends').is(':checked') || $('#radio-group').is(':checked'))) {
+                return false;
+            }
+            if ($('#radio-group').is(':checked') && ($('.repost-group-input').val() == '')) {
+                $('.repost-error-no-group').show();
+            }
+            if ($('#radio-group').is(':checked')) {
+                var group_name = $('.repost-group-input').val();
+                $.ajax({
+                    url: '/a/check_group',
+                    data: {'g': group_name},
+                    dataType: 'json',
+                    success: function () {
+                        $.ajax({
+                            url: '/post',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                'r': post_id,
+                                'g': group_name
+                            },
+                            success: function () {
+                                $('.success-check').show();
+                                setTimeout(function () {
+                                    $('#repost-dialog').modal('hide');
+                                    $('.success-check').hide();
+                                }, 1000);
+                            }
+                        });
+                    },
+                    error: function () {
+                        $('.group-exist-error').show();
+                    }
+                });
+            }
+        });
+
+    });
+
+    $(".post-submit").click(function () {
+        if ($('.post-form').val() == "" || $('.post-group').val() == "") {
+            return false;
+        }
+
+        var post_content = $('.post-form').val();
+        var post_title = $('.post-title').val();
+        var post_group = $('.post-group').val();
+
+        $.ajax({
+            url: "/a/post",
+            type: "POST",
+            dataType: "json",
+            data: {
+                "data": post_content,
+                "title": post_title,
+                "group_name": post_group
+            },
+            success: function (response, textStatus, jqXHR) {
+                $(response.item_html).insertAfter('.first-post').fadeIn(200);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("Unexpected internal server error. Please try again later.");
+            },
+            complete: function () {
+                $('textarea.post-form').val('');
+                $('.post-title').val('');
+                $('.post-group').val('');
+            }
+        });
+        return false;
+    });
+
+    $('.posts-wrapper').on('click', '.action-link-reposted', function () {
+        var repost_id = $(this).closest('.post').data('repost-item-id');
+        if (confirm('Are you sure you want to delete this post?')) {
+            var $this = $(this);
+            $.ajax({
+                url: '/a/delete_post',
+                type: 'POST',
+                dataType: 'json',
+                data: {'p': repost_id},
+                success: function () {
+                    $this.closest('.post').fadeOut(500, function () {
+                        $this.remove();
+                    });
+                    return false;
+                }
+            });
+        }
+        return false;
+    });
+
+    $('.modal').draggable({
+        handle: '.modal-header'
+    });
+
+    $('.posts-wrapper').on({
+        mouseenter: function () {
+            $(this).children('.post-wrapper').find('.post-functions').show();
+            return true;
+        },
+        mouseleave: function () {
+            $(this).children('.post-wrapper').find('.post-functions').hide();
+            return true;
+        }
+    }, 'li');
+
+    $('input[placeholder], textarea[placeholder]').placeholder();
+
+    $('textarea').autosize();
+
+    colorVotes('post');
+
+    colorVotes('comment');
+
+    $(document).on('keypress', '.comment-val', function (event) {
+        if (event.keyCode == 13 && event.shiftKey) {
+            var content = this.value;
+            var caret = getCaret(this);
+            this.value = content.substring(0, caret) + "\n" + content.substring(carent, content.length - 1);
+            event.stopPropagation();
+        } else if (event.keyCode == 13) {
+            $(this).parent().submit();
+        }
+    });
+
+    function getCaret(el) {
+        if (el.selectionStart) {
+            return el.selectionStart;
+        } else if (document.selection) {
+            el.focus();
+
+            var r = document.selection.createRange();
+            if (r == null) {
+                return 0;
+            }
+
+            var re = el.createTextRange(),
+                rc = re.duplicate();
+            re.moveToBookmark(r.getBookmark());
+            rc.setEndPoint('EndToStart', re);
+
+            return rc.text.length;
+        }
+        return 0;
+    }
+
+    $(".navbar-search").submit(function () {
+        var query = encodeURIComponent($(".search-query").val());
+        if (query == "") {
+            return false;
+        }
+        window.location.href = "/search?q=" + query;
+        return false;
+    });
+
+
+    $('.post-form').focus(function () {
+        $(this).css('min-height', '70px');
+        $(this).css('height', 'auto');
+        $(this).trigger('autosize.resize');
+        $('.picture_upload').removeClass('displaynone');
+        $('.post-title').removeClass('displaynone');
+        $('.post-group').removeClass('displaynone');
+        $('.post-group-text').removeClass('displaynone');
+        $('.post-form').addClass('post-form-expanded');
+        $(".post-submit").show();
+    });
+
+    $('textarea').autosize();
+
+    $('.posts-wrapper').on('click', '.action-link-comment', function () {
+
+        $('.comment-form').remove();
+
+        var comment_form_placement = $(this).closest('.post-actions').siblings('.comments-container');
+
+        $('<div class="comment-form"><form class="comment-input"><textarea class="form-control comment-val input-xlarge" data-expanded-height="40" placeholder="Write a comment..." style="height:34px;width:100%;overflow:auto;resize:none;margin-bottom:0px;"></textarea><input type="submit" style="position:absolute;left:-9999px;width:1px;height:1px;"/></form></div>').insertBefore(comment_form_placement);
+
+        $('.comment-val').autosize();
+
+        $(comment_form_placement).prev().find('.comment-val').focus();
+
+        $(".comment-input").submit(function (event) {
+            event.preventDefault();
+            var $this = $(this);
+            var comment = $(this).find('.comment-val').val();
+            var post_id = $(this).closest('.post').data('item-id');
+            var $comment_form = $(this).parent();
+            $.ajax({
+                url: '/comment',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'p': post_id,
+                    'data': comment,
+                    'reply_id': 0
+                },
+                success: function (response, textStatus, jqXHR) {
+                    $this.parent().siblings('.comments-container').append(response.item_html).fadeIn(200);
+                },
+                complete: function () {
+                    $comment_form.find('.comment-val').val('');
+                    $comment_form.find('.comment-val').height('20px');
+                }
+            });
+
+        });
+        return false;
+
+    });
+
+    $(document).on('click', '.action-link-like', function () {
+        var $this = $(this);
+        var post_id = $this.closest('.post').data('item-id');
+
+        if ($this.hasClass('liked')) {
+            return false;
+        }
+
+        $.ajax({
+            url: '/a/post/' + post_id + '/upvote',
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function () {
+                var amount = 1;
+                if ($this.parent().siblings('.dislike').children('.action-link-dislike').hasClass('disliked')) {
+                    $this.parent().siblings('.dislike').children('.action-link-dislike').removeClass('disliked');
+                    amount = 2;
+                }
+                $this.parent().siblings('.post-like-count').text(parseInt($this.parent().siblings('.post-like-count').text()) + amount);
+
+                $this.addClass('liked');
+            },
+            error: function () {
+            }
+        });
+        colorVotes('post');
+        return false;
+    });
+
+    $(document).on('click', '.action-link-dislike', function () {
+        var $this = $(this);
+        var post_id = $this.closest('.post').data('item-id');
+
+        if ($this.hasClass('disliked')) {
+            return false;
+        }
+
+        $.ajax({
+            url: '/a/post/' + post_id + '/downvote',
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function () {
+                var amount = 1;
+                if ($this.parent().siblings('.like').children('.action-link-like').hasClass('liked')) {
+                    $this.parent().siblings('.like').children('.action-link-like').removeClass('liked');
+                    amount = 2;
+                }
+                $this.parent().siblings('.post-like-count').text(parseInt($this.parent().siblings('.post-like-count').text()) - amount);
+
+                $this.addClass('disliked');
+            },
+            error: function () {
+            }
+        });
+        colorVotes('post');
+        return false;
+    });
+
+    $(document).on('click', '.c-action.like', function () {
+        var $this = $(this);
+        var comment_id = $(this).siblings('.post-id').html();
+
+        $.ajax({
+            url: '/a/comment/' + comment_id + '/upvote',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'p': comment_id,
+                'type': '1'
+            },
+            success: function () {
+                var amount = 1;
+                if ($this.siblings('.c-action.dislike').hasClass('disliked')) {
+                    amount = 2;
+                    $this.siblings('.c-action.dislike').removeClass('disliked');
+                }
+
+                $this.addClass('liked');
+                $this.siblings('.like-count').text(parseInt($this.siblings('.like-count').text()) + amount);
+                colorVotes('comment');
+            },
+            error: function () {
+            }
+        });
+        return false;
+
+    });
+
+    $(document).on('click', '.c-action.dislike', function () {
+        var $this = $(this);
+        var comment_id = $this.siblings('.post-id').html();
+
+        $.ajax({
+            url: '/a/comment/' + comment_id + '/downvote',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'p': comment_id,
+                'type': '1'
+            },
+            success: function () {
+                var amount = 1;
+                if ($this.siblings('.c-action.like').hasClass('liked')) {
+                    amount = 2;
+                    $this.siblings('.c-action.like').removeClass('liked');
+                }
+                $this.addClass('disliked');
+                $this.siblings('.like-count').text(parseInt($this.siblings('.like-count').text()) - amount);
+
+                colorVotes('comment');
+            }
+        });
+        return false;
+    });
+
+    $('div[data-placeholder]').on('keydown keypress input focus', function () {
+        if (this.textContent || this.childNodes.length !== 0) {
+            this.dataset.divPlaceholderContent = 'true';
+        }
+        else {
+            delete(this.dataset.divPlaceholderContent);
+        }
+    });
+
+})(jQuery);

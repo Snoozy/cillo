@@ -6,6 +6,11 @@
     margin: 30px auto;
 }
 
+body:after {
+    display: none;
+    content: url(//static.cillo.co/upvote-arrow.png) url(//static.cillo.co/upvoted-arrow.png) url(//static.cillo.co/downvote-arrow.png) url(//static.cillo.co/downvoted-arrow.png) url(//static.cillo.co/dropdown-arrow.png) url(//static.cillo.co/ajax-spinner.gif);
+}
+
 .inside-box {
     padding: 20px 25px;
 }
@@ -57,18 +62,18 @@
 }
 
 .icon-upvote {
-    background-image: url(//static.melio.co/upvote-arrow.png);
+    background-image: url(//static.cillo.co/upvote-arrow.png);
     height: 15px;
     width: 15px;
     margin-bottom: -1px;
 }
 
 .liked .icon-upvote {
-    background-image: url(//static.melio.co/upvoted-arrow.png);
+    background-image: url(//static.cillo.co/upvoted-arrow.png);
 }
 
 .icon-downvote {
-    background-image: url(//static.melio.co/downvote-arrow.png);
+    background-image: url(//static.cillo.co/downvote-arrow.png);
     width: 15px;
     height: 15px;
     margin-bottom: -4px;
@@ -76,7 +81,7 @@
 }
 
 .disliked .icon-downvote {
-    background-image: url(//static.melio.co/downvoted-arrow.png);
+    background-image: url(//static.cillo.co/downvoted-arrow.png);
 }
 
 .post-timestamp {
@@ -482,6 +487,9 @@ a.repost-user-link:hover {
 }
 .group {
     margin-top:10px;
+    display: block;
+    min-height: 55px;
+    margin-left: 63px;
 }
 
 .notifications-container {
@@ -769,7 +777,7 @@ textarea {
 }
 
 strong {
-    font-size:15px;
+    font-size: 16px;
 }
 
 .comment-content {
@@ -801,16 +809,14 @@ strong {
 }
 
 .post-avatar {
-    float: left;
-    margin-right:8px;
     vertical-align:text-top;
     -webkit-border-radius: 5px;
 	-khtml-border-radius: 5px;	
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-    margin-top:4px;  
-    height:40px;
-    width:40px;
+    margin-top:4px;
+    height: 48px;
+    width: 48px;
 }
 
 .group-avatar .user-avatar{
@@ -1008,7 +1014,7 @@ a.action-link {
 }
 
 .icon-drop-arrow {
-    background-image: url("//static.melio.co/dropdown-arrow.png");
+    background-image: url(//static.cillo.co/dropdown-arrow.png);
     background-repeat: no-repeat;
     cursor: pointer;
     height: 12px;
@@ -1080,7 +1086,7 @@ strong {
 }
 
 strong:hover {
-    color: #2793e6;
+    color: #1065C4;
 }
 
 .user-actions {
@@ -1172,6 +1178,7 @@ strong:hover {
 
 .margin-maker {
     position: relative;
+    margin-left: 55px;
 }
 
 .post {
@@ -1270,10 +1277,6 @@ a:hover {
     color: #008000 !important;
 }
 
-.disliked i{
-    color: #b20000 !important;
-}
-
 .icon-refresh {
     color: #5E5E5E;
 }
@@ -1292,7 +1295,6 @@ a:hover {
 }
 
 .post-content {
-    margin-left: 55px;
 }
 
 .comment-actions {
@@ -1308,7 +1310,7 @@ a:hover {
     height: 100px;
     width: 100px;
     margin: auto;
-    background: url("//static.melio.co/ajax-spinner.gif");
+    background: url(//static.cillo.co/ajax-spinner.gif);
     margin-bottom: 10px;
     margin-top: -20px;
     display: none;
@@ -1669,17 +1671,20 @@ body {
 
 .u-info-wrapper {
     margin: 0px;
+    margin-top: 2px;
     display: inline-block;
 }
 
 .timestamp-wrapper {
     margin-top: -4px;
+    display: inline-block;
 }
 
 .navbar-user-wrapper {
     float: right;
-    margin-right: 50px;
+    margin-right: 70px;
     margin-top: 6px;
+    margin-left: 20px;
 }
 
 .navbar-user-avatar-wrapper {
@@ -1703,8 +1708,11 @@ body {
     color: #000000;
 }
 
+.navbar-user-wrapper:hover {
+    cursor: pointer;
+}
+
 .navbar-user-wrapper:hover .navbar-user-info-text, .navbar-user-wrapper:focus .navbar-user-info-text {
-    text-decoration: underline;
     color: #1065C4;
 }
 
@@ -1714,4 +1722,45 @@ body {
 
 .input-group-btn {
     width: inherit;
+}
+
+.navbar-button-wrapper {
+    float: right;
+}
+
+.navbar-button-div {
+    padding: 11px 10px;
+}
+
+.navbar-button-text {
+    font-weight: 600;
+    color: #000000;
+}
+
+.navbar-button-div:hover .navbar-button-text {
+    color: #1065C4;
+}
+
+.group:hover .group-name-text {
+    color: #1065C4;
+}
+
+.navbar-button-separator-wrapper {
+    float: right;
+    margin-top: 10px;
+    color: grey;
+}
+
+.post-avatar-wrapper:hover strong.hover-blue.user-name-text {
+    color: #1065C4;
+}
+
+.post-avatar-wrapper {
+    float: left;
+    margin-left: -53px;
+}
+
+.p-action-anchor:focus {
+    outline: none;
+    text-decoration: none;
 }

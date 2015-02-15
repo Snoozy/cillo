@@ -16,7 +16,9 @@
             <div class="post-header">
                 <div class="user-avatar">
                     <a href="/user/@poster.username">
-                        <img class="post-avatar" src="@poster.photo">
+                        <div class="post-avatar-wrapper">
+                            <img class="post-avatar" src="@poster.photo">
+                        </div>
                     </a>
                 </div>
                 <div class="post-functions dropdown displaynone">
@@ -24,12 +26,12 @@
                         <i class="icon-drop-arrow"></i>
                     </a>
                     <ul class="dropdown-menu post-dropdown">
-                        <li>
+                        @*<li>
                             <a class="post-edit" href="#">
                                 <i class="icon-edit"></i>
                                 Edit
                             </a>
-                        </li>
+                        </li>*@
                         <li>
                             <a class="post-delete" href="#">
                                 <i class="icon-trash"></i>
@@ -41,7 +43,7 @@
                 <div class="user-info">
                     <label class="u-info-wrapper">
                         <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="modal-click username-anchor" style="margin-left:0px;font-size:110%%;">
-                            <strong class="hover-blue">@poster.name</strong>
+                            <strong class="hover-blue user-name-text">@poster.name</strong>
                         </a>
                     </label>
                     on
@@ -51,6 +53,7 @@
                         </a>
                     </label>
                     <div class="timestamp-wrapper">
+                        ·
                         <a class="post-timestamp" href="/@group.name/posts/@post.post_id.get">
                             @Etc.convertEpochToTimestamp(post.time.longValue)
                         </a>
@@ -74,30 +77,17 @@
             <div class="post-actions">
                 <span class="post-like-count">@post.votes</span>
                 <span class="p-action like">
-                    @if(vote.isDefined && vote.get.value == 1) {
-                        <a class="p-action-anchor action-link-like liked" href="#" style="margin-right : 0 px ;">
-                            <i class="icon-upvote" style="margin-right : - 5 px ;"> </i>
-                            <span class="color-blue like-text">Upvote</span>
-                        </a>
-                    } else {
-                        <a class="p-action-anchor action-link-like" href="#" style="margin-right : 0 px ;">
-                            <i class="icon-upvote" style="margin-right : - 5 px ;"> </i>
-                            <span class="color-blue like-text">Upvote</span>
-                        </a>
-                    }
+                    <a class="p-action-anchor action-link-like @if(vote.isDefined && vote.get.value == 1) {liked}" href="#" style="margin-right : 0 px ;">
+                        <i class="icon-upvote" style="margin-right : - 5 px ;"> </i>
+                        <span class="color-blue like-text">Upvote</span>
+                    </a>
                 </span>
 
                 <span class="p-action dislike">
                     <span style="color:#ccc"> | </span>
-                    @if(vote.isDefined && vote.get.value == -1) {
-                        <a class="p-action-anchor action-link-dislike disliked" href="#" style="margin-left:-1px;margin-right:-3px;">
-                            <i class="icon-downvote"></i>
-                        </a>
-                    } else {
-                        <a class="p-action-anchor action-link-dislike" href="#" style="margin-left:-1px;margin-right:-3px;">
-                            <i class="icon-downvote"></i>
-                        </a>
-                    }
+                    <a class="p-action-anchor action-link-dislike @if(vote.isDefined && vote.get.value == -1) {disliked}" href="#" style="margin-left : - 1 px ; margin-right : - 3 px ;">
+                        <i class="icon-downvote"></i>
+                    </a>
                 </span>
 
                 <span class="p-action comment">

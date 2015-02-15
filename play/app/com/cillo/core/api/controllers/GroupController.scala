@@ -51,10 +51,7 @@ object GroupController extends Controller {
                     val photo = form.get("photo").map(_.head.toInt)
                     if (name.isDefined) {
                         var group_id: Option[Long] = None
-                        if (photo.isDefined)
-                            group_id = Group.create(name.get, descr, user.get.user_id.get, photo = photo.get)
-                        else
-                            group_id = Group.create(name.get, descr, user.get.user_id.get)
+                        group_id = Group.create(name.get, descr, user.get.user_id.get, photo = photo)
                         if (group_id.isDefined) {
                             Group.addFollower(user.get.user_id.get, group_id.get.toInt)
                             Ok(Group.toJson(Group.find(group_id.get.toInt).get, true))

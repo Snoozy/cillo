@@ -1,10 +1,9 @@
 @(groups: Seq[com.cillo.core.data.db.models.Group])(implicit request: RequestHeader)
 
 @import com.cillo.core.web.views.html.components
-@import views.html.helper._
 
 @components.base("Welcome to Cillo - Login or Sign Up") {
-    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/welcome.css")"/>
+    <link rel="stylesheet" href="@routes.Assets.at("css/welcome.css")"/>
 
     <style>
         .form-group {
@@ -122,7 +121,6 @@
                                 <input type="email" class="form-control active-ph" name="email" required>
                                 <label placeholder="Email" class="active-ph"></label>
                             </div>
-                            @CSRF.formField
                             <button type="submit" class="btn btn-blue signup-submit">Sign Up for Cillo</button>
                         </form>
                         <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
