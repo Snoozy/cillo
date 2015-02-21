@@ -3125,14 +3125,13 @@ function insertParam(key, value) {
     }
 
     $('.posts-wrapper').on('click', '.post-delete', function (e) {
-        if (confirm('Are you sure you want to delete this post?')) {
+        if (confirm('Delete Post?')) {
             var post_id = $(this).closest('.post').data('item-id');
             var $this = $(this);
             $.ajax({
-                url: '/a/delete_post',
+                url: '/a/post/' + post_id + '/delete',
                 type: 'POST',
                 dataType: 'json',
-                data: {'p': post_id},
                 success: function () {
                     $this.closest('.post').fadeOut(500, function () {
                         $this.remove();
@@ -3149,17 +3148,17 @@ function insertParam(key, value) {
         var post_id = $(this).closest('.post').data('item-id');
         $('#repost-dialog').modal();
         $('.repost-submit-button').click(function () {
-            if (!($('#radio-friends').is(':checked') || $('#radio-group').is(':checked'))) {
+            if (!($('#radio-friends').is(':checked') || $('#radio-board').is(':checked'))) {
                 return false;
             }
-            if ($('#radio-group').is(':checked') && ($('.repost-group-input').val() == '')) {
-                $('.repost-error-no-group').show();
+            if ($('#radio-board').is(':checked') && ($('.repost-board-input').val() == '')) {
+                $('.repost-error-no-board').show();
             }
-            if ($('#radio-group').is(':checked')) {
-                var group_name = $('.repost-group-input').val();
+            if ($('#radio-board').is(':checked')) {
+                var board_name = $('.repost-board-input').val();
                 $.ajax({
-                    url: '/a/check_group',
-                    data: {'g': group_name},
+                    url: '/a/check_board',
+                    data: {'g': board_name},
                     dataType: 'json',
                     success: function () {
                         $.ajax({
@@ -3168,7 +3167,7 @@ function insertParam(key, value) {
                             dataType: 'json',
                             data: {
                                 'r': post_id,
-                                'g': group_name
+                                'g': board_name
                             },
                             success: function () {
                                 $('.success-check').show();
@@ -3180,7 +3179,7 @@ function insertParam(key, value) {
                         });
                     },
                     error: function () {
-                        $('.group-exist-error').show();
+                        $('.board-exist-error').show();
                     }
                 });
             }
@@ -3189,13 +3188,13 @@ function insertParam(key, value) {
     });
 
     $(".post-submit").click(function () {
-        if ($('.post-form').val() == "" || $('.post-group').val() == "") {
+        if ($('.post-form').val() == "" || $('.post-board').val() == "") {
             return false;
         }
 
         var post_content = $('.post-form').val();
         var post_title = $('.post-title').val();
-        var post_group = $('.post-group').val();
+        var post_board = $('.post-board').val();
 
         $.ajax({
             url: "/a/post",
@@ -3204,10 +3203,10 @@ function insertParam(key, value) {
             data: {
                 "data": post_content,
                 "title": post_title,
-                "group_name": post_group
+                "board_name": post_board
             },
             success: function (response, textStatus, jqXHR) {
-                $(response.item_html).insertAfter('.first-post').fadeIn(200);
+                $(response.item_html).hide().fadeIn(1000).css('display','block').insertAfter('.first-post');
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert("Unexpected internal server error. Please try again later.");
@@ -3215,7 +3214,8 @@ function insertParam(key, value) {
             complete: function () {
                 $('textarea.post-form').val('');
                 $('.post-title').val('');
-                $('.post-group').val('');
+                $('.post-board').val('');
+                collapseFirstPost();
             }
         });
         return false;
@@ -3226,10 +3226,9 @@ function insertParam(key, value) {
         if (confirm('Are you sure you want to delete this post?')) {
             var $this = $(this);
             $.ajax({
-                url: '/a/delete_post',
+                url: '/a/post/' + repost_id + '/delete',
                 type: 'POST',
                 dataType: 'json',
-                data: {'p': repost_id},
                 success: function () {
                     $this.closest('.post').fadeOut(500, function () {
                         $this.remove();
@@ -3255,6 +3254,30 @@ function insertParam(key, value) {
             return true;
         }
     }, 'li');
+
+    $('.following .board-follow-btn').click(function() {
+        var group_id = $(this).closest('.board-follow-btn-container').data('board-id');
+        $.ajax({
+            url: '/a/group/' + group_id + '/unfollow',
+            type: 'POST',
+            dataType: 'json',
+            success: function() {
+                location.reload();
+            }
+        });
+    });
+
+    $('.notfollowing .board-follow-btn').click(function() {
+        var group_id = $(this).closest('.board-follow-btn-container').data('board-id');
+        $.ajax({
+            url: '/a/group/' + group_id + '/follow',
+            type: 'POST',
+            dataType: 'json',
+            success: function() {
+                location.reload();
+            }
+        });
+    });
 
     $('input[placeholder], textarea[placeholder]').placeholder();
 
@@ -3310,13 +3333,26 @@ function insertParam(key, value) {
         $(this).css('min-height', '70px');
         $(this).css('height', 'auto');
         $(this).trigger('autosize.resize');
+        $('.first-post-clear').removeClass('displaynone');
         $('.picture_upload').removeClass('displaynone');
         $('.post-title').removeClass('displaynone');
-        $('.post-group').removeClass('displaynone');
-        $('.post-group-text').removeClass('displaynone');
+        $('.post-board-wrapper').removeClass('displaynone');
+        $('.post-board-text').removeClass('displaynone');
         $('.post-form').addClass('post-form-expanded');
         $(".post-submit").show();
     });
+
+    function collapseFirstPost() {
+        $('.post-form').css('min-height', '34px');
+        $('.post-form').css('height', '34px');
+        $('.first-post-clear').addClass('displaynone');
+        $('.picture_upload').addClass('displaynone');
+        $('.post-title').addClass('displaynone');
+        $('.post-board-wrapper').addClass('displaynone');
+        $('.post-board-text').addClass('displaynone');
+        $('.post-form').removeClass('post-form-expanded');
+        $('.post-submit').hide();
+    }
 
     $('textarea').autosize();
 

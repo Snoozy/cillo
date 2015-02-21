@@ -1,10 +1,10 @@
 package com.cillo.core.web.controllers
 
 import com.cillo.core.web.views.html
-import com.cillo.utils.play.Auth.{AuthAction, _}
+import com.cillo.utils.play.Auth._
 import play.api.mvc._
 
-object LoginController extends Controller {
+object AuthController extends Controller {
 
     def cleanLoginPage = AuthAction { implicit user => implicit request =>
         user match {
@@ -18,6 +18,12 @@ object LoginController extends Controller {
             case Some(_) => Redirect("/")
             case None => processLogin(request)
         }
+    }
+
+    def logout = AuthAction { implicit user => implicit request =>
+        if (user.isDefined)
+            logOutSession(user.get.token.get)
+        Redirect("/").discardingCookies(deleteSessionCookies)
     }
 
     private def processLogin(request: Request[AnyContent])(implicit r: RequestHeader): Result = {

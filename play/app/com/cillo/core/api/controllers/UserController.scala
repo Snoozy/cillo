@@ -1,6 +1,6 @@
 package com.cillo.core.api.controllers
 
-import com.cillo.core.data.db.models.{Comment, Group, Post, User}
+import com.cillo.core.data.db.models.{Comment, Board, Post, User}
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
@@ -10,7 +10,7 @@ import play.api.mvc._
  *      Describing
  *      Describing the currently logged in user
  *      Creating user
- *      Get a users groups
+ *      Get a users boards
  *      Get a users comments
  *      Get a users posts by time
  *      Get a users feed
@@ -99,12 +99,12 @@ object UserController extends Controller {
     }
 
     /**
-     * Get the groups of a user.
+     * Get the boards of a user.
      *
-     * @param user_id user_id of entity to get groups of
-     * @return Json of fully hydrated groups.
+     * @param user_id user_id of entity to get boards of
+     * @return Json of fully hydrated boards.
      */
-    def getGroups(user_id: Int) = AuthAction { implicit user => implicit request =>
+    def getBoards(user_id: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
@@ -114,7 +114,7 @@ object UserController extends Controller {
                 else {
                     val describingUser = userExists.get
                     val json: JsValue = Json.obj(
-                        "groups" -> Group.toJsonSeq(User.getGroups(describingUser.user_id.get), true)
+                        "boards" -> Board.toJsonSeq(User.getBoards(describingUser.user_id.get), true)
                     )
                     Ok(json)
                 }

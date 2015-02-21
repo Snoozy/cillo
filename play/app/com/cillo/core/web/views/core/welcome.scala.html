@@ -1,4 +1,4 @@
-@(groups: Seq[com.cillo.core.data.db.models.Group])(implicit request: RequestHeader)
+@(boards: Seq[com.cillo.core.data.db.models.Board])(implicit request: RequestHeader)
 
 @import com.cillo.core.web.views.html.components
 
@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="@routes.Assets.at("css/welcome.css")"/>
 
     <style>
-        .form-group {
+        .form-board {
             margin-bottom: 6px;
         }
     </style>
@@ -109,15 +109,15 @@
                     </div>
                     <div class="signup-form-wrapper">
                         <form role="form" method="post" action="/register?ref=welcome" style="float: left;width: 255px;">
-                            <div class="form-group">
+                            <div class="form-board">
                                 <input type="text" class="form-control active-ph" name="name" required>
                                 <label placeholder="Full Name" class="active-ph"></label>
                             </div>
-                            <div class="form-group">
+                            <div class="form-board">
                                 <input type="password" class="form-control active-ph" name="password" required>
                                 <label placeholder="Password" class="active-ph"></label>
                             </div>
-                            <div class="form-group">
+                            <div class="form-board">
                                 <input type="email" class="form-control active-ph" name="email" required>
                                 <label placeholder="Email" class="active-ph"></label>
                             </div>
@@ -157,7 +157,7 @@
                 <div class="trending-topics-wrapper">
                     <div class="trending-topics-inner">
                         <div class="trending-topics-header">
-                            <span class="trending-topics-text">Trending Groups</span>
+                            <span class="trending-topics-text">Trending Boards</span>
                         </div>
                         <div class="trending-topics-content">
                             <div class="trending-topics-centering">
@@ -174,7 +174,7 @@
                 <h3>Oh No!</h3>
             </div>
             <div class="modal-body">
-                <p class="ie-error-text">Your version of Internet Explorer is no longer supported! Not only will you not be able to enjoy Melio, but many other sites such as Gmail, Facebook and Twitter do not work well with your version of Internet Explorer. You can:
+                <p class="ie-error-text">Your version of Internet Explorer is no longer supported! Not only will you not be able to enjoy Cillo, but many other sites such as Gmail, Facebook and Twitter do not work well with your version of Internet Explorer. You can:
                 </p>
                 <div class="upgrade ie-upgrade pull-right"><a href="http://windows.microsoft.com/en-us/internet-explorer/downloads/ie-10/worldwide-languages"><img src="//static.cillo.co/ie10.jpeg" style="height: 90px; width: 90px;" height="90" width="90"></a><br>
                     Upgrade to IE 10

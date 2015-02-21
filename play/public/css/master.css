@@ -1,7 +1,7 @@
 .outside-box {
     width: 75%;
     min-width: 950px;
-    background-color: white;
+    background-color: #EEEEEE;
     border-radius: 6px;
     margin: 30px auto;
 }
@@ -48,7 +48,7 @@ body:after {
 }
 
 .gradient-background {
-    background: white;
+    background: #fdfdfd;
     background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#ddd));
     background:-moz-linear-gradient(top,#fff 0,#ddd 100%);
     background: -ms-linear-gradient(top,#fff 0,#ddd 100%);
@@ -109,7 +109,7 @@ li.post {
 }
 
 .ie-error {
-    background: white;
+    background: #EEEEEE;
     border-radius: 6px;
     border: 1px solid black;
     width: 100px;
@@ -272,7 +272,7 @@ body {
     margin-top:10px;
 }
 
-.repost-group-input {
+.repost-board-input {
     margin-left:20px;
 }
 
@@ -381,7 +381,7 @@ a.repost-user-link:hover {
 }
 
 #edit-modal {
-    background-color:white;
+    background-color:#EEEEEE;
     border-radius:15px;
 }
 
@@ -463,7 +463,7 @@ a.repost-user-link:hover {
     background-color:black;
     border: 1px solid #ccc;
     border-radius:15px;
-    color: white;
+    color: #EEEEEE;
     font-size:17px;
     font-weight:bold;
     padding:10px;
@@ -474,10 +474,10 @@ a.repost-user-link:hover {
     padding:4px 8px;
 }
 
-.group-followers {
+.board-followers {
     border:1px solid #ccc;
     border-radius:15px;
-    background-color:white;
+    background-color:#EEEEEE;
 }
 
 .message-content {
@@ -485,7 +485,7 @@ a.repost-user-link:hover {
     width:80%;
     word-wrap:break-word;
 }
-.group {
+.board {
     margin-top:10px;
     display: block;
     min-height: 55px;
@@ -498,7 +498,7 @@ a.repost-user-link:hover {
     width:15px;
 }
 
-.group-following-description {
+.board-following-description {
     word-wrap:break-word;
     margin-left:23%;
 }
@@ -515,51 +515,6 @@ textarea {
     position:absolute;
     top: -4px;
     right:63px;
-    padding:1px 3px 1px 3px;
-    background-color:red;
-    color:white;
-    font-weight:bold;
-    font-size:0.55em;
-    
-    border-radius:30px;
-    box-shadow:1px 1px 1px gray;
-    line-height:13px;
-}
-
-.dropdown-noti-bubble-friend {
-    position:absolute;
-    top: -4px;
-    right:22px;
-    padding:1px 3px 1px 3px;
-    background-color:red;
-    color:white;
-    font-weight:bold;
-    font-size:0.55em;
-    
-    border-radius:30px;
-    box-shadow:1px 1px 1px gray;
-    line-height:13px;
-}
-
-.dropdown-noti-bubble-alerts {
-    position:absolute;
-    top: -4px;
-    right:90px;
-    padding:1px 3px 1px 3px;
-    background-color:red;
-    color:white;
-    font-weight:bold;
-    font-size:0.55em;
-    
-    border-radius:30px;
-    box-shadow:1px 1px 1px gray;
-    line-height:13px;
-}
-
-.noti-bubble {
-    position:absolute;
-    top: -6px;
-    right:-6px;
     padding:1px 3px 1px 3px;
     background-color:red;
     color:white;
@@ -643,7 +598,7 @@ textarea {
     text-align:center;
 }
 
-.no-groups {
+.no-boards {
     text-align:center;
 }
 
@@ -717,7 +672,7 @@ textarea {
     margin-left:7%;
 }
 
-.result-group-name {
+.result-board-name {
     font-size:17px;
 }
 
@@ -785,7 +740,7 @@ strong {
     margin-bottom:0px;
 }
 
-.user-groups {
+.user-boards {
     background-color:white;
     border:1px solid #ccc;
     border-radius:15px;
@@ -819,7 +774,7 @@ strong {
     width: 48px;
 }
 
-.group-avatar .user-avatar{
+.board-avatar .user-avatar{
     float: left;
     margin-right:8px;
     vertical-align:text-top;
@@ -872,7 +827,7 @@ strong {
     margin-bottom:-5px;
 }
 
-.group-description {
+.board-description {
     padding-top:2px;
 }
 
@@ -916,7 +871,8 @@ form.form-search {
     z-index: 9;
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#222222',GradientType=0);
     margin-top:-1px;
-    background: white;
+    background: #fdfdfd;
+    border-color: #e7e7e7;
 }
 
 .main-nav {
@@ -989,13 +945,13 @@ hr {
     float:right;
 }
 
-.groups-container {
+.boards-container {
     border:1px solid #ccc;
     border-radius:8px;
     padding-top:5px;
 }
 
-.group {
+.board {
     vertical-align:middle;
 }
 
@@ -1055,7 +1011,7 @@ a.whitespace:hover {
     white-space:nowrap;
 }
 
-.group-post-submit {
+.board-post-submit {
     position:relative;
     left:39%;
 }
@@ -1082,7 +1038,7 @@ a.whitespace:hover {
 }
 
 strong {
-    color: black;
+    color: #2f2f2f;
 }
 
 strong:hover {
@@ -1092,7 +1048,7 @@ strong:hover {
 .user-actions {
 }
 
-.user-groups {
+.user-boards {
 }
 
 .special2 {
@@ -1109,7 +1065,7 @@ strong:hover {
 .user-post-text {
 }
 
-.group-name {
+.board-name {
     font-size:20px;
     font-weight:bold;
 }
@@ -1182,7 +1138,7 @@ strong:hover {
 }
 
 .post {
-    background: white;
+    background: #fdfdfd;
     margin-bottom: 13px;
     border-radius: 6px;
     box-shadow: 0 1px 5px rgba(0,0,0,.46);
@@ -1427,32 +1383,32 @@ a:hover {
     text-shadow: 0 0 10px #fff;
 }
 
-.group-box {
+.board-box {
     width: 236px;
     background-color: #e9e9e9;
     border-radius: 6px;
     margin: 0px 10px;
 }
 
-.group-inside-box {
+.board-inside-box {
     padding: 5px 15px;
 }
 
-.group-box-header {
+.board-box-header {
     text-align: center;
     font-weight: bold;
     font-size: 16px;
     margin-bottom:5px;
 }
 
-.group-box-descr {
+.board-box-descr {
     margin: 5px 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.group-box-avatar-img {
+.board-box-avatar-img {
     border-radius: 3px;
     height: 206px;
     width: 206px;
@@ -1465,14 +1421,12 @@ a:hover {
     font-size: 19px;
 }
 
-.group-category {
+.board-category {
     border-top: 1px solid #e8e8e8;
     margin-top: 10px;
 }
 
-.group-info {
-    margin-top: 5px;
-    margin-left: 10px;
+.board-info {
     display: inline-block;
 }
 
@@ -1508,6 +1462,7 @@ a:hover {
     position: relative;
     overflow: hidden;
     margin: 10px;
+    margin-left: 0px;
     float: left;
 
 }
@@ -1529,7 +1484,7 @@ a:hover {
     width: 750px;
     margin: auto;
     margin-top: 55px;
-    background: #ffffff;
+    background: #EEEEEE;
     margin-bottom: 35px;
 }
 
@@ -1549,6 +1504,7 @@ a:hover {
 
 .register-form-button {
     text-align: center;
+    margin-top: 10px;
 }
 
 .post-title {
@@ -1558,7 +1514,7 @@ a:hover {
     border-bottom-right-radius: 0;
 }
 
-.post-group-text {
+.post-board-text {
     font-weight: bold;
     font-size: 16px;
     float: right;
@@ -1566,12 +1522,12 @@ a:hover {
     margin-right: 5px;
 }
 
-.post-group {
+.post-board {
     float: right;
     width: 50%;
 }
 
-.post-group-wrapper {
+.post-board-wrapper {
     margin-top: 10px;
 }
 
@@ -1682,7 +1638,7 @@ body {
 
 .navbar-user-wrapper {
     float: right;
-    margin-right: 70px;
+    margin-right: 8px;
     margin-top: 6px;
     margin-left: 20px;
 }
@@ -1705,7 +1661,7 @@ body {
 .navbar-user-info-text {
     font-weight: 500;
     font-size: 16px;
-    color: #000000;
+    color: #2f2f2f;
 }
 
 .navbar-user-wrapper:hover {
@@ -1734,14 +1690,14 @@ body {
 
 .navbar-button-text {
     font-weight: 600;
-    color: #000000;
+    color: #2f2f2f;
 }
 
 .navbar-button-div:hover .navbar-button-text {
     color: #1065C4;
 }
 
-.group:hover .group-name-text {
+.board:hover .board-name-text {
     color: #1065C4;
 }
 
@@ -1763,4 +1719,153 @@ body {
 .p-action-anchor:focus {
     outline: none;
     text-decoration: none;
+}
+
+.first-post-avatar-wrapper {
+    float: left;
+}
+
+.navbar-settings-wrapper {
+    float: right;
+    display: inline-block;
+    padding: 8px;
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+.dropdown-menu>li>a:hover {
+    background-color: #3876b4;
+    color: #ffffff;
+}
+
+.first-post-clear {
+    clear: both;
+}
+
+.main-row {
+    padding: 20px;
+}
+
+.board-info-container {
+    background-color: #fdfdfd;
+    padding: 15px;
+    border-radius: 7px;
+    color: #2f2f2f;
+    width: 100%;
+}
+
+.board-avatar-img {
+    height: 200px;
+    width: 200px;
+    border-radius: 4px;
+}
+
+.board-name-text {
+    color: #2f2f2f;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.board-avatar {
+    float: left;
+    vertical-align: top;
+    margin-left: -210px;
+}
+
+.board-data-container {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 210px;
+}
+
+.navbar-default {
+    background-color: #fdfdfd;
+}
+
+.board-descr-container {
+    display: inline-block;
+    max-width: 620px;
+}
+
+.board-descr-text {
+    font-size: 16px;
+}
+
+.board-follow-btn-container {
+    float: right;
+
+}
+
+.btn-text {
+    font-size: 16px;
+}
+
+.board-follow-btn {
+    height: 36px;
+    font-size: 18px;
+    color: #fdfdfd;
+    font-weight: 600;
+    text-shadow: 0 -1px rgba(34,25,25,0.5);
+}
+
+.notfollowing .board-follow-btn {
+}
+
+.following .board-follow-btn {
+    background-color: #019ad2;
+    border-color: #057ed0;
+}
+
+.following .board-follow-btn:focus {
+    color: #fdfdfd;
+}
+
+.following .board-follow-btn:hover .following-text {
+    display: none;
+}
+
+.notfollowing .follow-text {
+    display: block;
+    color: #2f2f2f;
+}
+
+.notfollowing .following-text {
+    display: none;
+}
+
+.notfollowing .unfollow-text {
+    display: none;
+}
+
+.following .follow-text {
+    display: none;
+}
+
+.following .board-follow-btn:hover .unfollow-text {
+    display: block;
+}
+
+.following .board-follow-btn:hover {
+    background-color: #be1931;
+    border-color: #be1931;
+    color: #fdfdfd;
+}
+
+.following .unfollow-text {
+    display: none;
+}
+
+.board-posts-container {
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.board-related-boards-container {
+    display: inline-block;
+    margin-top: 20px;
+    vertical-align: top;
+    width: 250px;
+    border-radius: 8px;
+    padding-top: 5px;
+    background-color: #fdfdfd;
 }

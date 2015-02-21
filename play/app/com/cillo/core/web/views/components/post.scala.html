@@ -1,13 +1,25 @@
-@(post: com.cillo.core.data.db.models.Post, user: com.cillo.core.data.db.models.User)
+@(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User])
 
-@import com.cillo.core.data.db.models.{CommentTree, Group, Post, PostVote, User}
+@import com.cillo.core.data.db.models.{CommentTree, Board, Post, PostVote, User}
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
 
 @poster = @{User.find(post.user_id).get}
-@group = @{Group.find(post.group_id).get}
-@vote = @{PostVote.findByPostAndUser(post.post_id.get, user.user_id.get)}
-@reposted = @{Post.userHasReposted(user.user_id.get, post.post_id.get)}
+@board = @{Board.find(post.board_id).get}
+@vote = @{
+    if (user.isDefined) {
+        PostVote.findByPostAndUser(post.post_id.get, user.get.user_id.get)
+    } else {
+        None
+    }
+}
+@reposted = @{
+    if (user.isDefined) {
+        Post.userHasReposted(user.get.user_id.get, post.post_id.get)
+    } else {
+        false
+    }
+}
 @comments = @{CommentTree.getPostCommentsTop(post.post_id.get)}
 
 <li class="post" data-item-id="@post.post_id.get">
@@ -25,7 +37,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="icon-drop-arrow"></i>
                     </a>
-                    <ul class="dropdown-menu post-dropdown">
+                    <ul class="dropdown-menu post-dropdown pull-right">
                         @*<li>
                             <a class="post-edit" href="#">
                                 <i class="icon-edit"></i>
@@ -34,8 +46,8 @@
                         </li>*@
                         <li>
                             <a class="post-delete" href="#">
-                                <i class="icon-trash"></i>
-                                Delete
+                                <span class="glyphicon glyphicon-trash"></span>
+                                 Delete
                             </a>
                         </li>
                     </ul>
@@ -48,13 +60,13 @@
                     </label>
                     on
                     <label class="u-info-wrapper">
-                        <a href="/@group.name" >
-                            <strong class="hover-blue">@group.name</strong>
+                        <a href="/@board.name" >
+                            <strong class="hover-blue">@board.name</strong>
                         </a>
                     </label>
                     <div class="timestamp-wrapper">
                         ·
-                        <a class="post-timestamp" href="/@group.name/posts/@post.post_id.get">
+                        <a class="post-timestamp" href="/@board.name/posts/@post.post_id.get">
                             @Etc.convertEpochToTimestamp(post.time.longValue)
                         </a>
                     </div>
@@ -77,15 +89,15 @@
             <div class="post-actions">
                 <span class="post-like-count">@post.votes</span>
                 <span class="p-action like">
-                    <a class="p-action-anchor action-link-like @if(vote.isDefined && vote.get.value == 1) {liked}" href="#" style="margin-right : 0 px ;">
-                        <i class="icon-upvote" style="margin-right : - 5 px ;"> </i>
+                    <a class="p-action-anchor action-link-like @if(vote.isDefined && vote.get.value == 1) {liked}" href="#" style="margin-right:0px;">
+                        <i class="icon-upvote" style="margin-right:-5px;"></i>
                         <span class="color-blue like-text">Upvote</span>
                     </a>
                 </span>
 
                 <span class="p-action dislike">
                     <span style="color:#ccc"> | </span>
-                    <a class="p-action-anchor action-link-dislike @if(vote.isDefined && vote.get.value == -1) {disliked}" href="#" style="margin-left : - 1 px ; margin-right : - 3 px ;">
+                    <a class="p-action-anchor action-link-dislike @if(vote.isDefined && vote.get.value == -1) {disliked}" href="#" style="margin-left:-1px;margin-right:-3px;">
                         <i class="icon-downvote"></i>
                     </a>
                 </span>
@@ -97,13 +109,13 @@
                         <span class="color-blue comment-text">Comment</span>
                     </a>
                 </span>
-                @if(post.user_id != user.user_id.get) {
+                @if(user.isDefined && (post.user_id != user.get.user_id.get)) {
                     <span>
                         @if(reposted) {
                             <span class="p-action repost">
                                 <span class="bullet"> · </span>
                                 <a href="#" class="p-action-anchor action-link-reposted">
-                                    <i class="icon-refresh icon-green" style="margin-right : - 5 px ;"></i>
+                                    <i class="icon-refresh icon-green" style="margin-right:-5px;"></i>
                                     <span class="color-green">Reposted</span>
                                 </a>
                             </span>
@@ -111,7 +123,7 @@
                             <span class="p-action repost">
                                 <span class="bullet"> · </span>
                                 <a href="#" class="p-action-anchor action-link-repost">
-                                    <i class="icon-refresh" style="margin-right : - 5 px ;"></i>
+                                    <i class="icon-refresh" style="margin-right:-5px;"></i>
                                     <span class="color-blue repost-text">Repost</span>
                                 </a>
                             </span>

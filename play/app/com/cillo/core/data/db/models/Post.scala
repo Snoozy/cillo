@@ -13,7 +13,7 @@ case class Post (
     user_id: Int,
     title: Option[String],
     data: String,
-    group_id: Int,
+    board_id: Int,
     repost: Int,
     votes: Int,
     comment_count: Int,
@@ -31,16 +31,16 @@ object Post {
             get[Int]("user_id") ~
             get[Option[String]]("title") ~
             get[String]("data") ~
-            get[Int]("group_id") ~
+            get[Int]("board_id") ~
             get[Int]("repost") ~
             get[Int]("votes") ~
             get[Int]("comment_count") ~
             get[Long]("time") ~
             get[Int]("post_type") ~
             get[String]("media") map {
-            case post_id ~ user_id ~ title ~ data ~ group_id ~ repost ~ votes ~ comment_count ~ time ~ post_type ~ media =>
+            case post_id ~ user_id ~ title ~ data ~ board_id ~ repost ~ votes ~ comment_count ~ time ~ post_type ~ media =>
                 val media_ids = media.split(",").filter(_ != "").map(_.toInt)
-                Post(post_id, user_id, title, data, group_id, repost, votes, comment_count, time, post_type, media_ids)
+                Post(post_id, user_id, title, data, board_id, repost, votes, comment_count, time, post_type, media_ids)
         }
     }
 
@@ -50,7 +50,7 @@ object Post {
         }
     }
 
-    def createSimplePost(user_id: Int, title: Option[String], data: String, group_id: Int, repost: Boolean): Option[Long] = {
+    def createSimplePost(user_id: Int, title: Option[String], data: String, board_id: Int, repost: Boolean): Option[Long] = {
         // checking that data is a number if post is a repost
         if (repost && !data.forall(Character.isDigit))
             return None
@@ -64,21 +64,27 @@ object Post {
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO post (user_id, title, data, group_id, repost, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
-                " {group_id}, {repost}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> title, 'data -> data,
-                    'group_id -> group_id, 'repost -> (repost:Int), 'time -> time).executeInsert()
+            SQL("INSERT INTO post (user_id, title, data, board_id, repost, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
+                " {board_id}, {repost}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> title, 'data -> data,
+                    'board_id -> board_id, 'repost -> (repost:Int), 'time -> time).executeInsert()
         }
     }
 
-    def createMediaPost(user_id: Int, title: Option[String], data: String, group_id: Int, media_ids: Array[Int]): Option[Long] = {
+    def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Array[Int]): Option[Long] = {
         val time = System.currentTimeMillis()
 
         val media_string = media_ids.mkString(",")
 
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO post (user_id, title, data, group_id, repost, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
-                " {group_id}, {repost}, 0, {time}, 0, 1, {media})").on('user_id -> user_id, 'title -> title, 'data -> data,
-                    'group_id -> group_id, 'repost -> false, 'time -> time, 'media -> media_string).executeInsert()
+            SQL("INSERT INTO post (user_id, title, data, board_id, repost, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
+                " {board_id}, {repost}, 0, {time}, 0, 1, {media})").on('user_id -> user_id, 'title -> title, 'data -> data,
+                    'board_id -> board_id, 'repost -> false, 'time -> time, 'media -> media_string).executeInsert()
+        }
+    }
+
+    def deletePost(post_id: Int): Boolean = {
+        DB.withConnection { implicit connection =>
+            SQL("DELETE FROM post WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
         }
     }
 
@@ -110,18 +116,18 @@ object Post {
         if (post.repost:Boolean) {
             val reposted_post = Post.find(post.data.toInt)
             if (reposted_post.isDefined) {
-                val group = Group.find(reposted_post.get.group_id)
+                val board = Board.find(reposted_post.get.board_id)
                 val poster = User.find(reposted_post.get.user_id)
                 val reposter = User.find(post.user_id)
-                val repost_group = Group.find(post.group_id)
-                if (group.isDefined && poster.isDefined && reposter.isDefined && repost_group.isDefined) {
+                val repost_board = Board.find(post.board_id)
+                if (board.isDefined && poster.isDefined && reposter.isDefined && repost_board.isDefined) {
                     newPost = newPost.as[JsObject] +
                         ("repost_user" -> User.toJson(reposter.get, self = user)) +
-                        ("repost_group" -> Group.toJson(repost_group.get)) +
+                        ("repost_board" -> Board.toJson(repost_board.get)) +
                         ("repost_id" -> Json.toJson(post.data.toInt)) +
                         ("content" -> Json.toJson(reposted_post.get.data)) +
                         ("title" -> Json.toJson(reposted_post.get.title)) +
-                        ("group" -> Group.toJson(group.get)) +
+                        ("board" -> Board.toJson(board.get)) +
                         ("user" -> User.toJson(poster.get, self = user)) +
                         ("time" -> Json.toJson(reposted_post.get.time)) +
                         ("votes" -> Json.toJson(reposted_post.get.votes)) +
@@ -129,13 +135,13 @@ object Post {
                 }
             }
         } else {
-            val group = Group.find(post.group_id)
+            val board = Board.find(post.board_id)
             val poster = User.find(post.user_id)
-            if (group.isDefined && poster.isDefined) {
+            if (board.isDefined && poster.isDefined) {
                 newPost = newPost.as[JsObject] +
                     ("content" -> Json.toJson(post.data)) +
                     ("title" -> Json.toJson(post.title)) +
-                    ("group" -> Group.toJson(group.get)) +
+                    ("board" -> Board.toJson(board.get)) +
                     ("user" -> User.toJson(poster.get, self = user)) +
                     ("time" -> Json.toJson(post.time)) +
                     ("votes" -> Json.toJson(post.votes)) +

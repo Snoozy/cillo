@@ -248,7 +248,7 @@ a.login-link:hover {
     */
 }
 
-.trending-group-avatar {
+.trending-board-avatar {
     width: 256px;
     height: 256px;
     /*position: absolute;
@@ -261,7 +261,7 @@ a.login-link:hover {
     overflow: auto;
 }
 
-.trending-group-wrapper {
+.trending-board-wrapper {
     display: block;
     float: left;
     width: 256px;
@@ -273,30 +273,30 @@ a.login-link:hover {
 .trending-topics-header {
 }
 
-.trending-group-name {
+.trending-board-name {
     font-weight: bold;
     font-color: black;
     font-size: 15px;
 }
 
-.trending-group-content {
+.trending-board-content {
     position: relative;
 }
 
-.trending-group-header {
+.trending-board-header {
     text-align: left;
 }
 
-.trending-group-descr {
+.trending-board-descr {
     text-align: left;
 }
 
-.trending-group-content {
+.trending-board-content {
     background: white;
 
 }
 
-.trending-group-bottom {
+.trending-board-bottom {
     height: 60px;
     padding: 15px;
     font: normal 13px Roboto,arial,sans-serif;

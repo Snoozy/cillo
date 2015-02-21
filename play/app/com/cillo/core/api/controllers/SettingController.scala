@@ -30,25 +30,25 @@ object SettingController extends Controller{
         }
     }
 
-    def updateGroup(group_id: Int) = AuthAction { implicit user => implicit request =>
+    def updateBoard(board_id: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User must be authenticated."))
             case Some(_) =>
-                val group = Group.find(group_id)
-                if (group.isDefined && group.get.creator_id == user.get.user_id.get) {
+                val board = Board.find(board_id)
+                if (board.isDefined && board.get.creator_id == user.get.user_id.get) {
                     val body: AnyContent = request.body
                     body.asFormUrlEncoded.map { form =>
-                        val descr = form.get("description").map(_.head).getOrElse(group.get.description)
+                        val descr = form.get("description").map(_.head).getOrElse(board.get.description)
                         var pic = 1
                         try {
-                            pic = form.get("picture").map(_.head).getOrElse(group.get.photo_id + "").toInt
+                            pic = form.get("picture").map(_.head).getOrElse(board.get.photo_id + "").toInt
                         } catch {
                             case e: java.lang.NumberFormatException =>
                         }
-                        if (Group.update(group_id, descr, pic) > 0) {
-                            Ok(Group.toJson(Group.find(group_id).get, true))
+                        if (Board.update(board_id, descr, pic) > 0) {
+                            Ok(Board.toJson(Board.find(board_id).get, true))
                         } else {
-                            BadRequest(Json.obj("error" -> "Error updating group information."))
+                            BadRequest(Json.obj("error" -> "Error updating board information."))
                         }
                     }.getOrElse(BadRequest(Json.obj("error" -> "Request content type invalid.")))
                 } else {

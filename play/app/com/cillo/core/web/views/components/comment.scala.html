@@ -1,9 +1,15 @@
-@(comment: com.cillo.core.data.db.models.Comment, user: com.cillo.core.data.db.models.User)
+@(comment: com.cillo.core.data.db.models.Comment, user: Option[com.cillo.core.data.db.models.User])
 
-@import com.cillo.core.data.db.models.{CommentVote, User}
+@import com.cillo.core.data.db.models._
 @import com.cillo.utils.Etc
 
-@vote = @{CommentVote.findByCommentAndUser(comment.comment_id.get, user.user_id.get)}
+@vote = @{
+    if (user.isDefined) {
+        CommentVote.findByCommentAndUser(comment.comment_id.get, user.get.user_id.get)
+    } else {
+        None
+    }
+}
 @commenter = @{User.find(comment.user_id).get}
 
 <div class="comment" data-comment-id="@comment.comment_id.get" data-post-id="@comment.post_id">

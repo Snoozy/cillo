@@ -89,12 +89,12 @@ object User {
     def getFeed(user_id: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         //TODO user timeline
         DB.withConnection { implicit connection =>
-            val group_ids = User.getGroupIDs(user_id)
-            if (group_ids.isEmpty)
+            val board_ids = User.getBoardIDs(user_id)
+            if (board_ids.isEmpty)
                 Seq()
             else {
-                val posts = SQL("SELECT * FROM post WHERE group_id IN ({group_ids}) ORDER BY post_id DESC LIMIT {limit}")
-                    .on('group_ids -> group_ids, 'limit -> limit).as(postParser *)
+                val posts = SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY post_id DESC LIMIT {limit}")
+                    .on('board_ids -> board_ids, 'limit -> limit).as(postParser *)
                 posts
             }
         }
@@ -106,11 +106,11 @@ object User {
         }
     }
 
-    def userIsFollowing(user_id: Int, group_id: Int): Boolean = {
+    def userIsFollowing(user_id: Int, board_id: Int): Boolean = {
         DB.withConnection { implicit connection =>
-            val count = SQL("SELECT COUNT(*) FROM user_to_group WHERE user_id = {user_id} AND group_id = {group_id}")
-                .on('user_id -> user_id, 'group_id -> group_id).as(scalar[Int].single)
-            count > 0
+            val count = SQL("SELECT COUNT(*) FROM user_to_board WHERE user_id = {user_id} AND board_id = {board_id}")
+                .on('user_id -> user_id, 'board_id -> board_id).as(scalar[Long].single)
+            count > 0L
         }
     }
 
@@ -124,19 +124,19 @@ object User {
         }
     }
 
-    def getGroupIDs(user_id: Int): Seq[Int] = {
+    def getBoardIDs(user_id: Int): Seq[Int] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT group_id FROM user_to_group WHERE user_id = {id}").on('id -> user_id).as(int("group_id") *)
+            SQL("SELECT board_id FROM user_to_board WHERE user_id = {id}").on('id -> user_id).as(int("board_id") *)
         }
     }
 
-    def getGroups(user_id: Int): Seq[Group] = {
+    def getBoards(user_id: Int): Seq[Board] = {
         DB.withConnection { implicit connection =>
-            val groupIDs = User.getGroupIDs(user_id)
-            if (groupIDs.isEmpty)
+            val boardIDs = User.getBoardIDs(user_id)
+            if (boardIDs.isEmpty)
                 return List()
             else
-                SQL("SELECT * FROM `group` WHERE group_id IN ({group_ids})").on('group_ids -> groupIDs).as(Group.groupParser *)
+                SQL("SELECT * FROM `board` WHERE board_id IN ({board_ids})").on('board_ids -> boardIDs).as(Board.boardParser *)
         }
     }
 
@@ -161,7 +161,7 @@ object User {
                 ("photo" -> Json.toJson(user.photo)) +
                 ("bio" -> Json.toJson(user.bio)) +
                 ("email" -> Json.toJson(user.email)) +
-                ("group_count" -> Json.toJson(User.getGroupIDs(user.user_id.get).size))
+                ("board_count" -> Json.toJson(User.getBoardIDs(user.user_id.get).size))
         else
             newJson = newJson.as[JsObject] +
                 ("name" -> Json.toJson(user.name)) +
@@ -170,7 +170,7 @@ object User {
                 ("reputation" -> Json.toJson(user.reputation)) +
                 ("photo" -> Json.toJson(user.photo)) +
                 ("bio" -> Json.toJson(user.bio)) +
-                ("group_count" -> Json.toJson(User.getGroupIDs(user.user_id.get).size))
+                ("board_count" -> Json.toJson(User.getBoardIDs(user.user_id.get).size))
         if (self.isDefined && user.user_id.get == self.get.user_id.get)
             newJson = newJson.as[JsObject] + ("self" -> Json.toJson(true))
         else

@@ -1,0 +1,41 @@
+@(user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board], boardPage: Boolean = false)
+
+<li class="post first-post">
+    <div class="posting-wrapper" style="margin-left:48px;">
+        <div class="first-post-avatar-wrapper">
+            <img class="post-avatar" src="@user.photo" style="margin-left:-44px;width:34px;height:34px;margin-top:0px;vertical-align:baseline;">
+        </div>
+        <input class="post-title form-control displaynone" placeholder="Title (optional)" type="text">
+        <textarea data-expanded-height="50" class="post-form form-control" name="post-form" style="width:100%;height:34px;" placeholder="Write something..."></textarea>
+        <div class="picture_upload btn btn-default displaynone" style="padding:4px 10px;">
+            <span class="glyphicon glyphicon-camera"></span>
+            <input type="file" name="picture upload" id="picture_file_upload" class="file-input" tabindex="-1">
+        </div>
+        <button class="btn btn-primary post-submit displaynone" style="margin-left:13%;margin-top:8px;">Post</button>
+        <div class="post-board-wrapper displaynone">
+            <input class="post-board form-control" placeholder="Board" type="text" @if(boardPage){value="@boards.head.name" disabled}>
+            <span class="post-board-text displaynone">on Board:</span>
+        </div>
+        <div class="displaynone first-post-clear"></div>
+    </div>
+    @if(!boardPage) {
+
+        <script type="text/javascript" charset="utf-8">
+
+            $(document).ready(function() {
+
+                var boards = [@if(boards.nonEmpty){"@boards.head.name"@for(g <- boards.tail){,"@g.name"}}];
+
+                $('.post-board').autocomplete({
+                    minLength: 0,
+                    source: boards
+                });
+
+                $('.post-board').focus(function() {
+                    $('.post-board').autocomplete("search", "");
+                });
+
+            });
+        </script>
+    }
+</li>

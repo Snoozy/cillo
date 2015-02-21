@@ -1,4 +1,4 @@
-@(user: com.cillo.core.data.db.models.User, error: String = "", name: String = "", descr: String ="")(implicit request: RequestHeader)
+@(user: com.cillo.core.data.db.models.User, error: String = "", name: String = "", descr: String ="")
 
 @import com.cillo.core.web.views.html.components
 
@@ -17,7 +17,7 @@
     $('.btn.btn-success').addClass('disabled');
     } else {
     var alias_text = encodeURIComponent($('.name-input').val()).replace(/[%][2][0]/g, '+');
-    $('.name-help').html('<span class="help-block name-help">Your group\'s URL will be: https://cillo.co/<span class="name-url">' + alias_text + '</span></span>')
+    $('.name-help').html('<span class="help-block name-help">Your board\'s URL will be: https://cillo.co/<span class="name-url">' + alias_text + '</span></span>')
     $('.btn.btn-success').removeClass('disabled');
     }
     });
@@ -33,14 +33,14 @@
 
     $('.name-input').popover({
     title: 'Group Name',
-    content: 'This will uniquely identify your group, and will be used as your groups URL. No spaces allowed.',
+    content: 'This will uniquely identify your board, and will be used as your groups URL. No spaces allowed.',
     trigger: 'focus',
     placement: 'left'
     });
 
     $('.description-input').popover({
     title: 'Group Description',
-    content: 'Describe what your group is about and what you wish everyone who joins to see.',
+    content: 'Describe what your board is about and what you wish everyone who joins to see.',
     trigger: 'focus',
     placement: 'left'
     });
@@ -64,12 +64,12 @@
                         <div class="error-message">@error</div>
                     }
                     <form role="form" method="post" action="/boards/create">
-                        <div class="form-group">
+                        <div class="form-board">
                             <input type="text" class="form-control active-ph" id="nameInput" name="name" value="@name" required>
                             <label placeholder="Board Name" class="active-ph"></label>
                             <p class="help-block">Unique name that identifies your board.</p>
                         </div>
-                        <div class="form-group">
+                        <div class="form-board">
                             <input type="text" class="form-control active-ph" id="descrInput" name="description" value="@descr" required>
                             <label placeholder="Board Description" class="active-ph"></label>
                             <p class="help-block">Describe your board.</p>
