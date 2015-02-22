@@ -906,8 +906,6 @@ a:hover {
 
 a:focus {
     color:#0084B4;
-    outline:1px dotted #666;
-    border:0;
 }
 
 a {

@@ -27,9 +27,9 @@ object Etc {
                 (time / 60000L) + "m"
             case x if 3600000L <= x && x < 86399999L =>
                 (time / 3600000L) + "h"
-            case x if x <= 86400000L && x < 31535999999L =>
+            case x if x >= 86400000L && x < 31535999999L =>
                 (time / 86400000L) + "d"
-            case x if x <= 31536000000L && x < Long.MaxValue =>
+            case x if x >= 31536000000L && x < Long.MaxValue =>
                 (time / 31536000000L) + "y"
         }
     }
