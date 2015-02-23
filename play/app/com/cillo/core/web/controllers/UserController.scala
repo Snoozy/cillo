@@ -12,7 +12,8 @@ object UserController extends Controller {
         if (describeUser.isDefined) {
             val posts = User.getPosts(describeUser.get.user_id.get)
             val comments = User.getComments(describeUser.get.user_id.get)
-            Ok(core.user(describeUser.get, user, posts, comments))
+            val boards = User.getBoards(describeUser.get.user_id.get)
+            Ok(core.user(describeUser.get, user, posts, comments, boards))
         } else {
             NotFound("User does not exist.")
         }

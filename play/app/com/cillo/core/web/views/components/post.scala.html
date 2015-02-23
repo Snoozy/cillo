@@ -60,8 +60,8 @@
                     </label>
                     on
                     <label class="u-info-wrapper">
-                        <a href="/@board.name" >
-                            <strong class="hover-blue">@board.name</strong>
+                        <a href="/@board.name">
+                            <strong class="hover-blue board-name-text">@board.name</strong>
                         </a>
                     </label>
                     <div class="timestamp-wrapper">
@@ -74,6 +74,13 @@
             </div>
 
             <div class="post-content">
+                @if(post.title.isDefined) {
+                    <div class="post-text-title">
+                        <span class="post-text-title-text">
+                            @post.title.get
+                        </span>
+                    </div>
+                }
                 @if(post.post_type == 0) {
                     <div class="post-text">
                         @post.data

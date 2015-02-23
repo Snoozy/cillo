@@ -796,8 +796,7 @@ strong {
 }
 
 .post-actions {
-    margin:1px;
-    font-family:arial,sans-serif;
+    margin: 10px 1px 1px;
 }
 
 .comment-input {
@@ -839,8 +838,7 @@ strong {
     font-size:110%;
     word-wrap:break-word;
     width:100%;
-    min-height: 40px;
-    margin-bottom: -3px;
+    min-height: 24px;
 }
 
 form.form-search {
@@ -861,13 +859,13 @@ form.form-search {
 }
 
 .masthead {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.22);
     min-width: 900px;
     position:fixed;
     top: 0px;
     left:0px;
     right:0px;
     margin-bottom:-5px;
-    box-shadow: 0 0px 1px 1px rgba(0,0,0,.25);
     z-index: 9;
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#222222',GradientType=0);
     margin-top:-1px;
@@ -895,7 +893,7 @@ a.masthead-nav {
     line-height:150%;
 }
 
-masthead-nav home {
+.masthead-nav .home {
     margin-right: 5px;
 }
 
@@ -945,7 +943,7 @@ hr {
 
 .boards-container {
     border:1px solid #ccc;
-    border-radius:8px;
+    border-radius: 4px;
     padding-top:5px;
 }
 
@@ -1138,7 +1136,7 @@ strong:hover {
 .post {
     background: #fdfdfd;
     margin-bottom: 13px;
-    border-radius: 6px;
+    border-radius: 4px;
     box-shadow: 0 1px 5px rgba(0,0,0,.46);
     margin-left: 0px;
 }
@@ -1747,33 +1745,32 @@ body {
 .board-info-container {
     background-color: #fdfdfd;
     padding: 15px;
-    border-radius: 7px;
+    border-radius: 4px;
     color: #2f2f2f;
     width: 100%;
 }
 
 .board-avatar-img {
-    height: 200px;
-    width: 200px;
+    height: 148px;
+    width: 148px;
     border-radius: 4px;
 }
 
 .board-name-text {
     color: #2f2f2f;
-    font-size: 22px;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .board-avatar {
     float: left;
     vertical-align: top;
-    margin-left: -210px;
+    margin-left: -160px;
 }
 
 .board-data-container {
     display: inline-block;
     vertical-align: top;
-    margin-left: 210px;
+    margin-left: 160px;
 }
 
 .navbar-default {
@@ -1863,7 +1860,28 @@ body {
     margin-top: 20px;
     vertical-align: top;
     width: 250px;
-    border-radius: 8px;
+    border-radius: 4px;
     padding-top: 5px;
     background-color: #fdfdfd;
+}
+
+.box-shadow-apply {
+    box-shadow: 0 1px 3px rgba(0,0,0,.46);
+}
+
+.post-text-title {
+    margin-bottom: 5px;
+}
+
+.post-text-title-text {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.user-name-text, .board-name-text {
+    font-weight: 500;
+}
+
+strong {
+    font-weight: 600;
 }

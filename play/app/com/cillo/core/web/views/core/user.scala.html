@@ -1,11 +1,87 @@
-@(user: com.cillo.core.data.db.models.User, visitor: Option[com.cillo.core.data.db.models.User], posts: Seq[com.cillo.core.data.db.models.Post], comments: Seq[com.cillo.core.data.db.models.Comment])
+@(user: com.cillo.core.data.db.models.User, visitor: Option[com.cillo.core.data.db.models.User], posts: Seq[com.cillo.core.data.db.models.Post], comments: Seq[com.cillo.core.data.db.models.Comment], boards: Seq[com.cillo.core.data.db.models.Board])
 
 @import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.controllers.RemoteURLController
+@import com.cillo.utils.Etc
 
 @components.base(user.name + " | Cillo") {
 
 } {
     <body class="main-background">
+        <div class="page" style="margin:0px;">
+            @components.masthead(visitor, searchBar = true)
+            <div id="content">
+                <div class="container-fluid inner-background" style="padding-top:35px;border-radius:10px;margin-top:5px;margin-left:auto;margin-right:auto;width:1000px;border-top-left-radius:0px;border-top-right-radius:0px;padding-left:0px;padding-right:0px;">
+                    <div class="main-row" style="padding: 20px;">
+                        <div class="board-info-container box-shadow-apply">
+                            <div class="board-info">
+                                <div class="board-data-container">
+                                    <div class="board-avatar">
+                                        <img src="@user.photo" class="board-avatar-img">
+                                    </div>
+                                    <div class="board-name-container">
+                                        <span class="board-name-text">
+                                            @user.name
+                                        </span>
+                                            @@@user.username
+                                    </div>
+                                    <div class="board-descr-container">
+                                        <span class="board-descr-text">
+                                            @if(user.bio.length > 0) {
+                                                user.bio
+                                            } else {
+                                                User does not have a bio.
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="board-posts-container">
+                            <div class="posts-container" style="display:inline-block;margin-right:10px;width:696px;padding:0px;">
+                                <div class="posts-wrapper" style="text-align:left;">
+                                    <ol class="posts" style="margin:0;list-style-type:none;">
+                                        @for(post <- posts) {
+                                            @components.post(post, visitor)
+                                        }
 
+                                    </ol>
+                                    <div id="neverending_spinner"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="board-related-boards-container box-shadow-apply">
+                            <b style="margin-left:37%;font-size:16px;">Following</b>
+                            <br/>
+                            @for(b <- boards) {
+                                <div class="board" style="cursor:pointer;" onclick="window.location.href = '/@b.name'">
+                                    <a href="/@b.name" style="display:inline;">
+                                        <img class="avatar" style="margin-left:-52px;margin-right:0px;" alt="Board Picture" src="@b.photo">
+                                    </a>
+                                    <div class="board-desc-wrapper">
+                                        <span>
+                                            <a href="/@b.name">
+                                                <strong style="font-size:16px;" class="board-name-text">@b.name</strong>
+                                            </a>
+                                        </span>
+                                        <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
+                                        @Etc.ellipsize(b.description, 53)
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @components.repost_modal()
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
+        <script type="text/javascript" src="@RemoteURLController.url("js/core.bundle.js")"></script>
     </body>
 }
