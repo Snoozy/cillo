@@ -1,14 +1,14 @@
 @(user: Option[com.cillo.core.data.db.models.User] = None, searchBar: Boolean = false, fixed: Boolean = true, buttons: Boolean = true)
 
 <div class="masthead" style="@if(!fixed){position:relative;}">
-    <nav class="navbar navbar-default" style="margin-bottom:0px;min-height:45px;width:1000px;margin:auto;border:none;">
+    <nav class="navbar navbar-default" style="margin-bottom:0px;min-height:45px;width:960px;margin:auto;border:none;">
         <div class="navbar-header">
             <a class="navbar-brand navbar-logo" style="position:absolute;left:50%;margin-left:-61px;" href="/">
                 <img src="//static.cillo.co/cillo.png" width="105px" height="32px">
             </a>
         </div>
         @if(searchBar) {
-            <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:6px;padding-left:18px;">
+            <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:6px;padding-left:0px;">
                 <div class="form-group input-group">
                     <form class="navbar-search">
                         <input type="text" class="form-control search-query" placeholder="Search" style="height:34px;padding:6px 10px;width:200px;">

@@ -1,4 +1,4 @@
-@(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User])
+@(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User], expanded: Boolean = false)
 
 @import com.cillo.core.data.db.models.{CommentTree, Board, Post, PostVote, User}
 @import com.cillo.core.web.views.html.components
@@ -20,7 +20,9 @@
         false
     }
 }
-@comments = @{CommentTree.getPostCommentsTop(post.post_id.get)}
+@comments = @{
+    CommentTree.getPostCommentsTop(post.post_id.get)
+}
 
 <li class="post" data-item-id="@post.post_id.get">
     <div class="post-wrapper">
@@ -111,7 +113,7 @@
 
                 <span class="p-action comment">
                     <span class="bullet"> · </span>
-                    <a class="p-action-anchor action-link-comment" href="#" style="">
+                    <a class="p-action-anchor action-link-comment" href="#">
                         <i class="icon-comments-alt" style="margin-right:-5px;"></i>
                         <span class="color-blue comment-text">Comment</span>
                     </a>
@@ -139,14 +141,23 @@
                 }
             </div>
             @if(comments.rootComments.nonEmpty) {
-                <hr class="hr-no-margin" style="color:black;"/>
-
-                <div class="comments-container">
-                    @for(comment <- Post.getRootComments(post.post_id.get)) {
-                        @components.comment(comment, user)
-                    }
+                <hr class="hr-no-margin comment-hr"/>
+            }
+            @if(user.isDefined) {
+                <div class="comment-form displaynone">
+                    <img class="comment-avatar" src="@user.get.photo">
+                    <form class="comment-input">
+                        <textarea class="form-control comment-val input-xlarge" data-expanded-height="80" placeholder="Write a comment..."></textarea>
+                        <input type="submit" class="btn btn-primary comment-submit-btn">
+                        <div class="clear"></div>
+                    </form>
                 </div>
             }
+            <div class="comments-container">
+               @for(comment <- comments.rootComments) {
+                    @components.comment(comment, user, expanded = expanded)
+                }
+            </div>
         </div>
     </div>
 </li>

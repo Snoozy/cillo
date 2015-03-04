@@ -23,12 +23,12 @@ if [ -e "$package_path" ]; then
         scp "$package_path" ubuntu@${server}:/home/ubuntu/cillo-api.zip
         ssh ubuntu@${server} bash -c "'
             unzip cillo-api.zip
-            chmod 755 ./${filename}/bin/cillo-api
+            chmod 755 ./${filename}/bin/cillo
             rm cillo-api.zip
         '"
         ssh ubuntu@${server} "eval kill \$(ps aux | grep [c]illo | awk '{print \$2}')"
         ssh ubuntu@${server} bash -c "'
-            ./${filename}/bin/cillo-api -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod.conf &
+            ./${filename}/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod.conf &
             disown
         '"
     done

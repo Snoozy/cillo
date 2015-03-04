@@ -24,6 +24,7 @@ POST        /boards/create                 com.cillo.core.web.controllers.BoardC
 POST        /a/post                        com.cillo.core.web.controllers.PostController.post
 POST        /a/post/:id/upvote             com.cillo.core.web.controllers.VoteController.upvotePost(id: Int)
 POST        /a/post/:id/downvote           com.cillo.core.web.controllers.VoteController.downvotePost(id: Int)
+POST        /a/post/:id/comment            com.cillo.core.web.controllers.CommentController.createComment(id: Int)
 POST        /a/comment/:id/upvote          com.cillo.core.web.controllers.VoteController.upvoteComment(id: Int)
 POST        /a/comment/:id/downvote        com.cillo.core.web.controllers.VoteController.downvoteComment(id: Int)
 POST        /a/post/:id/delete             com.cillo.core.web.controllers.PostController.deletePost(id: Int)

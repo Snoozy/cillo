@@ -2,6 +2,7 @@ package com.cillo.core.web.controllers
 
 import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html.components
+import com.cillo.core.web.views.html.core
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -9,7 +10,13 @@ import play.api.mvc._
 object PostController extends Controller {
 
     def viewPostPage(board_name: String, post_id: Int) = AuthAction { implicit user => implicit request =>
-        Ok("TODO")
+        val board = Board.find(board_name)
+        val post = Post.find(post_id)
+        if (post.isDefined && board.isDefined && post.get.board_id == board.get.board_id.get) {
+            Ok(core.view_post(user, post.get))
+        } else {
+            NotFound("Post not found.")
+        }
     }
 
     def post = AuthAction { implicit user => implicit request =>

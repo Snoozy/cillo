@@ -1,0 +1,35 @@
+@(user: Option[com.cillo.core.data.db.models.User], post: com.cillo.core.data.db.models.Post)
+
+@import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.controllers.RemoteURLController
+@import com.cillo.core.data.db.models._
+
+@poster = @{
+    User.find(post.user_id)
+}
+
+@components.base(poster.get.name + "'s post on Cillo") {
+
+} {
+    <body class="main-background">
+        <div class="page" style="margin:0px;">
+            @components.masthead(user, searchBar = true)
+            <div id="content">
+                <div class="container-fluid inner-background">
+                    <div class="main-row" style="padding: 20px;">
+                        @components.post(post, user, expanded = true)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @components.repost_modal()
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
+        <script type="text/javascript" src="@RemoteURLController.url("js/core.bundle.js")"></script>
+
+    </body>
+}

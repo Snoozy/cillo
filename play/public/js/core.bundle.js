@@ -3109,6 +3109,36 @@ function insertParam(key, value) {
             return this;
         }
     });
+
+    var proto = $.ui.autocomplete.prototype,
+        initSource = proto._initSource;
+
+    function filter( array, term ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
+        return $.grep( array, function(value) {
+            return matcher.test( $( "<div>" ).html( value.label || value.value || value ).text() );
+        });
+    }
+
+    $.extend( proto, {
+        _initSource: function() {
+            if ( this.options.html && $.isArray(this.options.source) ) {
+                this.source = function( request, response ) {
+                    response( filter( this.options.source, request.term ) );
+                };
+            } else {
+                initSource.call( this );
+            }
+        },
+
+        _renderItem: function( ul, item) {
+            return $( "<li></li>" )
+                .data( "item.autocomplete", item )
+                .append( $( "<a></a>" )[ this.options.html ? "html" : "text" ]( item.label ) )
+                .appendTo( ul );
+        }
+    });
+
 }(jQuery));
 
 (function ($) {
@@ -3354,19 +3384,27 @@ function insertParam(key, value) {
         $('.post-submit').hide();
     }
 
-    $('textarea').autosize();
+    $(document).on('focus', '.comment-val', function() {
+        $(this).css('height', '80px');
+        $(this).sibling('.comment-submit-btn').addClass('displaynone');
+    });
 
-    $('.posts-wrapper').on('click', '.action-link-comment', function () {
+    $(document).on('blur', '.comment-val', function() {
+        if (!$.trim($(this).val())) {
+            $(this).css('height', '34px');
+            $(this).sibling('.comment-submit-btn').addClass('displaynone');
+        }
+    });
 
-        $('.comment-form').remove();
+    $(document).on('click', '.action-link-comment', function() {
 
-        var comment_form_placement = $(this).closest('.post-actions').siblings('.comments-container');
+        var comment_form = $(this).closest('.post-actions').siblings('.comment-form');
 
-        $('<div class="comment-form"><form class="comment-input"><textarea class="form-control comment-val input-xlarge" data-expanded-height="40" placeholder="Write a comment..." style="height:34px;width:100%;overflow:auto;resize:none;margin-bottom:0px;"></textarea><input type="submit" style="position:absolute;left:-9999px;width:1px;height:1px;"/></form></div>').insertBefore(comment_form_placement);
+        $(comment_form).removeClass('displaynone');
 
         $('.comment-val').autosize();
 
-        $(comment_form_placement).prev().find('.comment-val').focus();
+        $(comment_form).find('.comment-val').focus();
 
         $(".comment-input").submit(function (event) {
             event.preventDefault();

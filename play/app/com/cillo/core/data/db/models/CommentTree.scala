@@ -4,6 +4,7 @@ import anorm._
 import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.utils.EncodeDecode
 import play.api.Play.current
+import com.cillo.core.web.views.html.components
 import play.api.db._
 import play.api.libs.json.{JsValue, _}
 
