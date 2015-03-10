@@ -7,17 +7,18 @@
 @poster = @{
     User.find(post.user_id)
 }
+@board = @{Board.find(post.board_id)}
 
-@components.base(poster.get.name + "'s post on Cillo") {
+@components.base(poster.get.name + "'s post on " + board.get.name + " | Cillo") {
 
 } {
     <body class="main-background">
         <div class="page" style="margin:0px;">
             @components.masthead(user, searchBar = true)
             <div id="content">
-                <div class="container-fluid inner-background">
+                <div class="container-fluid inner-background" style="width: 900px; margin-top: 40px;">
                     <div class="main-row" style="padding: 20px;">
-                        @components.post(post, user, expanded = true)
+                        @components.post(post, user, expanded = true, boardOpt = board, posterOpt = poster)
                     </div>
                 </div>
             </div>

@@ -70,7 +70,7 @@ object Post {
         }
     }
 
-    def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Array[Int]): Option[Long] = {
+    def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Seq[Int]): Option[Long] = {
         val time = System.currentTimeMillis()
 
         val media_string = media_ids.mkString(",")

@@ -1,11 +1,22 @@
-@(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User], expanded: Boolean = false)
+@(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User], expanded: Boolean = false,
+        boardOpt: Option[com.cillo.core.data.db.models.Board] = None, posterOpt: Option[com.cillo.core.data.db.models.User] = None)
 
 @import com.cillo.core.data.db.models.{CommentTree, Board, Post, PostVote, User}
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
 
-@poster = @{User.find(post.user_id).get}
-@board = @{Board.find(post.board_id).get}
+@poster = @{
+    if (posterOpt.isDefined)
+        posterOpt.get
+    else
+        User.find(post.user_id).get
+}
+@board = @{
+    if (boardOpt.isDefined)
+        boardOpt.get
+    else
+        Board.find(post.board_id).get
+}
 @vote = @{
     if (user.isDefined) {
         PostVote.findByPostAndUser(post.post_id.get, user.get.user_id.get)
@@ -35,25 +46,27 @@
                         </div>
                     </a>
                 </div>
-                <div class="post-functions dropdown displaynone">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="icon-drop-arrow"></i>
-                    </a>
-                    <ul class="dropdown-menu post-dropdown pull-right">
-                        @*<li>
+                @if(user.isDefined && poster.user_id.get == user.get.user_id.get) {
+                    <div class="post-functions dropdown displaynone">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-drop-arrow"></i>
+                        </a>
+                        <ul class="dropdown-menu post-dropdown pull-right">
+                            @*<li>
                             <a class="post-edit" href="#">
-                                <i class="icon-edit"></i>
-                                Edit
+                            <i class="icon-edit"></i>
+                            Edit
                             </a>
-                        </li>*@
-                        <li>
-                            <a class="post-delete" href="#">
-                                <span class="glyphicon glyphicon-trash"></span>
-                                 Delete
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                            </li>*@
+                            <li>
+                                <a class="post-delete" href="#">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                    Delete
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
                 <div class="user-info">
                     <label class="u-info-wrapper">
                         <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="6username-anchor" style="margin-left:0px;">
@@ -141,20 +154,32 @@
                 }
             </div>
             @if(comments.rootComments.nonEmpty) {
-                <hr class="hr-no-margin comment-hr"/>
-            }
-            @if(user.isDefined) {
-                <div class="comment-form displaynone">
-                    <img class="comment-avatar" src="@user.get.photo">
-                    <form class="comment-input">
-                        <textarea class="form-control comment-val input-xlarge" data-expanded-height="80" placeholder="Write a comment..."></textarea>
-                        <input type="submit" class="btn btn-primary comment-submit-btn">
-                        <div class="clear"></div>
-                    </form>
-                </div>
+                <hr class="hr-no-margin comment-hr">
             }
             <div class="comments-container">
-               @for(comment <- comments.rootComments) {
+
+                @if(user.isDefined) {
+                    <div class="comment-form">
+                        <img class="comment-avatar" src="@user.get.photo">
+                        <form class="comment-input">
+                            <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                            <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
+                            <div class="clear"></div>
+                        </form>
+                    </div>
+                }
+
+                @if(!expanded && comments.rootComments.nonEmpty) {
+                    <div class="view-all-comments-wrapper">
+                        <a href="/@board.name/posts/@post.post_id.get">
+                            <div class="view-all-comments">
+                                <span class="view-all-comments-text">View all comments</span>
+                            </div>
+                        </a>
+                    </div>
+                }
+
+                @for(comment <- comments.rootComments) {
                     @components.comment(comment, user, expanded = expanded)
                 }
             </div>

@@ -18,19 +18,20 @@
 <div class="comment" data-comment-id="@comment.comment_id.get" data-post-id="@comment.post_id">
     <div class="comment-avatar">
         <a href="/user/@commenter.username">
-            <img src="//static.cillo.co/image/@commenter.photo" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
+            <img src="@commenter.photo" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
         </a>
     </div>
-    <a href="/user/@commenter.username" style="margin-right:2px;margin-left:0px;">
-        <strong>@commenter.name</strong>
+    <a href="/user/@commenter.username" style="margin-right:2px;margin-left:3px;">
+        <strong style="font-weight: 500;">@commenter.name</strong>
     </a>
+    ·
+    <span class="comment-timestamp">
+        @Etc.convertEpochToTimestamp(comment.time)
+    </span>
     <p class="comment-content">
         @comment.data
     </p>
     <div class="comment-actions">
-        <span class="comment-timestamp">
-            @Etc.convertEpochToTimestamp(comment.time)
-        </span>
         <span class="like-count" style="margin: 0px;">
             @comment.votes
         </span>
@@ -49,11 +50,11 @@
             <span class="color-blue">Reply</span>
         </a>
     </div>
-    @if(expanded) {
         <div class="comment-children-container">
+        @if(expanded) {
             @for(child <- commentTreeNode.children) {
-                @components.comment(child, user)
+                @components.comment(child, user, expanded = expanded)
             }
+        }
         </div>
-    }
 </div>

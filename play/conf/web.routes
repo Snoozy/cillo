@@ -30,6 +30,7 @@ POST        /a/comment/:id/downvote        com.cillo.core.web.controllers.VoteCo
 POST        /a/post/:id/delete             com.cillo.core.web.controllers.PostController.deletePost(id: Int)
 POST        /a/group/:id/follow            com.cillo.core.web.controllers.BoardController.followBoard(id: Int)
 POST        /a/group/:id/unfollow          com.cillo.core.web.controllers.BoardController.unfollowBoard(id: Int)
+POST        /a/upload                      com.cillo.core.web.controllers.MediaController.upload
 
 #Board catchalls
 GET         /:name                         com.cillo.core.web.controllers.BoardController.boardPage(name: String)

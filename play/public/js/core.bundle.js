@@ -3217,40 +3217,6 @@ function insertParam(key, value) {
 
     });
 
-    $(".post-submit").click(function () {
-        if ($('.post-form').val() == "" || $('.post-board').val() == "") {
-            return false;
-        }
-
-        var post_content = $('.post-form').val();
-        var post_title = $('.post-title').val();
-        var post_board = $('.post-board').val();
-
-        $.ajax({
-            url: "/a/post",
-            type: "POST",
-            dataType: "json",
-            data: {
-                "data": post_content,
-                "title": post_title,
-                "board_name": post_board
-            },
-            success: function (response, textStatus, jqXHR) {
-                $(response.item_html).hide().fadeIn(1000).css('display','block').insertAfter('.first-post');
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert("Unexpected internal server error. Please try again later.");
-            },
-            complete: function () {
-                $('textarea.post-form').val('');
-                $('.post-title').val('');
-                $('.post-board').val('');
-                collapseFirstPost();
-            }
-        });
-        return false;
-    });
-
     $('.posts-wrapper').on('click', '.action-link-reposted', function () {
         var repost_id = $(this).closest('.post').data('repost-item-id');
         if (confirm('Are you sure you want to delete this post?')) {
@@ -3385,20 +3351,23 @@ function insertParam(key, value) {
     }
 
     $(document).on('focus', '.comment-val', function() {
-        $(this).css('height', '80px');
-        $(this).sibling('.comment-submit-btn').addClass('displaynone');
+        $(this).css('min-height', '84px');
+        $(this).siblings('.comment-submit-btn').removeClass('displaynone');
     });
 
     $(document).on('blur', '.comment-val', function() {
         if (!$.trim($(this).val())) {
             $(this).css('height', '34px');
-            $(this).sibling('.comment-submit-btn').addClass('displaynone');
+            $(this).css('min-height', '0');
+            $(this).siblings('.comment-submit-btn').addClass('displaynone');
         }
     });
 
+    $('.comment-val').autosize();
+
     $(document).on('click', '.action-link-comment', function() {
 
-        var comment_form = $(this).closest('.post-actions').siblings('.comment-form');
+        var comment_form = $(this).closest('.post-actions').siblings('.comments-container').find('.comment-form');
 
         $(comment_form).removeClass('displaynone');
 
@@ -3406,31 +3375,6 @@ function insertParam(key, value) {
 
         $(comment_form).find('.comment-val').focus();
 
-        $(".comment-input").submit(function (event) {
-            event.preventDefault();
-            var $this = $(this);
-            var comment = $(this).find('.comment-val').val();
-            var post_id = $(this).closest('.post').data('item-id');
-            var $comment_form = $(this).parent();
-            $.ajax({
-                url: '/comment',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    'p': post_id,
-                    'data': comment,
-                    'reply_id': 0
-                },
-                success: function (response, textStatus, jqXHR) {
-                    $this.parent().siblings('.comments-container').append(response.item_html).fadeIn(200);
-                },
-                complete: function () {
-                    $comment_form.find('.comment-val').val('');
-                    $comment_form.find('.comment-val').height('20px');
-                }
-            });
-
-        });
         return false;
 
     });
@@ -3495,16 +3439,12 @@ function insertParam(key, value) {
 
     $(document).on('click', '.c-action.like', function () {
         var $this = $(this);
-        var comment_id = $(this).siblings('.post-id').html();
+        var comment_id = $(this).closest('.comment').data('comment-id');
 
         $.ajax({
             url: '/a/comment/' + comment_id + '/upvote',
             type: 'POST',
             dataType: 'json',
-            data: {
-                'p': comment_id,
-                'type': '1'
-            },
             success: function () {
                 var amount = 1;
                 if ($this.siblings('.c-action.dislike').hasClass('disliked')) {
@@ -3525,16 +3465,12 @@ function insertParam(key, value) {
 
     $(document).on('click', '.c-action.dislike', function () {
         var $this = $(this);
-        var comment_id = $this.siblings('.post-id').html();
+        var comment_id = $this.closest('.comment').data('comment-id');
 
         $.ajax({
             url: '/a/comment/' + comment_id + '/downvote',
             type: 'POST',
             dataType: 'json',
-            data: {
-                'p': comment_id,
-                'type': '1'
-            },
             success: function () {
                 var amount = 1;
                 if ($this.siblings('.c-action.like').hasClass('liked')) {
@@ -3547,6 +3483,198 @@ function insertParam(key, value) {
                 colorVotes('comment');
             }
         });
+        return false;
+    });
+
+    $(document).on('click', '.c-action.reply', function(e) {
+        e.preventDefault();
+        var reply_form = $(this).closest('.comments-container').find('.comment-form').first().clone();
+        console.log(reply_form);
+        reply_form.addClass('comment-reply');
+        reply_form.attr('data-reply-id', $(this).closest('.comment').data('comment-id'));
+        reply_form.find('.comment-val').attr('placeholder', 'Reply to comment...');
+        var $comment_cont = $(this).closest('.comment-actions').siblings('.comment-children-container');
+        if ($comment_cont.find('.comment-form').length == 0) {
+            $comment_cont.prepend(reply_form);
+        }
+        $comment_cont.find('.comment-val').focus();
+    });
+
+
+    $(document).on('submit', '.comment-input', function(event) {
+        event.preventDefault();
+        var $this = $(this);
+        var comment = $(this).find('.comment-val').val();
+        var post_id = $(this).closest('.post').data('item-id');
+        var $comment_form = $(this).closest('.comment-form');
+        var parent = $this.closest('.comment-form').attr('data-reply-id');
+        if (parent === undefined) {
+            parent = 0;
+        }
+        if ($.trim(comment)) {
+            $.ajax({
+                url: '/a/post/' + post_id + '/comment',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'data': comment,
+                    'parent': parent
+                },
+                success: function (response, textStatus, jqXHR) {
+                    if ($this.closest('.comment-form').siblings('.comment').length > 0) {
+                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertBefore($this.closest('.comment-form').siblings('.comment').eq(0));
+                    } else {
+                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter($this.closest('.comment-form'));
+                    }
+                },
+                complete: function () {
+                    $comment_form.find('.comment-val').val('');
+                    $comment_form.find('.comment-val').blur();
+                }
+            });
+        }
+
+    });
+/*
+    $(document).on('submit', '.comment-reply', function(e) {
+        e.preventDefault();
+        var parent_id = $(this).closest('.comment').data('comment-id');
+        var post_id = $(this).closest('.comment').data('post-id');
+        var data = $(this).find('.comment-val').val();
+        var $comment_form = $(this).closest('.comment-reply');
+        var $this = $(this);
+        if ($.trim(data)) {
+            $.ajax({
+                url: '/a/post/' + post_id + '/comment',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'data': data,
+                    'parent': parent_id
+                },
+                success: function(response) {
+                    if ($this.closest('.comment-form').siblings('.comment').length > 0) {
+                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertBefore($this.closest('.comment-form').siblings('.comment').eq(0));
+                    } else {
+                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter($this.closest('.comment-form'));
+                    }
+                },
+                complete: function () {
+                    $comment_form.find('.comment-val').val('');
+                    $comment_form.find('.comment-val').blur();
+                }
+            });
+        }
+    });
+    */
+
+    $(document).on('blur', '.comment-reply .comment-val', function() {
+        if (!$.trim($(this).val())) {
+            $(this).closest('.comment-reply').remove();
+        }
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('.post-form').addClass('post-form-with-thumbnails');
+                $('.thumbnail-container .previews').append($('<div class="preview"><a href="' + e.target.result + '" target="_blank"><img src="' + e.target.result + '" style="height:48px;width:48px;"></a></div>'));
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+    var media_form_data = new FormData();
+
+    $(document).on('change', '#picture_file_upload', function() {
+        $(this).closest('.picture_upload').siblings('.thumbnail-container').find('.previews').empty();
+        if ($(this).val() != '') {
+            readURL(this);
+            $('.thumbnail-container').removeClass('displaynone');
+            $.each($('#picture_file_upload')[0].files, function(i, file) {
+                media_form_data.append('file-' + i, file);
+            });
+        }
+        $(this).replaceWith($(this).clone());
+    });
+
+    $(".post-submit").click(function () {
+        if ($('.post-form').val() == "" || $('.post-board').val() == "") {
+            return false;
+        }
+
+        var post_content = $('.post-form').val();
+        var post_title = $('.post-title').val();
+        var post_board = $('.post-board').val();
+
+        if ($('.thumbnail-container .previews').children().length > 0) {
+            var media_id = null;
+            $.ajax({
+                url: '/a/upload',
+                type: 'POST',
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                data: media_form_data,
+                async: false,
+                success: function(response) {
+                    media_id = response.media_id
+                }
+            });
+
+            $.ajax({
+                url: "/a/post",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    "data": post_content,
+                    "title": post_title,
+                    "board_name": post_board,
+                    "media": media_id
+                },
+                success: function (response, textStatus, jqXHR) {
+                    $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
+                },
+                error: function () {
+                    alert("Unexpected error. Please try again later.");
+                },
+                complete: function () {
+                    $('textarea.post-form').val('');
+                    $('.post-title').val('');
+                    $('.post-board').val('');
+                    collapseFirstPost();
+                }
+            });
+        } else {
+            $.ajax({
+                url: "/a/post",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    "data": post_content,
+                    "title": post_title,
+                    "board_name": post_board
+                },
+                success: function (response, textStatus, jqXHR) {
+                    $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
+                },
+                error: function () {
+                    alert("Unexpected error. Please try again later.");
+                },
+                complete: function () {
+                    $('textarea.post-form').val('');
+                    $('.post-title').val('');
+                    $('.post-board').val('');
+                    collapseFirstPost();
+                }
+            });
+        }
+        media_form_data = new FormData();
+        $('.previews').empty();
+        $('.thumbnail-container').addClass('displaynone');
         return false;
     });
 

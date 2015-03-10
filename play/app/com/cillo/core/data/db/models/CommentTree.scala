@@ -38,7 +38,7 @@ object CommentTree {
         if (currentLevel.isEmpty)
             List()
         else {
-            currentLevel.sortBy(_.votes).par.map { currentComment =>
+            currentLevel.sortBy(- _.votes).par.map { currentComment =>
                 CommentTreeNode(currentComment, sortTopRecurse(comments, getChildren(currentComment, comments)))
             }.toList
         }
