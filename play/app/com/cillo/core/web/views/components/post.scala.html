@@ -1,7 +1,7 @@
 @(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User], expanded: Boolean = false,
         boardOpt: Option[com.cillo.core.data.db.models.Board] = None, posterOpt: Option[com.cillo.core.data.db.models.User] = None)
 
-@import com.cillo.core.data.db.models.{CommentTree, Board, Post, PostVote, User}
+@import com.cillo.core.data.db.models._
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
 
@@ -33,6 +33,14 @@
 }
 @comments = @{
     CommentTree.getPostCommentsTop(post.post_id.get)
+}
+
+@media = @{
+    if (post.media.nonEmpty) {
+        post.media.map(m => Media.find(m))
+    } else {
+        Seq()
+    }
 }
 
 <li class="post" data-item-id="@post.post_id.get">
@@ -96,13 +104,16 @@
                         </span>
                     </div>
                 }
-                @if(post.post_type == 0) {
-                    <div class="post-text">
-                        @post.data
-                    </div>
-                } else { @if(post.post_type == 1) {
-                    @* TODO Photo posts *@
-                }}
+                @if(media.nonEmpty) {
+                    @if(media.head.isDefined) {
+                        <div class="post-picture-container">
+                            <img src="@media.head.get.media_url" class="post-picture">
+                        </div>
+                    }
+                }
+                <p class="post-text">
+                    @post.data
+                </p>
                 <div class="repost-dialog">
                     @* TODO Repost dialog *@
                 </div>
@@ -179,7 +190,7 @@
                     </div>
                 }
 
-                @for(comment <- comments.rootComments) {
+                @for(comment <- comments.rootComments.take(5)) {
                     @components.comment(comment, user, expanded = expanded)
                 }
             </div>

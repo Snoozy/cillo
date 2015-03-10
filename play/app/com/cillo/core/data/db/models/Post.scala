@@ -19,7 +19,7 @@ case class Post (
     comment_count: Int,
     time: Long,
     post_type: Int,
-    media: Array[Int]
+    media: Seq[Int]
 )
 
 object Post {

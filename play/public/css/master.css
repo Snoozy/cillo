@@ -6,6 +6,10 @@
     margin: 30px auto;
 }
 
+body {
+    line-height: 1.508571;
+}
+
 body:after {
     display: none;
     content: url(//static.cillo.co/upvote-arrow.png) url(//static.cillo.co/upvoted-arrow.png) url(//static.cillo.co/downvote-arrow.png) url(//static.cillo.co/downvoted-arrow.png) url(//static.cillo.co/dropdown-arrow.png) url(//static.cillo.co/ajax-spinner.gif);
@@ -363,9 +367,15 @@ a.repost-user-link:hover {
 }
 
 .post-picture {
-    border-radius:1px;
+    border-radius:2px;
     margin-top:0px;
     margin-bottom: 5px;
+    width: 100%;
+}
+
+.post-picture-container {
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .post_picture {
@@ -842,6 +852,7 @@ strong {
     font-size:110%;
     word-wrap:break-word;
     width:100%;
+    margin-top: 5px;
     min-height: 24px;
 }
 
@@ -1872,6 +1883,7 @@ body {
 
 .post-text-title {
     margin-bottom: 5px;
+    margin-top: 2px;
 }
 
 .post-text-title-text {

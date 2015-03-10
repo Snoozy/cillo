@@ -8,7 +8,8 @@ import play.api.db._
 case class Media(
     media_id: Option[Int],
     media_type: Int,
-    media_name: String
+    media_name: String,
+    media_url: String
 )
 
 object Media {
@@ -20,7 +21,7 @@ object Media {
             get[Int]("media_type") ~
             get[String]("media_name") map {
             case media_id ~ media_type ~ media_name =>
-                Media(media_id, media_type, media_name)
+                Media(media_id, media_type, media_name, BaseMediaURL + media_name)
         }
     }
 
