@@ -39,7 +39,7 @@ object Post {
             get[Int]("post_type") ~
             get[String]("media") map {
             case post_id ~ user_id ~ title ~ data ~ board_id ~ repost ~ votes ~ comment_count ~ time ~ post_type ~ media =>
-                val media_ids = media.split(",").filter(_ != "").map(_.toInt)
+                val media_ids = media.split("~").filter(_ != "").map(_.toInt)
                 Post(post_id, user_id, title, data, board_id, repost, votes, comment_count, time, post_type, media_ids)
         }
     }
@@ -73,7 +73,9 @@ object Post {
     def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Seq[Int]): Option[Long] = {
         val time = System.currentTimeMillis()
 
-        val media_string = media_ids.mkString(",")
+        media_ids.foreach(id => if (!Media.find(id).isDefined) return None)
+
+        val media_string = media_ids.mkString("~")
 
         DB.withConnection { implicit connection =>
             SQL("INSERT INTO post (user_id, title, data, board_id, repost, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +

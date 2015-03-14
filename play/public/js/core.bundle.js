@@ -3535,38 +3535,6 @@ function insertParam(key, value) {
         }
 
     });
-/*
-    $(document).on('submit', '.comment-reply', function(e) {
-        e.preventDefault();
-        var parent_id = $(this).closest('.comment').data('comment-id');
-        var post_id = $(this).closest('.comment').data('post-id');
-        var data = $(this).find('.comment-val').val();
-        var $comment_form = $(this).closest('.comment-reply');
-        var $this = $(this);
-        if ($.trim(data)) {
-            $.ajax({
-                url: '/a/post/' + post_id + '/comment',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    'data': data,
-                    'parent': parent_id
-                },
-                success: function(response) {
-                    if ($this.closest('.comment-form').siblings('.comment').length > 0) {
-                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertBefore($this.closest('.comment-form').siblings('.comment').eq(0));
-                    } else {
-                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter($this.closest('.comment-form'));
-                    }
-                },
-                complete: function () {
-                    $comment_form.find('.comment-val').val('');
-                    $comment_form.find('.comment-val').blur();
-                }
-            });
-        }
-    });
-    */
 
     $(document).on('blur', '.comment-reply .comment-val', function() {
         if (!$.trim($(this).val())) {
@@ -3574,28 +3542,37 @@ function insertParam(key, value) {
         }
     });
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
+    function readURL(file, rand) {
+        var reader = new FileReader();
 
-            reader.onload = function(e) {
-                $('.post-form').addClass('post-form-with-thumbnails');
-                $('.thumbnail-container .previews').append($('<div class="preview"><a href="' + e.target.result + '" target="_blank"><img src="' + e.target.result + '" style="height:48px;width:48px;"></a></div>'));
-            };
+        reader.onload = function(e) {
+            $('.post-form').addClass('post-form-with-thumbnails');
+            $('.thumbnail-container .previews').append($('<div class="preview" data-upload-id="' + rand + '"><button type="button" class="remove-post-image"><span class="glyphicon glyphicon-remove"></span></button><a href="' + e.target.result + '" target="_blank"><img src="' + e.target.result + '" style="height:48px;width:48px;"></a></div>'));
+            $('.thumbnail-container').removeClass('displaynone');
+        };
 
-            reader.readAsDataURL(input.files[0]);
-        }
+        reader.readAsDataURL(file);
     };
 
-    var media_form_data = new FormData();
+    $(document).on('click', '.remove-post-image', function() {
+        var upload_id = $(this).closest('.preview').data('upload-id');
+        delete media_form_data['media-' + upload_id];
+        $(this).closest('.preview').remove();
+    });
+
+    var media_form_data = {};
+
+    function reset_form() {
+        media_form_data = {};
+    };
 
     $(document).on('change', '#picture_file_upload', function() {
         $(this).closest('.picture_upload').siblings('.thumbnail-container').find('.previews').empty();
         if ($(this).val() != '') {
-            readURL(this);
-            $('.thumbnail-container').removeClass('displaynone');
             $.each($('#picture_file_upload')[0].files, function(i, file) {
-                media_form_data.append('file-' + i, file);
+                var rand = Math.random().toString(36).substring(2);
+                media_form_data['media-' + rand] = file;
+                readURL(file, rand);
             });
         }
         $(this).replaceWith($(this).clone());
@@ -3611,17 +3588,21 @@ function insertParam(key, value) {
         var post_board = $('.post-board').val();
 
         if ($('.thumbnail-container .previews').children().length > 0) {
-            var media_id = null;
+            var media_ids = null;
+            var formData = new FormData();
+            for (var key in media_form_data) {
+                formData.append(key, media_form_data[key]);
+            }
             $.ajax({
                 url: '/a/upload',
                 type: 'POST',
                 dataType: 'json',
                 contentType: false,
                 processData: false,
-                data: media_form_data,
+                data: formData,
                 async: false,
                 success: function(response) {
-                    media_id = response.media_id
+                    media_ids = response.media_ids.join("~")
                 }
             });
 
@@ -3633,7 +3614,7 @@ function insertParam(key, value) {
                     "data": post_content,
                     "title": post_title,
                     "board_name": post_board,
-                    "media": media_id
+                    "media": media_ids
                 },
                 success: function (response, textStatus, jqXHR) {
                     $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
@@ -3672,7 +3653,7 @@ function insertParam(key, value) {
                 }
             });
         }
-        media_form_data = new FormData();
+        reset_form();
         $('.previews').empty();
         $('.thumbnail-container').addClass('displaynone');
         return false;

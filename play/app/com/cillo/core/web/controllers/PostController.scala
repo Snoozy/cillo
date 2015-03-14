@@ -51,7 +51,7 @@ object PostController extends Controller {
                 val data = form.get("data").map(_.head)
                 val board_name = form.get("board_name").map(_.head)
                 val repost = form.get("repost").exists(_.head.toBoolean)
-                val media_id = form.get("media").map(_.head)
+                val media_ids = form.get("media").map(_.head)
                 if (data.isDefined && board_name.isDefined) {
                     val board = Board.find(board_name.get)
                     if (board.isDefined) {
@@ -59,10 +59,10 @@ object PostController extends Controller {
                             title = None
                         }
                         val newPost = {
-                            if (!media_id.isDefined || media_id.get == "") {
+                            if (!media_ids.isDefined || media_ids.get == "") {
                                 Post.createSimplePost(user.user_id.get, title, data.get, board.get.board_id.get, repost)
                             } else {
-                                Post.createMediaPost(user.user_id.get, title, data.get, board.get.board_id.get, Seq(media_id.get.toInt))
+                                Post.createMediaPost(user.user_id.get, title, data.get, board.get.board_id.get, media_ids.get.split("~").map(_.toInt))
                             }
                         }
                         if (newPost.isDefined)

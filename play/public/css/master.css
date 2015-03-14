@@ -2002,3 +2002,24 @@ strong {
 .post-form-with-thumbnails {
     border-radius: 0px;
 }
+
+.remove-post-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #222;
+    color: #f5f5f5;
+    border: none;
+    opacity: .75;
+    height: 17px;
+}
+
+.remove-post-image:hover {
+    opacity: 1;
+}
+
+.preview {
+    display: inline-block;
+    position: relative;
+    margin-right: 5px;
+}

@@ -15,6 +15,8 @@ import play.api.mvc._
 
 object MediaController extends Controller {
 
+    private final val MediaIdentifier = "^media-\\S.*$".r
+
     /**
      * Uploads a media file and returns the media id for attachment to posts.
      *
@@ -26,24 +28,34 @@ object MediaController extends Controller {
             case Some(_) =>
                 val multiBody = request.body.asMultipartFormData
                 if (multiBody.isDefined) {
-                    multiBody.get.file("file-0").map { media =>
-                        val mediaFile = media.ref.file
-                        if (mediaFile.length() > 3145728)
-                            BadRequest(Json.obj("error" -> "Media upload too large. Code: 101"))
-                        else {
-                            val uuid = UUID.randomUUID()
-                            if (!S3.upload(mediaFile, "image/" + uuid))
-                                BadRequest(Json.obj("error" -> "Upload failed. Code: 104"))
+                    val resSeq = multiBody.get.files.filter(_.key.matches(MediaIdentifier.toString()))
+                    if (resSeq.nonEmpty) {
+                        val res = resSeq.map { media =>
+                            val mediaFile = media.ref.file
+                            if (mediaFile.length() > 3145728)
+                                -1
                             else {
-                                val DBMedia = Media.create(0, uuid.toString)
-                                if (!DBMedia.isDefined)
-                                    BadRequest(Json.obj("error" -> "Error uploading. Code: 102"))
+                                val uuid = UUID.randomUUID()
+                                if (!S3.upload(mediaFile, "image/" + uuid))
+                                    -1
                                 else {
-                                    Ok(Json.obj("media_id" -> Json.toJson(DBMedia.get)))
+                                    val DBMedia = Media.create(0, uuid.toString)
+                                    if (!DBMedia.isDefined)
+                                        -1
+                                    else {
+                                        DBMedia.get.toInt
+                                    }
                                 }
                             }
                         }
-                    }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
+                        if (res.contains(-1)) {
+                            BadRequest(Json.obj("error" -> "Error uploading images."))
+                        } else {
+                            Ok(Json.obj("media_ids" -> Json.toJson(res)))
+                        }
+                    } else {
+                        BadRequest(Json.obj("error" -> "No images detected"))
+                    }
                 } else {
                     BadRequest(Json.obj("error" -> "No file detected. Code: 103"))
                 }
