@@ -35,7 +35,7 @@ CREATE TABLE post (
     title VARCHAR(50),
     data VARCHAR(10000) NOT NULL,
     board_id INT NOT NULL,
-    repost TINYINT NOT NULL,
+    repost INT,
     votes INT NOT NULL,
     comment_count INT NOT NULL,
     post_type TINYINT NOT NULL,

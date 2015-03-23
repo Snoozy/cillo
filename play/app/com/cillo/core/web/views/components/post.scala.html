@@ -192,6 +192,16 @@
 
                 @for(comment <- comments.rootComments.take(5)) {
                     @components.comment(comment, user, expanded = expanded)
+                    @if(comment.children.nonEmpty && !expanded) {
+                        <div class="view-replies-wrapper">
+                            <a href="/@board.name/posts/@post.post_id.get">
+                                <div class="view-replies">
+                                    <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
+                                    <span class="view-replies-text">View @comment.children.size replies</span>
+                                </div>
+                            </a>
+                        </div>
+                    }
                 }
             </div>
         </div>

@@ -39,14 +39,6 @@ function setEndOfContenteditable(contentEditableElement) {
     }
 }
 
-$(function () {
-    $('#user-modal').modal({show: false});
-    $('.posts').on('click', '.modal-click.username-anchor', function (e) {
-        e.preventDefault();
-        $('#user-modal').modal('toggle');
-    });
-});
-
 function readURL(input, selector) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -3176,43 +3168,17 @@ function insertParam(key, value) {
     $(document).on('click', '.action-link-repost', function (e) {
         e.preventDefault();
         var post_id = $(this).closest('.post').data('item-id');
-        $('#repost-dialog').modal();
+        var post_content = $(this).closest('.post-wrapper').clone();
+        post_content.find('.post-actions').remove();
+        post_content.find('.hr-no-margin').remove();
+        post_content.find('.comments-container').remove();
+        $('#repost-modal').find('.repost-post-container').children().empty();
+        $('#repost-modal').find('.repost-post-container').append(post_content);
+        $('.modal-dialog').attr('data-post-id', post_id);
+        $('#repost-modal').modal();
         $('.repost-submit-button').click(function () {
-            if (!($('#radio-friends').is(':checked') || $('#radio-board').is(':checked'))) {
-                return false;
-            }
-            if ($('#radio-board').is(':checked') && ($('.repost-board-input').val() == '')) {
-                $('.repost-error-no-board').show();
-            }
-            if ($('#radio-board').is(':checked')) {
-                var board_name = $('.repost-board-input').val();
-                $.ajax({
-                    url: '/a/check_board',
-                    data: {'g': board_name},
-                    dataType: 'json',
-                    success: function () {
-                        $.ajax({
-                            url: '/post',
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                'r': post_id,
-                                'g': board_name
-                            },
-                            success: function () {
-                                $('.success-check').show();
-                                setTimeout(function () {
-                                    $('#repost-dialog').modal('hide');
-                                    $('.success-check').hide();
-                                }, 1000);
-                            }
-                        });
-                    },
-                    error: function () {
-                        $('.board-exist-error').show();
-                    }
-                });
-            }
+            var post_id = $(this).closest('.modal-dialog').data('post-id');
+
         });
 
     });
@@ -3234,10 +3200,6 @@ function insertParam(key, value) {
             });
         }
         return false;
-    });
-
-    $('.modal').draggable({
-        handle: '.modal-header'
     });
 
     $('.posts-wrapper').on({

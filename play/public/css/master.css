@@ -328,10 +328,6 @@ body {
     color: red;
 }
 
-.modal.fade.in {
-    top:40%;
-}
-
 .modal-subheader {
     font-size: 18px;
     font-weight: bold;
@@ -360,10 +356,6 @@ a.repost-user-link {
 
 a.repost-user-link:hover {
     color: #0084B4;
-}
-
-.modal-header {
-    cursor: move;
 }
 
 .post-picture {
@@ -397,10 +389,6 @@ a.repost-user-link:hover {
 #edit-modal {
     background-color:#EEEEEE;
     border-radius:15px;
-}
-
-.modal {
-    margin: -250px 0 0 -280px;
 }
 
 .edit-post-textarea {
@@ -1980,8 +1968,17 @@ strong {
     font-size: 17px;
 }
 
-.view-all-comments:hover {
-    background-color: #D3D3D3;
+.view-replies-wrapper {
+    margin-left: 37px;
+}
+
+.view-replies {
+    line-height: 20px;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    margin-left: 0;
+    margin-right: 15px;
+    font-size: 17px;
 }
 
 .comment-val {
@@ -2022,4 +2019,8 @@ strong {
     display: inline-block;
     position: relative;
     margin-right: 5px;
+}
+
+.ui-front {
+    z-index: 1051;
 }

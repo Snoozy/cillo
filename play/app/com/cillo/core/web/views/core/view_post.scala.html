@@ -24,8 +24,9 @@
             </div>
         </div>
 
-        @components.repost_modal()
-
+        @if(user.isDefined) {
+            @components.repost_modal(User.getBoards(user.get.user_id.get))
+        }
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>

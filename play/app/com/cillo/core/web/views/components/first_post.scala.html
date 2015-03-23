@@ -16,7 +16,7 @@
         </div>
         <button class="btn btn-primary post-submit displaynone" style="margin-left:13%;margin-top:8px;">Post</button>
         <div class="post-board-wrapper displaynone">
-            <input class="post-board form-control" placeholder="Board" type="text" @if(boardPage){value="@boards.head.name" disabled}>
+            <input class="post-board form-control" id="post-autocomplete" placeholder="Board" type="text" @if(boardPage){value="@boards.head.name" disabled}>
             <span class="post-board-text displaynone">on Board:</span>
         </div>
         <div class="displaynone first-post-clear"></div>
@@ -29,13 +29,13 @@
 
                 var boards = [@if(boards.nonEmpty){"@boards.head.name"@for(g <- boards.tail){,"@g.name"}}];
 
-                $('.post-board').autocomplete({
+                $('#post-autocomplete').autocomplete({
                     minLength: 0,
                     source: boards
                 });
 
-                $('.post-board').focus(function() {
-                    $('.post-board').autocomplete("search", "");
+                $('#post-autocomplete').focus(function() {
+                    $(this).autocomplete("search", "");
                 });
 
             });
