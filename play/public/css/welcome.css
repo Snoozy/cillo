@@ -316,3 +316,71 @@ a.login-link:hover {
     font-weight: bold;
     line-height: 0px;
 }
+
+.form-board {
+    margin-bottom: 6px;
+}
+.trending-group-avatar {
+    width: 254px;
+    height: 254px;
+    /*position: absolute;
+    left: -30px;*/
+}
+
+.trending-topics-wrapper {
+    padding: 15px;
+    padding-left: 30px;
+    overflow: auto;
+}
+
+.trending-group-wrapper {
+    display: block;
+    float: left;
+    width: 256px;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.trending-topics-header {
+}
+
+.trending-group-name {
+    font-weight: bold;
+    color: #262626;
+    font-size: 25px;
+}
+
+.trending-group-content {
+    position: relative;
+}
+
+.trending-group-header {
+    text-align: left;
+}
+
+.trending-group-descr {
+    text-align: left;
+    margin-top: 5px;
+}
+
+.trending-group-content {
+    background: white;
+
+}
+
+.trending-group-bottom {
+    height: 100px;
+    padding: 15px;
+    font: normal 13px Roboto,arial,sans-serif;
+}
+
+.trending-topics-text {
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.46);
+}
+
+.trending-group-descr-content {
+    font-size: 16px;
+}

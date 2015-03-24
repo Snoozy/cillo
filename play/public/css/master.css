@@ -1951,8 +1951,8 @@ strong {
     overflow:hidden;
 }
 
-.view-all-comments-wrapper {
-
+.view-all-comments-wrapper:hover {
+    background-color: #e1e8ed;
 }
 
 .view-all-comments {

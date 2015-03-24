@@ -1,15 +1,10 @@
 @(boards: Seq[com.cillo.core.data.db.models.Board])(implicit request: RequestHeader)
 
 @import com.cillo.core.web.views.html.components
+@import com.cillo.utils.Etc
 
 @components.base("Welcome to Cillo - Login or Sign Up") {
     <link rel="stylesheet" href="@routes.Assets.at("css/welcome.css")"/>
-
-    <style>
-        .form-board {
-            margin-bottom: 6px;
-        }
-    </style>
 
     <script type="text/javascript" charset="utf-8">
     //IE detection
@@ -161,7 +156,29 @@
                         </div>
                         <div class="trending-topics-content">
                             <div class="trending-topics-centering">
-                                TODO
+                                @for(b <- boards) {
+                                    <div class="trending-group-wrapper block" onclick="window.location.href='/@b.name'">
+                                        <div class="trending-group-content">
+                                            <div class="trending-group-avatar">
+                                                <a href="/@b.name">
+                                                    <img class="trending-group-avatar" src="@b.photo">
+                                                </a>
+                                            </div>
+                                            <div class="trending-group-bottom">
+                                                <div class="trending-group-header">
+                                                    <span class="trending-group-name">
+                                                        @b.name
+                                                    </span>
+                                                </div>
+                                                <div class="trending-group-descr">
+                                                    <span class="trending-group-descr-content">
+                                                        @Etc.ellipsize(b.description, 52)
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
