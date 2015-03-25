@@ -14,7 +14,7 @@ case class Post (
     title: Option[String],
     data: String,
     board_id: Int,
-    repost: Int,
+    repost_id: Option[Int],
     votes: Int,
     comment_count: Int,
     time: Long,
@@ -32,15 +32,15 @@ object Post {
             get[Option[String]]("title") ~
             get[String]("data") ~
             get[Int]("board_id") ~
-            get[Int]("repost") ~
+            get[Option[Int]]("repost_id") ~
             get[Int]("votes") ~
             get[Int]("comment_count") ~
             get[Long]("time") ~
             get[Int]("post_type") ~
             get[String]("media") map {
-            case post_id ~ user_id ~ title ~ data ~ board_id ~ repost ~ votes ~ comment_count ~ time ~ post_type ~ media =>
+            case post_id ~ user_id ~ title ~ data ~ board_id ~ repost_id ~ votes ~ comment_count ~ time ~ post_type ~ media =>
                 val media_ids = media.split("~").filter(_ != "").map(_.toInt)
-                Post(post_id, user_id, title, data, board_id, repost, votes, comment_count, time, post_type, media_ids)
+                Post(post_id, user_id, title, data, board_id, repost_id, votes, comment_count, time, post_type, media_ids)
         }
     }
 
@@ -50,13 +50,10 @@ object Post {
         }
     }
 
-    def createSimplePost(user_id: Int, title: Option[String], data: String, board_id: Int, repost: Boolean): Option[Long] = {
+    def createSimplePost(user_id: Int, title: Option[String], data: String, board_id: Int, repost_id: Option[Int] = None): Option[Long] = {
         // checking that data is a number if post is a repost
-        if (repost && !data.forall(Character.isDigit))
-            return None
-
-        if (repost) {
-            val repostExists = Post.find(data.toInt)
+        if (repost_id.isDefined) {
+            val repostExists = Post.find(repost_id.get)
             if (!repostExists.isDefined)
                 return None
         }
@@ -64,9 +61,9 @@ object Post {
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO post (user_id, title, data, board_id, repost, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
-                " {board_id}, {repost}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> title, 'data -> data,
-                    'board_id -> board_id, 'repost -> (repost:Int), 'time -> time).executeInsert()
+            SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
+                " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> title, 'data -> data,
+                    'board_id -> board_id, 'repost_id -> repost_id, 'time -> time).executeInsert()
         }
     }
 
@@ -92,9 +89,9 @@ object Post {
 
     def userHasReposted(user_id: Int, post_id: Int): Boolean = {
         DB.withConnection { implicit connection =>
-            val post = SQL("SELECT * FROM post WHERE data = {post} AND user_id = {user}")
-                .on('post -> post_id, 'user -> user_id).as(postParser.singleOpt)
-            post.isDefined
+            val post = SQL("SELECT * FROM post WHERE repost_id = {post} AND user_id = {user}")
+                .on('post -> post_id, 'user -> user_id).as(postParser *)
+            post.nonEmpty
         }
     }
 
@@ -112,10 +109,10 @@ object Post {
     def toJsonSingle(post: Post, user: Option[User]): JsValue = {
         var newPost = Json.obj(
             "post_id" -> Json.toJson(post.post_id),
-            "repost" -> Json.toJson(post.repost:Boolean)
+            "repost" -> Json.toJson(post.repost_id.isDefined)
         )
 
-        if (post.repost:Boolean) {
+        if (post.repost_id.isDefined) {
             val reposted_post = Post.find(post.data.toInt)
             if (reposted_post.isDefined) {
                 val board = Board.find(reposted_post.get.board_id)

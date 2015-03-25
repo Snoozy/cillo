@@ -1,0 +1,176 @@
+@(boards: Map[String, Seq[Int]], user: com.cillo.core.data.db.models.User)
+
+@import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.controllers.RemoteURLController
+@import com.cillo.core.data.db.models._
+@import com.cillo.utils.Etc; var carouselId = 0;
+
+@components.base("Welcome to Cillo"){
+    <link rel="stylesheet" href="@RemoteURLController.url("css/welcome.css")"/>
+    <style>
+        .follow-btn {
+            padding: 4px 6px;
+            font-size: 14px;
+            font-weight: bold;
+            float:right;
+            width:80px;
+            height: 29px;
+        }
+
+        .btn-text {
+            font-size: 14px;
+        }
+
+        .trending-group-header {
+            width: 130px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .trending-group-descr-content {
+            font-size: 15px;
+        }
+
+        .trending-group-name {
+            font-size: 22px;
+        }
+    </style>
+}{
+    <body class="main-background">
+
+        <div class="outside-box">
+            <div class="inside-box">
+                <div class="box-header">
+                    Welcome. <span class="box-subheader">Let me help you get started.</span>
+                </div>
+
+                <div class="main-body">
+                    <div class="body-header">
+                        Join some boards you are interested in:
+                    </div>
+
+                    @for((key, value) <- boards) {
+                        <div class="group-category" style="position: relative;">
+                            <div class="category-header">
+                                @key
+                            </div>
+
+                            <div id="carousel@carouselId" class="carousel">
+                                <ul>
+                                    @for(g <- value) {
+                                        @defining(Board.find(g).get) { b =>
+                                            <li>
+                                                <div class="trending-group-wrapper" style="margin-left:15px;margin-right:15px;">
+                                                    <div class="trending-group-content">
+                                                        <div class="trending-group-avatar">
+                                                            <a href="/@b.name">
+                                                                <img class="trending-group-avatar" src="@b.photo">
+                                                            </a>
+                                                        </div>
+                                                        <div class="trending-group-bottom">
+                                                            <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.board_id.get">
+                                                                <span class="btn-text follow-text">Follow</span>
+                                                                <span class="btn-text following-text">Following</span>
+                                                                <span class="btn-text unfollow-text">Unfollow</span>
+                                                            </button>
+                                                            <div class="trending-group-header">
+                                                                <a href="/@b.name" class="">
+                                                                    <span class="trending-group-name">
+                                                                        @b.name
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                            <div class="trending-group-descr">
+                                                                <span class="trending-group-descr-content">
+                                                                @Etc.ellipsize(b.description, 52)
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+
+                            <a href="#" id="carousel@carouselId-control-prev" class="carousel-control-prev">&lsaquo;</a>
+                            <a href="#" id="carousel@carouselId-control-next" class="carousel-control-next">&rsaquo;</a>
+                        </div>
+                        @(carouselId = carouselId + 1)
+                    }
+
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
+        <script type="text/javascript" src="@RemoteURLController.url("js/core.bundle.js")"></script>
+
+        <script>
+            $(function() {
+
+                var index = 0;
+
+                $('.carousel').each(function() {
+
+                    var carousel_id = '#carousel' + index;
+
+                    $(carousel_id).jcarousel({
+                        wrap: 'circular'
+                    });
+
+                    $(carousel_id + '-control-prev').click(function(e) {
+                        $(carousel_id).jcarousel('scroll', '-=2');
+                        return false;
+                    });
+
+                    $(carousel_id + '-control-next').click(function(e) {
+                        $(carousel_id).jcarousel('scroll', '+=2');
+                        return false;
+                    });
+
+                    index++;
+                });
+
+                $(document).on('click', '.notfollowing', function(e) {
+                    var group_id = $(this).data('group-id');
+                    var $this = $(this);
+                    $.ajax({
+                        url: '/a/group/' + group_id + '/follow',
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function() {
+                            $this.addClass('following');
+                            $this.removeClass('notfollowing');
+                        }
+                    });
+
+                    return false;
+                });
+
+                $(document).on('click', '.following', function() {
+                    var group_id = $(this).data('group-id');
+                    var $this = $(this);
+                    $.ajax({
+                        url: '/a/group/' + group_id + '/unfollow',
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function() {
+                            $this.addClass('notfollowing');
+                            $this.removeClass('following');
+                        }
+                    });
+                });
+
+            });
+        </script>
+
+    </body>
+}
+

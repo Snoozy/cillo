@@ -2,9 +2,10 @@
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
+@import com.cillo.core.web.controllers.RemoteURLController
 
 @components.base("Welcome to Cillo - Login or Sign Up") {
-    <link rel="stylesheet" href="@routes.Assets.at("css/welcome.css")"/>
+    <link rel="stylesheet" href="@RemoteURLController.url("css/welcome.css")"/>
 
     <script type="text/javascript" charset="utf-8">
     //IE detection
@@ -103,7 +104,7 @@
                         </p>
                     </div>
                     <div class="signup-form-wrapper">
-                        <form role="form" method="post" action="/register?ref=welcome" style="float: left;width: 255px;">
+                        <form role="form" method="post" action="/signup?ref=welcome" style="float: left;width: 255px;">
                             <div class="form-board">
                                 <input type="text" class="form-control active-ph" name="name" required>
                                 <label placeholder="Full Name" class="active-ph"></label>

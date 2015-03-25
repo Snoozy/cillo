@@ -12,11 +12,11 @@
 @components.base(poster.get.name + "'s post on " + board.get.name + " | Cillo") {
 
 } {
-    <body class="main-background">
+    <body class="single-post main-background@if(!user.isDefined){ logged-out}">
         <div class="page" style="margin:0px;">
             @components.masthead(user, searchBar = true)
             <div id="content">
-                <div class="container-fluid inner-background" style="width: 900px; margin-top: 40px;">
+                <div class="container-fluid inner-background" style="width: 900px;">
                     <div class="main-row" style="padding: 20px;">
                         @components.post(post, user, expanded = true, boardOpt = board, posterOpt = poster)
                     </div>

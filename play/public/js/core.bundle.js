@@ -3147,7 +3147,7 @@ function insertParam(key, value) {
     }
 
     $('.posts-wrapper').on('click', '.post-delete', function (e) {
-        if (confirm('Delete Post?')) {
+        if (confirm('Delete post?')) {
             var post_id = $(this).closest('.post').data('item-id');
             var $this = $(this);
             $.ajax({
@@ -3165,6 +3165,21 @@ function insertParam(key, value) {
         return false;
     });
 
+    $('.single-post').on('click', '.post-delete', function(e) {
+        if (confirm('Delete post?')) {
+            var post_id = $(this).closest('.post').data('item-id');
+            $.ajax({
+                url: '/a/post/' + post_id + '/delete',
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    window.location.replace('/');
+                    return false;
+                }
+            });
+        }
+    });
+
     $(document).on('click', '.action-link-repost', function (e) {
         e.preventDefault();
         var post_id = $(this).closest('.post').data('item-id');
@@ -3172,46 +3187,49 @@ function insertParam(key, value) {
         post_content.find('.post-actions').remove();
         post_content.find('.hr-no-margin').remove();
         post_content.find('.comments-container').remove();
-        $('#repost-modal').find('.repost-post-container').children().empty();
+        post_content.find('.user-avatar').remove();
+        post_content.find('.margin-maker').removeClass('margin-maker');
+        $('#repost-modal').find('.repost-post-container').empty();
         $('#repost-modal').find('.repost-post-container').append(post_content);
         $('.modal-dialog').attr('data-post-id', post_id);
         $('#repost-modal').modal();
         $('.repost-submit-button').click(function () {
             var post_id = $(this).closest('.modal-dialog').data('post-id');
-
+            var comment = $(this).closest('.modal-content').find('.repost-comment-input').val();
+            console.log(comment);
+            var board = $(this).siblings('.post-board-wrapper').find('.post-board').val();
+            $.ajax({
+                url: '/a/repost',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'repost' : post_id,
+                    'comment' : comment,
+                    'board' : board
+                },
+                success: function(response) {
+                    $('#repost-modal').modal('hide');
+                    $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
+                }
+            });
         });
 
     });
 
     $('.posts-wrapper').on('click', '.action-link-reposted', function () {
-        var repost_id = $(this).closest('.post').data('repost-item-id');
-        if (confirm('Are you sure you want to delete this post?')) {
-            var $this = $(this);
-            $.ajax({
-                url: '/a/post/' + repost_id + '/delete',
-                type: 'POST',
-                dataType: 'json',
-                success: function () {
-                    $this.closest('.post').fadeOut(500, function () {
-                        $this.remove();
-                    });
-                    return false;
-                }
-            });
-        }
         return false;
     });
 
-    $('.posts-wrapper').on({
+    $(".main-row").on({
         mouseenter: function () {
-            $(this).children('.post-wrapper').find('.post-functions').show();
+            $(this).find('.post-functions').show();
             return true;
         },
         mouseleave: function () {
-            $(this).children('.post-wrapper').find('.post-functions').hide();
+            $(this).find('.post-functions').hide();
             return true;
         }
-    }, 'li');
+    }, 'li.post');
 
     $('.following .board-follow-btn').click(function() {
         var group_id = $(this).closest('.board-follow-btn-container').data('board-id');
@@ -3541,6 +3559,8 @@ function insertParam(key, value) {
     });
 
     $(".post-submit").click(function () {
+        $(this).addClass('disabled');
+
         if ($('.post-form').val() == "" || $('.post-board').val() == "") {
             return false;
         }
@@ -3562,33 +3582,31 @@ function insertParam(key, value) {
                 contentType: false,
                 processData: false,
                 data: formData,
-                async: false,
                 success: function(response) {
                     media_ids = response.media_ids.join("~")
-                }
-            });
-
-            $.ajax({
-                url: "/a/post",
-                type: "POST",
-                dataType: "json",
-                data: {
-                    "data": post_content,
-                    "title": post_title,
-                    "board_name": post_board,
-                    "media": media_ids
-                },
-                success: function (response, textStatus, jqXHR) {
-                    $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
-                },
-                error: function () {
-                    alert("Unexpected error. Please try again later.");
-                },
-                complete: function () {
-                    $('textarea.post-form').val('');
-                    $('.post-title').val('');
-                    $('.post-board').val('');
-                    collapseFirstPost();
+                    $.ajax({
+                        url: "/a/post",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            "data": post_content,
+                            "title": post_title,
+                            "board_name": post_board,
+                            "media": media_ids
+                        },
+                        success: function (response, textStatus, jqXHR) {
+                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
+                        },
+                        error: function () {
+                            alert("Unexpected error. Please try again later.");
+                        },
+                        complete: function () {
+                            $('textarea.post-form').val('');
+                            $('.post-title').val('');
+                            $('.post-board').val('');
+                            collapseFirstPost();
+                        }
+                    });
                 }
             });
         } else {
@@ -3618,6 +3636,7 @@ function insertParam(key, value) {
         reset_form();
         $('.previews').empty();
         $('.thumbnail-container').addClass('displaynone');
+        $(this).removeClass('disabled');
         return false;
     });
 

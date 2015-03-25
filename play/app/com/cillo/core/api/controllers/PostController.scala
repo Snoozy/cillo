@@ -45,24 +45,24 @@ object PostController extends Controller {
             case Some(_) =>
                 val body: AnyContent = request.body
                 body.asFormUrlEncoded.map { form =>
-                    val repost_id = form.get("repost_id").map(_.head)
+                    val repost_id = form.get("repost_id").map(_.head.toInt)
                     var post_id: Option[Long] = None
+                    val data = form.get("data").map(_.head)
                     if (repost_id.isDefined) {
                         val board_id = form.get("board_id").map(_.head.toInt)
                         val board_name = form.get("board_name").map(_.head)
                         try {
                             if (board_id.isDefined)
-                                post_id = Post.createSimplePost(user.get.user_id.get, None, repost_id.get, board_id.get, true)
+                                post_id = Post.createSimplePost(user.get.user_id.get, None, data.getOrElse(""), board_id.get, repost_id)
                             else if (board_name.isDefined) {
                                 val board = Board.find(board_name.get)
                                 if (board.isDefined)
-                                    post_id = Post.createSimplePost(user.get.user_id.get, None, repost_id.get, board.get.board_id.get, true)
+                                    post_id = Post.createSimplePost(user.get.user_id.get, None, data.getOrElse(""), board.get.board_id.get, repost_id)
                             }
                         } catch {
                             case e: NumberFormatException => // Do nothing so post stays None and if statement is not triggered.
                         }
                     } else {
-                        val data = form.get("data").map(_.head)
                         val media_ids = form.get("media").map(_.head)
                         try {
                             val board_id = form.get("board_id").map(_.head.toInt)
@@ -70,12 +70,12 @@ object PostController extends Controller {
                             if (!media_ids.isDefined) {
                                 if (data.isDefined && board_id.isDefined) {
                                     post_id = Post.createSimplePost(user.get.user_id.get, form.get("title").map(_.head), data.get,
-                                        board_id.get, false)
+                                        board_id.get)
                                 } else if (board_name.isDefined && data.isDefined) {
                                     val board = Board.find(board_name.get)
                                     if (board.isDefined)
                                         post_id = Post.createSimplePost(user.get.user_id.get, form.get("title").map(_.head), data.get,
-                                            board.get.board_id.get, false)
+                                            board.get.board_id.get)
                                 }
                             } else {
                                 if (data.isDefined && board_id.isDefined) {

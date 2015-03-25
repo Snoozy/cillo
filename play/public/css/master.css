@@ -345,8 +345,8 @@ input.search-query {
 }
 
 .repost-dialog {
-    font-size: 12px;
-    color: #999;
+    font-size: 13px;
+    color: #8899a6;
     margin-top:2px;
 }
 
@@ -1033,10 +1033,6 @@ a.whitespace:hover {
     color:#0084B5;
 }
 
-.color-green {
-    color: #0D9D28;
-}
-
 strong {
     color: #2f2f2f;
 }
@@ -1412,9 +1408,10 @@ a:hover {
 
 .category-header {
     margin: 5px 0px;
-    margin-bottom: 10px;
+    margin-bottom: -15px;
     font-weight: bold;
-    font-size: 19px;
+    font-size: 24px;
+    margin-left: 15px;
 }
 
 .board-category {
@@ -1635,7 +1632,7 @@ body {
 .navbar-user-wrapper {
     float: right;
     margin-right: 8px;
-    margin-top: 6px;
+    margin-top: 10px;
     margin-left: 20px;
 }
 
@@ -1644,14 +1641,14 @@ body {
 }
 
 .navbar-user-avatar {
-    width: 32px;
-    height: 32px;
+    width: 24px;
     border-radius: 4px;
 }
 
 .navbar-user-info {
     display: inline-block;
     margin-left: 1px;
+    vertical-align: middle;
 }
 
 .navbar-user-info-text {
@@ -1788,6 +1785,7 @@ body {
 
 .board-follow-btn-container {
     float: right;
+    border-radius: 4px;
 
 }
 
@@ -1795,27 +1793,32 @@ body {
     font-size: 16px;
 }
 
-.board-follow-btn {
+.board-follow-btn,
+.follow-btn {
     height: 36px;
     font-size: 18px;
     color: #fdfdfd;
-    font-weight: 600;
-    text-shadow: 0 -1px rgba(34,25,25,0.5);
+    font-weight: bold;
 }
 
 .notfollowing .board-follow-btn {
 }
 
-.following .board-follow-btn {
+.following .board-follow-btn,
+.following {
     background-color: #019ad2;
     border-color: #057ed0;
 }
 
-.following .board-follow-btn:focus {
+.following .board-follow-btn:focus,
+.following:focus {
+    background-color: #019ad2;
+    border-color: #057ed0;
     color: #fdfdfd;
 }
 
-.following .board-follow-btn:hover .following-text {
+.following .board-follow-btn:hover .following-text,
+.following:hover .following-text{
     display: none;
 }
 
@@ -1836,11 +1839,13 @@ body {
     display: none;
 }
 
-.following .board-follow-btn:hover .unfollow-text {
+.following .board-follow-btn:hover .unfollow-text,
+.following:hover .unfollow-text {
     display: block;
 }
 
-.following .board-follow-btn:hover {
+.following .board-follow-btn:hover,
+.following:hover {
     background-color: #be1931;
     border-color: #be1931;
     color: #fdfdfd;
@@ -1880,7 +1885,7 @@ body {
 }
 
 .user-name-text, .board-name-text {
-    font-weight: 500;
+    font-weight: bold;
 }
 
 strong {
@@ -1909,9 +1914,7 @@ strong {
 }
 
 .inner-container {
-    padding-top:35px;
     border-radius:10px;
-    margin-top:5px;
     margin-left:auto;
     margin-right:auto;
     width:960px;
@@ -2023,4 +2026,35 @@ strong {
 
 .ui-front {
     z-index: 1051;
+}
+
+.repost-content {
+    padding-left: 20px;
+    border-left: 2px solid #e6e6e6;
+}
+
+.glyphicon-retweet {
+    color: #000000;
+    font-size: 13px;
+}
+
+.glyphicon-retweet:hover {
+    text-decoration: none;
+}
+
+.repost-post-anchor {
+    color: #999;
+}
+
+.color-green {
+    color: #0D9D28;
+}
+
+.repost-avatar-container {
+    display: inline-block;
+}
+
+.repost-avatar {
+    width: 24px;
+    border-radius: 2px;
 }

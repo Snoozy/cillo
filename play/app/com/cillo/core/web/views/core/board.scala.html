@@ -19,11 +19,11 @@
 @components.base(board.name + " | Cillo") {
 
 } {
-    <body class="main-background">
+    <body class="main-background@if(!user.isDefined){ logged-out}">
         <div class="page" style="margin:0px;">
             @components.masthead(user, searchBar = true)
             <div id="content">
-                <div class="container-fluid inner-background" style="padding-top:35px;border-radius:10px;margin-top:5px;margin-left:auto;margin-right:auto;width:960px;border-top-left-radius:0px;border-top-right-radius:0px;padding-left:0px;padding-right:0px;">
+                <div class="container-fluid inner-background" style="border-radius:10px;margin-left:auto;margin-right:auto;width:960px;border-top-left-radius:0px;border-top-right-radius:0px;padding-left:0px;padding-right:0px;">
                     <div class="main-row" style="">
                         <div class="board-info-container box-shadow-apply">
                             <div class="board-follow-btn-container @if(following){following}else{notfollowing}" data-board-id="@board.board_id.get">

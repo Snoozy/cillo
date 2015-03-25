@@ -9,7 +9,7 @@
 @components.base(user.name + " | Cillo") {
 
 } {
-    <body class="main-background">
+    <body class="main-background@if(!visitor.isDefined){ logged-out}">
         <div class="page" style="margin:0px;">
             @components.masthead(visitor, searchBar = true)
             <div id="content">

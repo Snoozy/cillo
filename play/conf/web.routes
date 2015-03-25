@@ -5,23 +5,26 @@
 #GET
 
 GET         /                              com.cillo.core.web.controllers.IndexController.homePage
-GET         /register                      com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
+GET         /signup                        com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
 GET         /user/:username                com.cillo.core.web.controllers.UserController.userPage(username: String)
 GET         /login                         com.cillo.core.web.controllers.AuthController.cleanLoginPage
 GET         /boards/create                 com.cillo.core.web.controllers.BoardController.createBoardPage
 GET         /:name/posts/:id               com.cillo.core.web.controllers.PostController.viewPostPage(name: String, id: Int)
 GET         /logout                        com.cillo.core.web.controllers.AuthController.logout
 GET         /boards/explore                com.cillo.core.web.controllers.BoardController.exploreBoards
+GET         /settings                      com.cillo.core.web.controllers.SettingsController.settingsPage
+GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
 
-GET         /debug/health                  com.cillo.core.web.controllers.EtcController.healthCheck
+GET         /debug                         com.cillo.core.web.controllers.EtcController.debug
 
 #POST
-POST        /register                      com.cillo.core.web.controllers.RegisterController.attemptRegister
+POST        /signup                        com.cillo.core.web.controllers.RegisterController.attemptRegister
 POST        /login                         com.cillo.core.web.controllers.AuthController.attemptLogin
 POST        /boards/create                 com.cillo.core.web.controllers.BoardController.attemptCreateBoard
 
 #AJAX CALLS
 POST        /a/post                        com.cillo.core.web.controllers.PostController.post
+POST        /a/repost                      com.cillo.core.web.controllers.PostController.repost
 POST        /a/post/:id/upvote             com.cillo.core.web.controllers.VoteController.upvotePost(id: Int)
 POST        /a/post/:id/downvote           com.cillo.core.web.controllers.VoteController.downvotePost(id: Int)
 POST        /a/post/:id/comment            com.cillo.core.web.controllers.CommentController.createComment(id: Int)

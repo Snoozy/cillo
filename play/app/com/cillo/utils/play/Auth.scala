@@ -54,7 +54,7 @@ object Auth {
         val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
         val user = User.find(user_id)
         if (user.isDefined)
-            Some(user.get.copy(token = Some(byToken)))
+            Some(user.get.copy(token = Some(byToken), session = Some(session)))
         else
             user
     }
@@ -68,7 +68,7 @@ object Auth {
         val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
         val user = User.find(user_id)
         if (user.isDefined)
-            Some(user.get.copy(token = Some(token)))
+            Some(user.get.copy(token = Some(token), session = Some(session)))
         else
             user
     }
@@ -82,7 +82,7 @@ object Auth {
         val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
         val user = User.find(user_id)
         if (user.isDefined)
-            Some(user.get.copy(token = Some(token)))
+            Some(user.get.copy(token = Some(token), session = Some(session)))
         else
             user
     }
@@ -96,7 +96,7 @@ object Auth {
         val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
         val user = User.find(user_id)
         if (user.isDefined)
-            Some(user.get.copy(token = Some(token)))
+            Some(user.get.copy(token = Some(token), session = Some(session)))
         else
             user
     }

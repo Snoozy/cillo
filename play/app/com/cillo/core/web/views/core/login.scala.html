@@ -1,8 +1,10 @@
-@()(implicit request: RequestHeader)
+
 @import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.controllers.RemoteURLController
+
 
 @components.base("Login | Cillo") {
-    <link rel="stylesheet" href="@routes.Assets.at("css/welcome.css")"/>
+    <link rel="stylesheet" href="@RemoteURLController.url("css/welcome.css")"/>
     <style>
 
         .login-wrapper {
@@ -13,7 +15,7 @@
             background-color:white;
             position: absolute;
             left: 50%;
-            top: 50%;
+            top: 232px;
             margin-top: -170px;
             padding:10px 10px 0px 10px;
             margin-left: -180px;
@@ -29,26 +31,28 @@
         }
 
         .login-nav {
-            margin: 20px;
+            margin: 70px;
+        }
+
+        .login-header-wrapper {
+            font-weight: 600;
+            font-size: 24px;
+            margin-bottom: 15px;
         }
 
     </style>
 } {
 
     <body class="main-background">
-        <div class="login-nav">
-            <a class="clear-btn" href="javascript:window.history.back();">Back</a>
-        </div>
+        @com.cillo.core.web.views.html.components.masthead(None, buttons = false)
         <div class="login-wrapper gradient-background" style="min-height:0px;">
-            <div class="login-logo-wrapper">
-                <a href="/">
-                    <img class="login-logo" src="//static.cillo.co/cillo.png">
-                </a>
+            <div class="login-header-wrapper">
+                Cillo Login
             </div>
             <form action="/login" method="POST">
                 <input class="form-control" type="text" name="username" value="" placeholder="Username">
                 <input class="form-control" type="password" name="password" style="margin-top: 5px;" value="" placeholder="Password">
-                <p><input class="btn btn-primary" type="submit" name="login.submitted" value="Login" style="font-weight:bold;font-size:18px;width:95%;margin-bottom:-50px;margin-left:2%;"></p>
+                <p><input class="btn btn-primary" type="submit" name="login.submitted" value="Login" style="font-weight:bold;font-size:18px;width:100%;margin-bottom:-50px;"></p>
                 <br/>
             </form>
         </div>

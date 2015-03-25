@@ -26,6 +26,46 @@ object PostController extends Controller {
         }
     }
 
+    def repost = AuthAction { implicit user => implicit request =>
+        user match {
+            case None => BadRequest("User not authenticated.")
+            case Some(_) => processRepost(request, user.get)
+        }
+    }
+
+    def processRepost(request: Request[AnyContent], user: User): Result = {
+        val body: AnyContent = request.body
+        body.asFormUrlEncoded.map { form =>
+            try {
+                val repost_id = form.get("repost").map(_.head)
+                val comment = form.get("comment").map(_.head)
+                val board_name = form.get("board").map(_.head)
+                if (board_name.isDefined) {
+                    val board = Board.find(board_name.get)
+                    if (board.isDefined) {
+                        val repost = Post.find(repost_id.get.toInt)
+                        if (repost.isDefined) {
+                            val newPost = Post.createSimplePost(user.user_id.get, None, comment.getOrElse(""), board.get.board_id.get, repost.get.post_id)
+                            if (newPost.isDefined) {
+                                Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user)).toString())))
+                            } else {
+                                BadRequest("Invalid parameters.")
+                            }
+                        } else {
+                            BadRequest("Post does not exist.")
+                        }
+                    } else {
+                        BadRequest("Board does not exist.")
+                    }
+                } else {
+                    BadRequest("Board name not defined.")
+                }
+            } catch {
+                case e: java.lang.NumberFormatException => return BadRequest("Invalid parameters.")
+            }
+        }.getOrElse(BadRequest("FormUrlEncoded required."))
+    }
+
     def deletePost(post_id: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest("User not authenticated.")
@@ -50,7 +90,6 @@ object PostController extends Controller {
                 var title = form.get("title").map(_.head)
                 val data = form.get("data").map(_.head)
                 val board_name = form.get("board_name").map(_.head)
-                val repost = form.get("repost").exists(_.head.toBoolean)
                 val media_ids = form.get("media").map(_.head)
                 if (data.isDefined && board_name.isDefined) {
                     val board = Board.find(board_name.get)
@@ -60,7 +99,7 @@ object PostController extends Controller {
                         }
                         val newPost = {
                             if (!media_ids.isDefined || media_ids.get == "") {
-                                Post.createSimplePost(user.user_id.get, title, data.get, board.get.board_id.get, repost)
+                                Post.createSimplePost(user.user_id.get, title, data.get, board.get.board_id.get)
                             } else {
                                 Post.createMediaPost(user.user_id.get, title, data.get, board.get.board_id.get, media_ids.get.split("~").map(_.toInt))
                             }

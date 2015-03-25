@@ -20,7 +20,8 @@ case class User(
     photo: String,
     photo_id: Int,
     bio: String,
-    token: Option[String]
+    token: Option[String] = None,
+    session: Option[JsValue] = None
 )
 
 object User {
@@ -42,11 +43,11 @@ object User {
                 if (photo.isDefined) {
                     val p = Media.find(photo.get)
                     if (p.isDefined)
-                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + p.get.media_name, photo.get, bio, None)
+                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + p.get.media_name, photo.get, bio)
                     else
-                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio, None)
+                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio)
                 } else {
-                    User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio, None)
+                    User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio)
                 }
         }
     }

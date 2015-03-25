@@ -1,5 +1,6 @@
 @(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User], expanded: Boolean = false,
-        boardOpt: Option[com.cillo.core.data.db.models.Board] = None, posterOpt: Option[com.cillo.core.data.db.models.User] = None)
+        boardOpt: Option[com.cillo.core.data.db.models.Board] = None, posterOpt: Option[com.cillo.core.data.db.models.User] = None,
+        full: Boolean = false)
 
 @import com.cillo.core.data.db.models._
 @import com.cillo.core.web.views.html.components
@@ -20,6 +21,13 @@
 @vote = @{
     if (user.isDefined) {
         PostVote.findByPostAndUser(post.post_id.get, user.get.user_id.get)
+    } else {
+        None
+    }
+}
+@repost = @{
+    if (post.repost_id.isDefined) {
+        Post.find(post.repost_id.get)
     } else {
         None
     }
@@ -114,9 +122,58 @@
                 <p class="post-text">
                     @post.data
                 </p>
-                <div class="repost-dialog">
-                    @* TODO Repost dialog *@
-                </div>
+                @if(repost.isDefined) {
+                    @defining(Board.find(repost.get.board_id)) { b =>
+                        <div class="repost-content">
+                            <div class="repost-post-info">
+                                <div class="user-info">
+                                    <label class="u-info-wrapper">
+                                        @defining(User.find(repost.get.user_id)) { u =>
+                                            <div class="repost-avatar-container">
+                                                <a href="/user/@u.get.username">
+                                                    <img class="repost-avatar" src="@u.get.photo">
+                                                </a>
+                                            </div>
+                                            <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor" style="margin-left : 0 px ;">
+                                                <strong class="hover-blue user-name-text">@u.get.name</strong>
+                                            </a>
+                                        }
+                                    </label>
+                                    on
+                                    <label class="u-info-wrapper">
+                                            <a href="/@b.get.name">
+                                                <strong class="hover-blue board-name-text">@b.get.name</strong>
+                                            </a>
+                                    </label>
+                                    <span style="font-weight: 600;">:</span>
+                                </div>
+                            </div>
+                            @if(repost.get.title.isDefined) {
+                                <div class="post-text-title">
+                                    <span class="post-text-title-text">
+                                    @repost.get.title.get
+                                    </span>
+                                </div>
+                            }
+                            @if(repost.get.media.nonEmpty) {
+                                @defining(Media.find(repost.get.media.head)) { m =>
+                                    <div class="post-picture-container">
+                                        <img src="@media.head.get.media_url" class="post-picture">
+                                    </div>
+                                }
+                            }
+                            <p class="post-text">
+                                @repost.get.data
+                            </p>
+                            <div class="repost-dialog">
+                                <a href="/@b.get.name/posts/@repost.get.post_id.get" class="repost-post-anchor">
+                                    <i class="glyphicon glyphicon-share-alt" style="margin-right: -1px;"></i>
+                                    Original post
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
 
             <div class="post-actions">
@@ -144,23 +201,13 @@
                 </span>
                 @if(user.isDefined && (post.user_id != user.get.user_id.get)) {
                     <span>
-                        @if(reposted) {
-                            <span class="p-action repost">
-                                <span class="bullet"> · </span>
-                                <a href="#" class="p-action-anchor action-link-reposted">
-                                    <i class="icon-refresh icon-green" style="margin-right:-5px;"></i>
-                                    <span class="color-green">Reposted</span>
-                                </a>
-                            </span>
-                        } else {
-                            <span class="p-action repost">
-                                <span class="bullet"> · </span>
-                                <a href="#" class="p-action-anchor action-link-repost">
-                                    <i class="icon-refresh" style="margin-right:-5px;"></i>
-                                    <span class="color-blue repost-text">Repost</span>
-                                </a>
-                            </span>
-                        }
+                        <span class="p-action repost">
+                            <span class="bullet"> · </span>
+                            <a href="#" class="p-action-anchor action-link-repost" style="margin-left: 2px;">
+                                <i class="glyphicon glyphicon-retweet@if(reposted){ color-green}"></i>
+                                <span class="color-blue repost-text@if(reposted){ color-green}">Repost@if(reposted){ed}</span>
+                            </a>
+                        </span>
                     </span>
                 }
             </div>
