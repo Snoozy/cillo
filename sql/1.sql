@@ -25,7 +25,8 @@ CREATE TABLE board (
     photo INT,
     privacy TINYINT,
     CONSTRAINT `user__board_fk` FOREIGN KEY (`creator_id`) REFERENCES user(`user_id`),
-    PRIMARY KEY (board_id)
+    PRIMARY KEY (board_id),
+    FULLTEXT(name)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS post;

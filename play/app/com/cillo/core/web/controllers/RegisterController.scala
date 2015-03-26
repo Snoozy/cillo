@@ -18,71 +18,46 @@ object RegisterController extends Controller {
     def attemptRegister = AuthAction { implicit user => implicit request =>
         user match {
             case Some(_) => Redirect("/")
-            case None => val ref: Option[String] = request.getQueryString("ref")
-                if (ref.isDefined && ref.get.equals("welcome")) {
-                    val body: AnyContent = request.body
-                    var name = ""
-                    var password = ""
-                    var email = ""
-                    body.asFormUrlEncoded.map { form =>
-                        name = form.get("name").map(_.head).getOrElse("")
-                        password = form.get("password").map(_.head).getOrElse("")
-                        email = form.get("email").map(_.head).getOrElse("")
+            case None =>
+                val body: AnyContent = request.body
+
+                body.asFormUrlEncoded.map { form =>
+                    if (form.get("wel_submit").map(_.head).isDefined) {
+                        val name = form.get("wel_name").map(_.head).getOrElse("")
+                        val password = form.get("wel_password").map(_.head).getOrElse("")
+                        val email = form.get("wel_email").map(_.head).getOrElse("")
+                        Ok(com.cillo.core.web.views.html.core.register(name)(password)(email))
+                    }  else {
+                        processRegister(request)
                     }
-                    Ok(com.cillo.core.web.views.html.core.register(name)(password)(email))
-                } else {
-                    processRegister(request)
-                }
+                }.getOrElse(Ok(com.cillo.core.web.views.html.core.register()()()))
         }
     }
 
     private def processRegister(request: Request[AnyContent]): Result = {
         val body: AnyContent = request.body
-        body.asJson.map { json =>
-            val username = (json \ "username").asOpt[String]
+        body.asFormUrlEncoded.map { form =>
+            val username = form.get("username").map(_.head)
             if (!username.isDefined)
                 return BadRequest("Username invalid.")
-            val password = (json \ "password").asOpt[String]
+            val password = form.get("password").map(_.head)
             val userExists = User.find(username.get)
             if (userExists.isDefined && password.isDefined) {
                 if (Etc.checkPass(password.get, userExists.get.password))
                     return Redirect("/").withCookies(Auth.newSessionCookies(userExists.get.user_id.get))
-                return BadRequest("Username taken.")
+                return BadRequest("Username taken..")
             }
-            val email = (json \ "email").asOpt[String]
-            val name = (json \ "name").asOpt[String]
+            val email = form.get("email").map(_.head)
+            val name = form.get("name").map(_.head)
             if (username.isDefined && name.isDefined && password.isDefined && email.isDefined) {
                 val newUser = User.create(username.get, name.get, password.get, email.get, None)
                 if (newUser.isDefined)
-                    Redirect("/").withCookies(Auth.newSessionCookies(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).user_id.get))
+                    Redirect("/gettingstarted").withCookies(Auth.newSessionCookies(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).user_id.get))
                 else
                     BadRequest("Error: user creation failed.")
             } else
                 BadRequest("Error: request format invalid.")
-        }.getOrElse {
-            body.asFormUrlEncoded.map { form =>
-                val username = form.get("username").map(_.head)
-                if (!username.isDefined)
-                    return BadRequest("Username invalid.")
-                val password = form.get("password").map(_.head)
-                val userExists = User.find(username.get)
-                if (userExists.isDefined && password.isDefined) {
-                    if (Etc.checkPass(password.get, userExists.get.password))
-                        return Redirect("/").withCookies(Auth.newSessionCookies(userExists.get.user_id.get))
-                    return BadRequest("Username taken..")
-                }
-                val email = form.get("email").map(_.head)
-                val name = form.get("name").map(_.head)
-                if (username.isDefined && name.isDefined && password.isDefined && email.isDefined) {
-                    val newUser = User.create(username.get, name.get, password.get, email.get, None)
-                    if (newUser.isDefined)
-                        Redirect("/").withCookies(Auth.newSessionCookies(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).user_id.get))
-                    else
-                        BadRequest("Error: user creation failed.")
-                } else
-                    BadRequest("Error: request format invalid.")
-            }.getOrElse(return BadRequest("Error."))
-        }
+        }.getOrElse(return BadRequest("Error."))
     }
 
 }

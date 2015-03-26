@@ -14,6 +14,8 @@ GET         /v1/users/:id/posts              com.cillo.core.api.controllers.User
 GET         /v1/users/:id/comments           com.cillo.core.api.controllers.UserController.getComments(id: Int)
 
 GET         /v1/boards/:id/feed              com.cillo.core.api.controllers.BoardController.getBoardTrendingPosts(id: Int)
+GET         /v1/boards/search                com.cillo.core.api.controllers.SearchController.fullSearchBoard
+GET         /v1/boards/autocomplete          com.cillo.core.api.controllers.SearchController.autoCompleteBoard
 
 GET         /v1/me/feed                      com.cillo.core.api.controllers.UserController.getFeed
 GET         /v1/me/describe                  com.cillo.core.api.controllers.UserController.describeSelf

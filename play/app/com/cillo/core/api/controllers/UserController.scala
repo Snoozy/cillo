@@ -114,7 +114,7 @@ object UserController extends Controller {
                 else {
                     val describingUser = userExists.get
                     val json: JsValue = Json.obj(
-                        "boards" -> Board.toJsonSeq(User.getBoards(describingUser.user_id.get), true)
+                        "boards" -> Board.toJsonSeq(User.getBoards(describingUser.user_id.get), Some(true))
                     )
                     Ok(json)
                 }

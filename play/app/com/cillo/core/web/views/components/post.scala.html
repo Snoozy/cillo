@@ -244,7 +244,7 @@
                             <a href="/@board.name/posts/@post.post_id.get">
                                 <div class="view-replies">
                                     <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
-                                    <span class="view-replies-text">View @comment.children.size replies</span>
+                                    <span class="view-replies-text">View @comment.children.size repl@if(comment.children.size != 1){ies}else{y}</span>
                                 </div>
                             </a>
                         </div>

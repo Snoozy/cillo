@@ -24,7 +24,7 @@ object Board {
     private val DefaultPhotoString = "0.png"
     private val ImageURLBase = "https://static.cillo.co/image/"
 
-    private[models] val boardParser: RowParser[Board] = {
+    private[data] val boardParser: RowParser[Board] = {
         get[Option[Int]]("board_id") ~
             get[String]("name") ~
             get[Long]("time") ~
@@ -111,10 +111,17 @@ object Board {
         }
     }
 
-    def toJsonSeq(boards: Seq[Board], following: Boolean = false): JsValue = {
+    def toJsonSeq(boards: Seq[Board], following: Option[Boolean] = None, user: Option[User] = None): JsValue = {
         var json = Json.arr()
         boards.foreach { board =>
-            json = json.+:(toJson(board, following))
+            if (following.isDefined) {
+                json = json.+:(toJson(board, following.get))
+            } else if (user.isDefined) {
+                val f = User.userIsFollowing(user.get.user_id.get, board.board_id.get)
+                json = json.+:(toJson(board, f))
+            } else {
+                json = json.+:(toJson(board))
+            }
         }
         json
     }

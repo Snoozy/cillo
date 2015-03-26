@@ -45,7 +45,13 @@ object PostController extends Controller {
                     if (board.isDefined) {
                         val repost = Post.find(repost_id.get.toInt)
                         if (repost.isDefined) {
-                            val newPost = Post.createSimplePost(user.user_id.get, None, comment.getOrElse(""), board.get.board_id.get, repost.get.post_id)
+                            val repost_id = {
+                                if (repost.get.repost_id.isDefined)
+                                    repost.get.repost_id
+                                else
+                                    repost.get.post_id
+                            }
+                            val newPost = Post.createSimplePost(user.user_id.get, None, comment.getOrElse(""), board.get.board_id.get, repost_id)
                             if (newPost.isDefined) {
                                 Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user)).toString())))
                             } else {

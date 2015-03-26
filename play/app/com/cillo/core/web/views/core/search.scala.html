@@ -1,0 +1,19 @@
+@(user: Option[com.cillo.core.data.db.models.User], boards: Seq[com.cillo.core.data.db.models.Board], query: String)
+
+@import com.cillo.core.web.views.html.components
+
+@components.base(query + " - Cillo"){
+
+}{
+    <body class="main-background@if(!user.isDefined){ logged-out}">
+        <div class="page" style="margin:0px;">
+            @components.masthead(user, searchBar = true)
+            <div id="content">
+                <div class="container-fluid inner-container">
+                    <div class="main-row" style="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+}

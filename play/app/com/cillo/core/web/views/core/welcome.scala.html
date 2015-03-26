@@ -8,81 +8,110 @@
     <link rel="stylesheet" href="@RemoteURLController.url("css/welcome.css")"/>
 
     <script type="text/javascript" charset="utf-8">
-    //IE detection
-    var ie = (function(){
+        //IE detection
+        var ie = (function(){
 
-    var undef,
-    v = 3,
-    div = document.createElement('div'),
-    all = div.getElementsByTagName('i');
+        var undef,
+        v = 3,
+        div = document.createElement('div'),
+        all = div.getElementsByTagName('i');
 
-    while (
-    div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
-    all[0]
-    );
+        while (
+            div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+            all[0]
+        );
 
-    return v > 4 ? v : undef;
+        return v > 4 ? v : undef;
 
-    }())
+        }())
     </script>
 
     <script type="text/javascript">
-    $(window).load(function() {
+        $(window).load(function() {
 
-    if (ie < 9) {
-    $('.modal').appendTo($('body'));
-    $( "#modal" ).modal('show');
-    }
-    });
+            if (ie < 9) {
+                $('.modal').appendTo($('body'));
+                $( "#modal" ).modal('show');
+            }
+        });
     </script>
 
     <script type="text/javascript" charset="utf-8">
 
-    var colCount = 0;
-    var colWidth = 256;
-    var margin = 30;
-    var spaceLeft = 0;
-    var windowWidth = 0;
-    var blocks = [];
+        var colCount = 0;
+        var colWidth = 256;
+        var margin = 30;
+        var spaceLeft = 0;
+        var windowWidth = 0;
+        var blocks = [];
 
-    $(function(){
-    $(window).resize(setupBlocks);
-    $('.block').addClass('load');
-    });
+        $(function(){
+            $(window).resize(setupBlocks);
+            $('.block').addClass('load');
+        });
 
-    function setupBlocks() {
-    windowWidth = $(window).width();
-    blocks = [];
+        function setupBlocks() {
+            windowWidth = $(window).width();
+            blocks = [];
 
-    // Calculate the margin so the blocks are evenly spaced within the window
-    colCount = Math.floor(windowWidth/(colWidth+margin*2));
-    spaceLeft = (windowWidth - ((colWidth*colCount)+(margin*(colCount-1)))) / 2;
+            // Calculate the margin so the blocks are evenly spaced within the window
+            colCount = Math.floor(windowWidth/(colWidth+margin*2));
+            spaceLeft = (windowWidth - ((colWidth*colCount)+(margin*(colCount-1)))) / 2;
 
-    for(var i=0;i<colCount;i++){
-    blocks.push(margin);
-    }
-    positionBlocks();
-    }
+            for(var i=0;i<colCount;i++){
+                blocks.push(margin);
+            }
+            positionBlocks();
+        }
 
-    function positionBlocks() {
-    $('.block').each(function(i){
-    var min = Array.min(blocks);
-    var index = $.inArray(min, blocks);
-    var leftPos = margin+(index*(colWidth+margin));
-    $(this).css({
-    'left':(leftPos+spaceLeft-90)+'px',
-    'top': 320+min+'px'
-    });
-    blocks[index] = min+$(this).outerHeight()+margin;
-    });
-    }
+        function positionBlocks() {
+            $('.block').each(function(i){
+                var min = Array.min(blocks);
+                var index = $.inArray(min, blocks);
+                var leftPos = margin+(index*(colWidth+margin));
+                $(this).css({
+                    'left':(leftPos+spaceLeft-90)+'px',
+                    'top': 320+min+'px'
+                });
+                blocks[index] = min+$(this).outerHeight()+margin;
+            });
+        }
 
-    // Function to get the Min value in Array
-    Array.min = function(array) {
-    return Math.min.apply(Math, array);
-    };
+        // Function to get the Min value in Array
+        Array.min = function(array) {
+            return Math.min.apply(Math, array);
+        };
 
+    </script>
 
+    <script>
+        $(function() {
+            $('.active-ph').blur(function() {
+                if ($(this).val()) {
+                    $(this).addClass('filled');
+                } else if (!$(this).val()) {
+                    $(this).removeClass('filled');
+                }
+            });
+
+            $('.active-ph').each(function() {
+                if ($(this).val()) {
+                    $(this).addClass('filled');
+                } else if (!$(this).val()) {
+                    $(this).removeClass('filled');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
     </script>
 
 } {
@@ -104,20 +133,20 @@
                         </p>
                     </div>
                     <div class="signup-form-wrapper">
-                        <form role="form" method="post" action="/signup?ref=welcome" style="float: left;width: 255px;">
+                        <form role="form" method="post" action="/signup" style="float: left;width: 255px;">
                             <div class="form-board">
-                                <input type="text" class="form-control active-ph" name="name" required>
+                                <input type="text" class="form-control active-ph" name="wel_name">
                                 <label placeholder="Full Name" class="active-ph"></label>
                             </div>
                             <div class="form-board">
-                                <input type="password" class="form-control active-ph" name="password" required>
+                                <input type="password" class="form-control active-ph" name="wel_password">
                                 <label placeholder="Password" class="active-ph"></label>
                             </div>
                             <div class="form-board">
-                                <input type="text" class="form-control active-ph" name="email" required>
+                                <input type="text" class="form-control active-ph" name="wel_email">
                                 <label placeholder="Email" class="active-ph"></label>
                             </div>
-                            <button type="submit" class="btn btn-primary signup-submit">Sign Up for Cillo</button>
+                            <button type="submit" class="btn btn-primary signup-submit" name="wel_submit">Sign Up for Cillo</button>
                         </form>
                         <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
                             <div class="or">OR</div>

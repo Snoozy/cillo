@@ -59,37 +59,39 @@
                             <div id="carousel@carouselId" class="carousel">
                                 <ul>
                                     @for(g <- value) {
-                                        @defining(Board.find(g).get) { b =>
-                                            <li>
-                                                <div class="trending-group-wrapper" style="margin-left:15px;margin-right:15px;">
-                                                    <div class="trending-group-content">
-                                                        <div class="trending-group-avatar">
-                                                            <a href="/@b.name">
-                                                                <img class="trending-group-avatar" src="@b.photo">
-                                                            </a>
-                                                        </div>
-                                                        <div class="trending-group-bottom">
-                                                            <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.board_id.get">
-                                                                <span class="btn-text follow-text">Follow</span>
-                                                                <span class="btn-text following-text">Following</span>
-                                                                <span class="btn-text unfollow-text">Unfollow</span>
-                                                            </button>
-                                                            <div class="trending-group-header">
-                                                                <a href="/@b.name" class="">
-                                                                    <span class="trending-group-name">
-                                                                        @b.name
-                                                                    </span>
+                                        @defining(Board.find(g)) { b =>
+                                            @if(b.isDefined) {
+                                                <li>
+                                                    <div class="trending-group-wrapper" style="margin-left:15px;margin-right:15px;">
+                                                        <div class="trending-group-content">
+                                                            <div class="trending-group-avatar">
+                                                                <a href="/@b.get.name">
+                                                                    <img class="trending-group-avatar" src="@b.get.photo">
                                                                 </a>
                                                             </div>
-                                                            <div class="trending-group-descr">
-                                                                <span class="trending-group-descr-content">
-                                                                @Etc.ellipsize(b.description, 52)
-                                                                </span>
+                                                            <div class="trending-group-bottom">
+                                                                <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.board_id.get">
+                                                                    <span class="btn-text follow-text">Follow</span>
+                                                                    <span class="btn-text following-text">Following</span>
+                                                                    <span class="btn-text unfollow-text">Unfollow</span>
+                                                                </button>
+                                                                <div class="trending-group-header">
+                                                                    <a href="/@b.get.name" class="">
+                                                                        <span class="trending-group-name">
+                                                                            @b.get.name
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="trending-group-descr">
+                                                                    <span class="trending-group-descr-content">
+                                                                    @Etc.ellipsize(b.get.description, 52)
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            } else {}
                                         }
                                     }
                                 </ul>
@@ -101,6 +103,9 @@
                         @(carouselId = carouselId + 1)
                     }
 
+                </div>
+                <div class="next-container" style="text-align:right;margin-top:15px;">
+                    <a href="/" class="btn btn-primary">Continue</a>
                 </div>
             </div>
         </div>

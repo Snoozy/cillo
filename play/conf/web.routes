@@ -14,6 +14,7 @@ GET         /logout                        com.cillo.core.web.controllers.AuthCo
 GET         /boards/explore                com.cillo.core.web.controllers.BoardController.exploreBoards
 GET         /settings                      com.cillo.core.web.controllers.SettingsController.settingsPage
 GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
+GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
 
 GET         /debug                         com.cillo.core.web.controllers.EtcController.debug
 

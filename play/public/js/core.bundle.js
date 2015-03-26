@@ -3649,4 +3649,12 @@ function insertParam(key, value) {
         }
     });
 
+    $('.active-ph').keypress(function() {
+        if ($(this).val()) {
+            $(this).addClass('filled');
+        } else if (!$(this).val()) {
+            $(this).removeClass('filled');
+        }
+    });
+
 })(jQuery);

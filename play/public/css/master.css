@@ -1561,24 +1561,24 @@ input.active-ph {
     resize: none;
     outline: none;
 }
-input[required].active-ph:focus {
+.active-ph:focus {
     border-color: #00bafa;
 }
-input[required].active-ph:focus + label[placeholder].active-ph:before {
+.active-ph:focus + label[placeholder].active-ph:before {
     color: #00bafa;
 }
-input[required].active-ph:focus + label[placeholder].active-ph:before,
-input[required].active-ph:valid + label[placeholder].active-ph:before {
+.active-ph:focus + label[placeholder].active-ph:before,
+.active-ph.filled + label[placeholder].active-ph:before {
     -webkit-transition-duration: .2s;
     transition-duration: .2s;
     -webkit-transform: translate(0, -1.3em) scale(0.9, 0.9);
     -ms-transform: translate(0, -1.3em) scale(0.9, 0.9);
     transform: translate(0, -1.3em) scale(0.9, 0.9);
 }
-input[required].active-ph:invalid + label[placeholder][alt].active-ph:before {
+.active-ph:not(.filled) + label[placeholder][alt].active-ph:before {
     content: attr(alt);
 }
-input[required].active-ph + label[placeholder].active-ph {
+.active-ph + label[placeholder].active-ph {
     display: block;
     pointer-events: none;
     line-height: 1em;
@@ -1587,7 +1587,7 @@ input[required].active-ph + label[placeholder].active-ph {
     margin-top: calc(-3em + 3px);
     margin-bottom: calc((3em - 1em) - 10px);
 }
-input[required].active-ph + label[placeholder].active-ph:before {
+.active-ph + label[placeholder].active-ph:before {
     content: attr(placeholder);
     display: inline-block;
     margin: 0 calc(1em + 2px);

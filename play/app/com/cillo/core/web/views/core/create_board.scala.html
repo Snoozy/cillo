@@ -31,18 +31,20 @@
     $('form').submit();
     });
 
-    $('.name-input').popover({
-    title: 'Group Name',
-    content: 'This will uniquely identify your board, and will be used as your groups URL. No spaces allowed.',
-    trigger: 'focus',
-    placement: 'left'
+    $('.active-ph').blur(function() {
+    if ($(this).val()) {
+    $(this).addClass('filled');
+    } else if (!$(this).val()) {
+    $(this).removeClass('filled');
+    }
     });
 
-    $('.description-input').popover({
-    title: 'Group Description',
-    content: 'Describe what your board is about and what you wish everyone who joins to see.',
-    trigger: 'focus',
-    placement: 'left'
+    $('.active-ph').each(function() {
+    if ($(this).val()) {
+    $(this).addClass('filled');
+    } else if (!$(this).val()) {
+    $(this).removeClass('filled');
+    }
     });
 
     });
