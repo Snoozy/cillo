@@ -6,7 +6,7 @@ import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
 import play.api.Play.current
 import play.api.mvc._
 import play.api.{Application, GlobalSettings, Play}
-import com.cillo.social.FB
+import com.cillo.core.social.FB
 import play.filters.gzip.GzipFilter
 
 object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with GlobalSettings {

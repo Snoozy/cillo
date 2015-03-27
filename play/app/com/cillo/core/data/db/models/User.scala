@@ -21,7 +21,7 @@ case class User(
     photo_id: Int,
     bio: String,
     token: Option[String] = None,
-    session: Option[JsValue] = None
+    session: Option[Map[String, String]] = None
 )
 
 object User {

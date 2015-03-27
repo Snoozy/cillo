@@ -1,8 +1,10 @@
-package com.cillo.social
+package com.cillo.core.social
 
+import com.ning.http.client.{AsyncHttpClientConfig, AsyncHttpClient}
 import play.api.libs.json._
 import play.api.libs.ws._
 import scala.concurrent.duration._
+import play.api.Play.current
 import scala.concurrent.{Await, Future}
 
 case class FBUninitialized(message: String) extends Exception(message)
@@ -44,7 +46,22 @@ object FB {
 
 class FBInstance(t: String) {
     val token: String = t
+    implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
+    def getBasicInfo: JsValue = {
+        val res = WS.url(FB.facebookServerUrl + "/v2.3/me").withQueryString("access_token" -> token).get()
+            .map { response =>
+                response.json
+            }
+        Await.result(res, 5 seconds)
+    }
 
+    def getPictureUrl: String = {
+        val res = WS.url(FB.facebookServerUrl + "/v2.3/me/picture").withQueryString("access_token" -> token).get()
+            .map { response =>
+                (response.json \ "data" \ "url").as[String]
+            }
+        Await.result(res, 5 seconds)
+    }
 
 }

@@ -5,6 +5,7 @@ import com.cillo.core.web.views.html.components
 import com.cillo.core.web.views.html.core
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
+import com.cillo.core.social.FB
 import play.api.mvc._
 
 object SocialController extends Controller {
@@ -15,7 +16,8 @@ object SocialController extends Controller {
             case None =>
                 val token = request.getQueryString("token")
                 if (token.isDefined) {
-
+                    val fb = FB.createFBInstance(token.get)
+                    Ok("s")
                 } else {
                     NotFound("Token needed for facebook login")
                 }

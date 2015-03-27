@@ -71,7 +71,7 @@
                 var leftPos = margin+(index*(colWidth+margin));
                 $(this).css({
                     'left':(leftPos+spaceLeft-90)+'px',
-                    'top': 320+min+'px'
+                    'top': 340+min+'px'
                 });
                 blocks[index] = min+$(this).outerHeight()+margin;
             });
@@ -108,10 +108,9 @@
         window.fbAsyncInit = function() {
             FB.init({
                 appId : '911323222224791',
-                cookie : true, // enable cookies to allow the server to access
-                // the session
-                xfbml : true, // parse social plugins on this page
-                version : 'v2.2' // use version 2.2
+                cookie : true,
+                xfbml : true,
+                version : 'v2.3'
             });
         };
 

@@ -4,14 +4,14 @@ import com.cillo.core.data.cache.Memcached
 import com.cillo.core.data.db.models.User
 import com.cillo.utils.Etc
 import com.cillo.utils.security.SecureRand
-import play.api.libs.json._
 import play.api.mvc._
+import com.cillo.utils.Session
 
 object Auth {
 
     def AuthAction(f: (Option[User]) => (Request[AnyContent]) => Result) = Action { implicit request: Request[AnyContent] =>
         try {
-            val user = parseUserFromPostData orElse parseUserFromQueryString orElse parseUserFromCookie orElse parseUserFromHeader
+            val user = parseUserFromCookie orElse parseUserFromPostData orElse parseUserFromQueryString  orElse parseUserFromHeader
             f(user)(request)
         } catch {
             case e: AuthTokenCookieExpired =>
@@ -40,8 +40,7 @@ object Auth {
     private def getNewUserSessionId(id: Int): String = {
         val newSeshId = SecureRand.newSessionId()
         val currTime = System.currentTimeMillis().toString
-        val json: JsValue = Json.obj("creation_time" -> currTime, "user_id" -> id)
-        Memcached.set(newSeshId, Json.stringify(json))
+        new Session(newSeshId).multiSet(Map("creation_time" -> currTime, "user_id" -> id.toString))
         newSeshId
     }
 
@@ -50,13 +49,7 @@ object Auth {
         val memcachedRes: Option[String] = Option(Memcached.get(byToken))
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             throw AuthTokenCookieExpired("Cookie auth token expired.")
-        val session = Json.parse(memcachedRes.get)
-        val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
-        val user = User.find(user_id)
-        if (user.isDefined)
-            Some(user.get.copy(token = Some(byToken), session = Some(session)))
-        else
-            user
+        parseMemcached(memcachedRes.get, byToken)
     }
 
     private def parseUserFromPostData(implicit request: Request[AnyContent]): Option[User] = {
@@ -64,13 +57,7 @@ object Auth {
         val memcachedRes: Option[String] = Option(Memcached.get(token))
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             return None
-        val session = Json.parse(memcachedRes.get)
-        val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
-        val user = User.find(user_id)
-        if (user.isDefined)
-            Some(user.get.copy(token = Some(token), session = Some(session)))
-        else
-            user
+        parseMemcached(memcachedRes.get, token)
     }
 
     private def parseUserFromQueryString(implicit request: Request[AnyContent]): Option[User] = {
@@ -78,13 +65,7 @@ object Auth {
         val memcachedRes: Option[String] = Option(Memcached.get(token))
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             return None
-        val session = Json.parse(memcachedRes.get)
-        val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
-        val user = User.find(user_id)
-        if (user.isDefined)
-            Some(user.get.copy(token = Some(token), session = Some(session)))
-        else
-            user
+        parseMemcached(memcachedRes.get, token)
     }
 
     private def parseUserFromHeader(implicit request: Request[AnyContent]): Option[User] = {
@@ -92,13 +73,16 @@ object Auth {
         val memcachedRes: Option[String] = Option(Memcached.get(token))
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             return None
-        val session = Json.parse(memcachedRes.get)
-        val user_id = (session \ "user_id").asOpt[Int].getOrElse(return None)
+        parseMemcached(memcachedRes.get, token)
+    }
+
+    private def parseMemcached(memcached: String, token: String): Option[User] = {
+        val map = Etc.deserializeMap(memcached)
+        val user_id = map.getOrElse("user_id", return None).toInt
         val user = User.find(user_id)
-        if (user.isDefined)
-            Some(user.get.copy(token = Some(token), session = Some(session)))
-        else
-            user
+        if (user.isDefined) {
+            Some(user.get.copy(token = Some(token), session = Some(map)))
+        } else user
     }
 
 }
