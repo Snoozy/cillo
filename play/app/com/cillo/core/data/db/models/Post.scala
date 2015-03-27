@@ -58,11 +58,19 @@ object Post {
                 return None
         }
 
+        val titleParsed: Option[String] = {
+            if (title.isDefined) {
+                Some(title.get.replace("\n", ""))
+            } else {
+                None
+            }
+        }
+
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>
             SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
-                " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> title, 'data -> data,
+                " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> titleParsed, 'data -> data,
                     'board_id -> board_id, 'repost_id -> repost_id, 'time -> time).executeInsert()
         }
     }
@@ -74,10 +82,18 @@ object Post {
 
         val media_string = media_ids.mkString("~")
 
+        val titleParsed: Option[String] = {
+            if (title.isDefined) {
+                Some(title.get.replace("\n", ""))
+            } else {
+                None
+            }
+        }
+
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO post (user_id, title, data, board_id, repost, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
-                " {board_id}, {repost}, 0, {time}, 0, 1, {media})").on('user_id -> user_id, 'title -> title, 'data -> data,
-                    'board_id -> board_id, 'repost -> false, 'time -> time, 'media -> media_string).executeInsert()
+            SQL("INSERT INTO post (user_id, title, data, board_id, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
+                " {board_id}, 0, {time}, 0, 1, {media})").on('user_id -> user_id, 'title -> titleParsed, 'data -> data,
+                    'board_id -> board_id, 'time -> time, 'media -> media_string).executeInsert()
         }
     }
 

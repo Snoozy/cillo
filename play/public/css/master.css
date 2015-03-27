@@ -285,6 +285,8 @@ body {
 }
 
 .follower-count {
+    float: right;
+    font-weight: bold;
 }
 
 .dropdown-menu.pull-right:before {
@@ -657,7 +659,6 @@ textarea {
 
 .description {
     margin-bottom:10px;
-    font-style:italic;
 }
 
 .profile-container {
@@ -685,7 +686,7 @@ textarea {
 .comments-container {
     font-size:13px;
     margin-top:0px;
-    margin-left:15px;
+    margin-left:12px;
     word-wrap:break-word;
 }
 
@@ -730,7 +731,6 @@ textarea {
 }
 
 .comment {
-    margin-bottom:7px;
 }
 
 strong {
@@ -1130,7 +1130,7 @@ strong:hover {
 
 .margin-maker {
     position: relative;
-    margin-left: 55px;
+    margin-left: 60px;
 }
 
 .post {
@@ -1250,7 +1250,7 @@ a:hover {
 }
 
 .comment-actions {
-    margin-left: 40px;
+    margin-left: 37px;
 }
 
 .post-timestamp:hover {
@@ -1706,7 +1706,7 @@ body {
 
 .post-avatar-wrapper {
     float: left;
-    margin-left: -53px;
+    margin-left: -56px;
 }
 
 .p-action-anchor:focus {
@@ -1739,7 +1739,7 @@ body {
     padding-top: 20px;
 }
 
-.board-info-container {
+.big-container {
     background-color: #fdfdfd;
     padding: 15px;
     border-radius: 4px;
@@ -1937,8 +1937,8 @@ strong {
 }
 
 .comment-avatar {
-    height: 34px;
-    width: 34px;
+    height: 32px;
+    width: 32px;
     float: left;
     border-radius: 3px;
 }
@@ -1989,7 +1989,14 @@ strong {
 }
 
 .comment-children-container {
-    margin-left: 35px;
+    margin-left: 37px;
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #e1e8ed;
+}
+
+.comment-children-container:empty {
+    border: none;
 }
 
 .previews {
@@ -2057,4 +2064,55 @@ strong {
 .repost-avatar {
     width: 24px;
     border-radius: 2px;
+}
+
+.search-header {
+    font-weight: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 5px;
+    text-align: center;
+    width: 440px;
+    margin: auto;
+    margin-bottom: 7px;
+}
+
+h2 {
+    line-height: 22px;
+    color: #66757f;
+    font-size: 22px;
+    text-rendering: optimizeLegibility;
+}
+
+.search-query-text {
+    font-weight: bold;
+}
+
+.search-content {
+    border-top: 1px solid #e1e8ed;
+}
+
+.board-wrapper {
+    border-bottom: 1px solid #e1e8ed;
+    padding: 1px;
+}
+
+.no-results-search {
+    font-size: 13px;
+    color: #8899a6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.comment-container {
+    margin-top: 5px;
+}
+
+.root-comment {
+    margin-left: -12px;
+    padding-left: 10px;
+    border-left: 2px solid rgb(220, 222, 227);
 }

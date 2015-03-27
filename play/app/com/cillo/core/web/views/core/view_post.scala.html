@@ -10,7 +10,11 @@
 @board = @{Board.find(post.board_id)}
 
 @components.base(poster.get.name + "'s post on " + board.get.name + " | Cillo") {
-
+    <style>
+        .comment-children-container {
+            border-top: 1px solid #e1e8ed;
+        }
+    </style>
 } {
     <body class="single-post main-background@if(!user.isDefined){ logged-out}">
         <div class="page" style="margin:0px;">

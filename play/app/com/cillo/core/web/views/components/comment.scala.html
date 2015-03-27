@@ -1,4 +1,5 @@
-@(commentTreeNode: com.cillo.core.data.db.models.CommentTreeNode, user: Option[com.cillo.core.data.db.models.User], expanded: Boolean = false)
+@(commentTreeNode: com.cillo.core.data.db.models.CommentTreeNode, user: Option[com.cillo.core.data.db.models.User],
+        expanded: Boolean = false, root: Boolean = false)
 
 @import com.cillo.core.data.db.models._
 @import com.cillo.utils.Etc
@@ -15,46 +16,48 @@
 }
 @commenter = @{User.find(comment.user_id).get}
 
-<div class="comment" data-comment-id="@comment.comment_id.get" data-post-id="@comment.post_id">
-    <div class="comment-avatar">
-        <a href="/user/@commenter.username">
-            <img src="@commenter.photo" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
-        </a>
-    </div>
-    <a href="/user/@commenter.username" style="margin-right:2px;margin-left:3px;">
-        <strong style="font-weight: 500;">@commenter.name</strong>
-    </a>
-    ·
-    <span class="comment-timestamp">
-        @Etc.convertEpochToTimestamp(comment.time)
-    </span>
-    <p class="comment-content">
-        @comment.data
-    </p>
-    <div class="comment-actions">
-        <span class="like-count" style="margin: 0px;">
-            @comment.votes
-        </span>
-        ·
-        <a href="#" class="c-action like@if(vote.isDefined && vote.get.value == 1){ liked}">
-            <i class="icon-upvote"></i>
-        </a>
-
-        <span style="color:#ccc"> | </span>
-
-        <a href="#" class="c-action dislike@if(vote.isDefined && vote.get.value == -1){ disliked}" style="margin-left:-2px;margin-right:-2px;">
-            <i class="icon-downvote"></i>
-        </a>
-        ·
-        <a href="#" class="c-action reply">
-            <span class="color-blue">Reply</span>
-        </a>
-    </div>
-        <div class="comment-children-container">
-        @if(expanded) {
-            @for(child <- commentTreeNode.children) {
-                @components.comment(child, user, expanded = expanded)
-            }
-        }
+<div class="@if(root){root-comment }comment-container">
+    <div class="comment" data-comment-id="@comment.comment_id.get" data-post-id="@comment.post_id">
+        <div class="comment-avatar">
+            <a href="/user/@commenter.username">
+                <img src="@commenter.photo" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
+            </a>
         </div>
+        <a href="/user/@commenter.username" style="margin-right:2px;margin-left:3px;">
+            <strong style="font-weight: 500;">@commenter.name</strong>
+        </a>
+        ·
+        <span class="comment-timestamp">
+            @Etc.convertEpochToTimestamp(comment.time)
+        </span>
+        <p class="comment-content">
+            @Html(Etc.parseHTML(comment.data))
+        </p>
+        <div class="comment-actions">
+            <span class="like-count" style="margin: 0px;">
+                @comment.votes
+            </span>
+            ·
+            <a href="#" class="c-action like@if(vote.isDefined && vote.get.value == 1){ liked}">
+                <i class="icon-upvote"></i>
+            </a>
+
+            <span style="color:#ccc"> | </span>
+
+            <a href="#" class="c-action dislike@if(vote.isDefined && vote.get.value == -1){ disliked}" style="margin-left:-2px;margin-right:-2px;">
+                <i class="icon-downvote"></i>
+            </a>
+            ·
+            <a href="#" class="c-action reply">
+                <span class="color-blue">Reply</span>
+            </a>
+        </div>
+            <div class="comment-children-container">
+                @if(expanded) {
+                    @for(child <- commentTreeNode.children) {
+                        @components.comment(child, user, expanded = expanded)
+                    }
+                }
+            </div>
+    </div>
 </div>

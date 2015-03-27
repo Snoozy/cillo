@@ -15,7 +15,7 @@
             <div id="content">
                 <div class="container-fluid inner-container">
                     <div class="main-row" style="">
-                        <div class="board-info-container box-shadow-apply">
+                        <div class="big-container box-shadow-apply">
                             <div class="board-info">
                                 <div class="board-data-container">
                                     <div class="board-avatar">
@@ -69,7 +69,7 @@
                                             </a>
                                         </span>
                                         <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
-                                        @Etc.ellipsize(b.description, 53)
+                                        @Html(Etc.parseHTML(Etc.ellipsize(b.description, 53)))
                                         </p>
                                     </div>
                                 </div>

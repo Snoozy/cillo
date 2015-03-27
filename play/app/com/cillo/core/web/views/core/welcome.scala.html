@@ -105,6 +105,16 @@
     </script>
 
     <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId : '911323222224791',
+                cookie : true, // enable cookies to allow the server to access
+                // the session
+                xfbml : true, // parse social plugins on this page
+                version : 'v2.2' // use version 2.2
+            });
+        };
+
         (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
@@ -112,6 +122,17 @@
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+
+        $(function() {
+            $('.fb-signup-button' ).click(function() {
+                FB.login(function(response) {
+                    if (response.status === 'connected') {
+                        console.log(response.authResponse.accessToken);
+                        console.log(response);
+                    }
+                });
+            });
+        });
     </script>
 
 } {
@@ -151,7 +172,7 @@
                         <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
                             <div class="or">OR</div>
                             <div class="fb-signup">
-                                <a href="/facebook/auth" class="fb-signup-button">
+                                <a href="#" class="fb-signup-button">
                                     <div class="fb-register-fill">
                                         <img alt="Facebook Signup" src="//static.cillo.co/facebookLogo.png" style="margin: 10px 5px;">
                                         <div class="fb-register-text">

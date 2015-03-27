@@ -6,6 +6,7 @@ import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
 import play.api.Play.current
 import play.api.mvc._
 import play.api.{Application, GlobalSettings, Play}
+import com.cillo.social.FB
 import play.filters.gzip.GzipFilter
 
 object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with GlobalSettings {
@@ -26,6 +27,10 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         val addr: String = Play.current.configuration.getString("memcached.address").getOrElse("127.0.0.1:11211")
         Memcached.setAddr(addr)
         Memcached.get("init")
+        val fbId: Option[String] = Play.current.configuration.getString("facebook.client_id")
+        val fbSecret: Option[String] = Play.current.configuration.getString("facebook.client_secret")
+        if (fbId.isDefined && fbSecret.isDefined)
+            FB.init(fbId.get, fbSecret.get)
     }
 
 }

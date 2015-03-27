@@ -3263,17 +3263,6 @@ function insertParam(key, value) {
 
     colorVotes('comment');
 
-    $(document).on('keypress', '.comment-val', function (event) {
-        if (event.keyCode == 13 && event.shiftKey) {
-            var content = this.value;
-            var caret = getCaret(this);
-            this.value = content.substring(0, caret) + "\n" + content.substring(carent, content.length - 1);
-            event.stopPropagation();
-        } else if (event.keyCode == 13) {
-            $(this).parent().submit();
-        }
-    });
-
     function getCaret(el) {
         if (el.selectionStart) {
             return el.selectionStart;
@@ -3469,8 +3458,8 @@ function insertParam(key, value) {
     $(document).on('click', '.c-action.reply', function(e) {
         e.preventDefault();
         var reply_form = $(this).closest('.comments-container').find('.comment-form').first().clone();
-        console.log(reply_form);
         reply_form.addClass('comment-reply');
+        reply_form.find('.comment-submit-btn').attr('value', 'Reply');
         reply_form.attr('data-reply-id', $(this).closest('.comment').data('comment-id'));
         reply_form.find('.comment-val').attr('placeholder', 'Reply to comment...');
         var $comment_cont = $(this).closest('.comment-actions').siblings('.comment-children-container');

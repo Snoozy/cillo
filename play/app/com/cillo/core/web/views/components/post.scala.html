@@ -120,7 +120,7 @@
                     }
                 }
                 <p class="post-text">
-                    @post.data
+                    @Html(Etc.parseHTML(post.data))
                 </p>
                 @if(repost.isDefined) {
                     @defining(Board.find(repost.get.board_id)) { b =>
@@ -163,7 +163,7 @@
                                 }
                             }
                             <p class="post-text">
-                                @repost.get.data
+                                @Html(Etc.parseHTML(repost.get.data))
                             </p>
                             <div class="repost-dialog">
                                 <a href="/@b.get.name/posts/@repost.get.post_id.get" class="repost-post-anchor">
@@ -238,7 +238,7 @@
                 }
 
                 @for(comment <- comments.rootComments.take(5)) {
-                    @components.comment(comment, user, expanded = expanded)
+                    @components.comment(comment, user, expanded = expanded, root = true)
                     @if(comment.children.nonEmpty && !expanded) {
                         <div class="view-replies-wrapper">
                             <a href="/@board.name/posts/@post.post_id.get">
