@@ -7,6 +7,7 @@ import com.cillo.core.data.db.models.Post.postParser
 import com.cillo.utils.Etc.makeDigest
 import play.api.Play.current
 import play.api.db._
+import com.cillo.utils.Session
 import play.api.libs.json._
 
 case class User(
@@ -21,7 +22,7 @@ case class User(
     photo_id: Int,
     bio: String,
     token: Option[String] = None,
-    session: Option[Map[String, String]] = None
+    session: Option[Session] = None
 )
 
 object User {

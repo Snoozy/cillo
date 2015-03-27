@@ -81,7 +81,7 @@ object Auth {
         val user_id = map.getOrElse("user_id", return None).toInt
         val user = User.find(user_id)
         if (user.isDefined) {
-            Some(user.get.copy(token = Some(token), session = Some(map)))
+            Some(user.get.copy(token = Some(token), session = Some(new Session(token))))
         } else user
     }
 

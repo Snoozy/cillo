@@ -16,11 +16,13 @@ class Session(t: String) {
     def set(key: String, value: String) = multiSet(Map(key -> value))
 
     def multiSet(m: Map[String, String]) = {
-        val curr = Etc.deserializeMap(Memcached.get(token))
+        val curr = Option(Etc.deserializeMap(Memcached.get(token)))
         val newMap: mutable.Map[String, String] = new mutable.HashMap[String, String]()
-        curr.foreach {
-            case (k, v) =>
-                newMap.put(k, v)
+        if (curr.isDefined) {
+            curr.get.foreach {
+                case (k, v) =>
+                    newMap.put(k, v)
+            }
         }
         m.foreach {
             case (k, v) =>
@@ -31,9 +33,15 @@ class Session(t: String) {
     }
 
     def remove(key: String) = {
-        val curr = Memcached.get(key)
-        val newStr = curr.substring(0, curr.indexOf("\"" + key + "\"")) + curr.substring(curr.indexOf(",", curr.indexOf("\"" + key +"\"")) + 1)
-        Memcached.set(key, newStr)
+        val curr = Option(Etc.deserializeMap(Memcached.get(token)))
+        if (curr.isDefined) {
+            val newMap = curr.get - key
+            Memcached.set(token, Etc.serializeMap(newMap))
+        }
+    }
+
+    override def toString = {
+        Memcached.get(token)
     }
 
 }

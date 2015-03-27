@@ -10,6 +10,7 @@ object EtcController extends Controller {
     }
 
     def debug = AuthAction { implicit user => implicit request =>
+        user.get.session.get.remove("creation_time")
         Ok(user.get.session.get.toString())
     }
 
