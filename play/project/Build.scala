@@ -20,7 +20,8 @@ object Build extends Build {
             "com.amazonaws" % "aws-java-sdk-s3" % "1.9.0",
             "io.argonaut" %% "argonaut" % "6.0.4",
             "com.mohiva" %% "play-html-compressor" % "0.3.1",
-            "com.google.code.gson" % "gson" % "2.3.1"
+            "com.google.code.gson" % "gson" % "2.3.1",
+            "com.sksamuel.scrimage" %% "scrimage-core" % "1.4.2"
         ),
         unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
     ).enablePlugins(PlayScala)

@@ -126,8 +126,7 @@
             $('.fb-signup-button' ).click(function() {
                 FB.login(function(response) {
                     if (response.status === 'connected') {
-                        console.log(response.authResponse.accessToken);
-                        console.log(response);
+                        window.location.href = '/facebook/register?fb_token=' + response.authResponse.accessToken
                     }
                 });
             });

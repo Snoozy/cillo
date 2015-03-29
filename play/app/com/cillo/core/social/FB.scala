@@ -1,6 +1,7 @@
 package com.cillo.core.social
 
 import com.ning.http.client.{AsyncHttpClientConfig, AsyncHttpClient}
+import play.api.Logger
 import play.api.libs.json._
 import play.api.libs.ws._
 import scala.concurrent.duration._
@@ -8,12 +9,13 @@ import play.api.Play.current
 import scala.concurrent.{Await, Future}
 
 case class FBUninitialized(message: String) extends Exception(message)
+case class FBTokenInvalid(message: String) extends Exception(message)
 
 
 object FB {
 
     implicit val context = scala.concurrent.ExecutionContext.Implicits.global
-    val facebookServerUrl = "https://graph.facebook.com/"
+    val facebookServerUrl = "https://graph.facebook.com"
     private var cilloFBClientId: Option[String] = None
     private var cilloFBClientSecret: Option[String] = None
 
@@ -28,15 +30,23 @@ object FB {
     def createFBInstance(token: String): FBInstance = {
         (cilloFBClientId, cilloFBClientSecret) match {
             case (Some(_), Some(_)) =>
-                val longToken = WS.url(facebookServerUrl + "/oauth/access_token")
-                    .withQueryString("grant_type" -> "exchange_token",
-                        "client_id" -> cilloFBClientId.get,
-                        "client_secret" -> cilloFBClientSecret.get,
-                        "fb_exchange_token" -> token).get()
+                val longToken = WS.url(facebookServerUrl + "/oauth/access_token?" +
+                    "client_id=" + cilloFBClientId.get +
+                    "&client_secret=" + cilloFBClientSecret.get +
+                    "&grant_type=fb_exchange_token" +
+                    "&fb_exchange_token=" + token)
+                    .get()
                     .map { response =>
-                        (response.json \ "access_token").as[String]
+                        val body = response.body
+                        print(body)
+                        body.substring(body.indexOf('=') + 1, body.indexOf('&'))
                     }
-                new FBInstance(Await.result(longToken, 5 seconds))
+                val resp = Await.result(longToken, 5 seconds)
+                if (resp.length > 10) {
+                    new FBInstance(resp)
+                } else {
+                    throw new FBTokenInvalid("Facebook token invalid.")
+                }
             case (None, None) =>
                 throw new FBUninitialized("Facebook instance uninitialized")
         }

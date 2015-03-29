@@ -1,7 +1,31 @@
-@(name: String = "")(password : String = "")(email: String = "")(implicit request: RequestHeader)
+@(name: String = "", password : String = "", email: String = "", username: String = "")
 
 @com.cillo.core.web.views.html.components.base("Sign Up for Cillo") {
+    <script>
+        $(function() {
+            $('.active-ph').blur(function() {
+                if ($(this).val()) {
+                    $(this).addClass('filled');
+                } else if (!$(this).val()) {
+                    $(this).removeClass('filled');
+                }
+            });
 
+            $('.active-ph').each(function() {
+                if ($(this).val()) {
+                    $(this).addClass('filled');
+                } else if (!$(this).val()) {
+                    $(this).removeClass('filled');
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .form-board {
+            margin-bottom: 28px;
+        }
+    </style>
 }{
     <body class="main-background">
         @com.cillo.core.web.views.html.components.masthead(None, buttons = false)
@@ -15,20 +39,20 @@
                     </div>
                     <form role="form" method="post" action="/signup">
                         <div class="form-board">
-                            <label for="nameInput">Full Name</label>
-                            <input type="text" class="form-control" id="nameInput" name="name" value="@name">
+                            <input type="text" class="form-control active-ph" id="nameInput" name="name" value="@name">
+                            <label placeholder="Full Name" class="active-ph"></label>
                         </div>
                         <div class="form-board">
-                            <label for="emailInput">Email Address</label>
-                            <input type="email" class="form-control" id="emailInput" name="email" value="@email">
+                            <input type="email" class="form-control active-ph" id="emailInput" name="email" value="@email">
+                            <label placeholder="Email Address" class="active-ph"></label>
                         </div>
                         <div class="form-board">
-                            <label for="passwordInput">Password</label>
-                            <input type="password" class="form-control" id="passwordinput" name="password" value="@password">
+                            <input type="password" class="form-control active-ph" id="passwordInput" name="password" value="@password">
+                            <label placeholder="Password" class="active-ph"></label>
                         </div>
                         <div class="form-board">
-                            <label for="usernameInput">Username</label>
-                            <input type="text" class="form-control" id="usernameInput" name="username">
+                            <input type="text" class="form-control active-ph" id="usernameInput" name="username" value="@username">
+                            <label placeholder="Username" class="active-ph"></label>
                         </div>
                         <div class="register-form-button">
                             <button type="submit" class="btn btn-primary" style="font-weight:bold;font-size:18px;width: 200px ;">Sign Up</button>

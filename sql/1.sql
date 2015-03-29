@@ -1,6 +1,5 @@
 # --- !Ups
 
-DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     user_id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(15) NOT NULL UNIQUE,
@@ -14,7 +13,14 @@ CREATE TABLE user (
     PRIMARY KEY (user_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS board;
+CREATE TABLE social_user (
+    social_user_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    social_id VARCHAR(100),
+    PRIMARY KEY (social_user_id),
+    CONSTRAINT `user__social_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
 CREATE TABLE board (
     board_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
@@ -29,7 +35,6 @@ CREATE TABLE board (
     FULLTEXT(name)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS post;
 CREATE TABLE post (
     post_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -47,7 +52,6 @@ CREATE TABLE post (
     PRIMARY KEY (post_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS comment;
 CREATE TABLE comment (
     comment_id INT NOT NULL AUTO_INCREMENT,
     post_id INT NOT NULL,
@@ -62,7 +66,6 @@ CREATE TABLE comment (
     PRIMARY KEY (comment_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS post_vote;
 CREATE TABLE post_vote (
     post_vote_id INT NOT NULL AUTO_INCREMENT,
     post_id INT NOT NULL,
@@ -74,7 +77,6 @@ CREATE TABLE post_vote (
     CONSTRAINT `user__post_vote_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS comment_vote;
 CREATE TABLE comment_vote (
     comment_vote_id INT NOT NULL AUTO_INCREMENT,
     comment_id INT NOT NULL,
@@ -86,7 +88,6 @@ CREATE TABLE comment_vote (
     CONSTRAINT `user__comment_vote_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS user_to_board;
 CREATE TABLE user_to_board (
     id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -97,7 +98,6 @@ CREATE TABLE user_to_board (
     PRIMARY KEY (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS media;
 CREATE TABLE media (
     media_id INT NOT NULL AUTO_INCREMENT,
     media_type TINYINT NOT NULL,

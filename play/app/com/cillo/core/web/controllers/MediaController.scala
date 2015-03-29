@@ -35,11 +35,11 @@ object MediaController extends Controller {
                             if (mediaFile.length() > 3145728)
                                 -1
                             else {
-                                val uuid = UUID.randomUUID()
-                                if (!S3.upload(mediaFile, "image/" + uuid))
+                                val id = S3.upload(mediaFile)
+                                if (!id.isDefined)
                                     -1
                                 else {
-                                    val DBMedia = Media.create(0, uuid.toString)
+                                    val DBMedia = Media.create(0, id.get)
                                     if (!DBMedia.isDefined)
                                         -1
                                     else {

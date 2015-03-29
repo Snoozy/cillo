@@ -65,13 +65,54 @@ object User {
         }
     }
 
-    def create(username: String, name: String, password: String, email: String, bio: Option[String]): Option[Long] = {
+    def checkUsername(s: String): Boolean = {
+        !find(s).isDefined
+    }
+
+    /**
+     * Generates valid username from valid email
+     *
+     * @param s Valid email
+     * @return Valid username for user.
+     */
+    def genUsername(s: String): String = {
+        val i = {
+            val t = s.indexOf('@')
+            if (t > 0 && t < 16) {
+                t
+            } else {
+                15
+            }
+        }
+        val parsed = s.substring(0, i)
+        if (!checkUsername(parsed)) {
+            val rand = "%04d".format(scala.util.Random.nextInt(1000))
+            var check = parsed
+            if (check.length > 14) {
+                check = check.substring(0, 11)
+            }
+            check = check + rand
+            while (!checkUsername(check)) {
+                print(check)
+                check = check.substring(0, 11) + "%04d".format(scala.util.Random.nextInt(1000))
+            }
+            check
+        } else parsed
+    }
+
+    def create(username: String, name: String, password: String, email: String, bio: Option[String] = None, pic: Option[Int] = None): Option[Long] = {
         val time = System.currentTimeMillis()
 
+        val pass = {
+            if (password != "")
+                makeDigest(password)
+            else password
+        }
+
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO user (username, name, password, email, bio, time, reputation) VALUES ({username}, {name}," +
-                " {password}, {email}, {bio}, {time}, 0)").on('username -> username, 'name -> name,
-                    'password -> makeDigest(password), 'email -> email, 'bio -> bio.getOrElse(""), 'time -> time).executeInsert()
+            SQL("INSERT INTO user (username, name, password, email, bio, time, reputation, photo) VALUES ({username}, {name}," +
+                " {password}, {email}, {bio}, {time}, 0, {pic})").on('username -> username, 'name -> name,
+                    'password -> pass, 'email -> email, 'bio -> bio.getOrElse(""), 'time -> time, 'pic -> pic).executeInsert()
         }
     }
 

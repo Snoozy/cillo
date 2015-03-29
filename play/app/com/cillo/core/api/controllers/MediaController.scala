@@ -31,11 +31,11 @@ object MediaController extends Controller {
                         if (mediaFile.length() > 3145728)
                             BadRequest(Json.obj("error" -> "Media upload too large. Code: 101"))
                         else {
-                            val uuid = UUID.randomUUID()
-                            if (!S3.upload(mediaFile, "image/" + uuid))
+                            val id = S3.upload(mediaFile)
+                            if (!id.isDefined)
                                 BadRequest(Json.obj("error" -> "Upload failed. Code: 104"))
                             else {
-                                val DBMedia = Media.create(0, uuid.toString)
+                                val DBMedia = Media.create(0, id.get)
                                 if (!DBMedia.isDefined)
                                     BadRequest(Json.obj("error" -> "Error uploading. Code: 102"))
                                 else {

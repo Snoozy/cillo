@@ -21,7 +21,7 @@ object BoardController extends Controller {
             }
             Ok(core.board(board.get, user, posts))
         } else {
-            NotFound("Page not found.")
+            NotFound("Board not found.")
         }
     }
 

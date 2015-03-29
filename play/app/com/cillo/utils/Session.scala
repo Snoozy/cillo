@@ -1,11 +1,7 @@
 package com.cillo.utils
 
-import _root_.play.api.libs.json._
 import com.cillo.core.data.cache.Memcached
-import com.cillo.utils.Etc
-
 import scala.collection.mutable
-import scala.collection.mutable.HashMap
 
 class Session(t: String) {
 

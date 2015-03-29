@@ -3,7 +3,6 @@ package com.cillo.utils
 import org.apache.commons.lang3.StringEscapeUtils.escapeHtml4
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.cillo.utils.MapUtils
 import collection.JavaConversions._
 import scala.collection.JavaConversions.mapAsScalaMap
 
