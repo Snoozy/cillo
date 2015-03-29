@@ -19,8 +19,16 @@ object SocialController extends Controller {
                 if (request.getQueryString("fb_token").isDefined) {
                     facebookRegister(request)
                 } else {
-                    NotFound("Opps.")
+                    NotFound("Oops.")
                 }
+        }
+    }
+
+    def twitterAuth = AuthAction { implicit user => implicit request =>
+        user match {
+            case Some(_) => Found("/")
+            case None =>
+
         }
     }
 
@@ -33,7 +41,6 @@ object SocialController extends Controller {
         if (user_id.isDefined) {
             Found("/").withCookies(Auth.newSessionCookies(User.find(user_id.get).get.user_id.get))
         } else {
-            print("enter fb register.")
             val fbEmail = (info \ "email").asOpt[String]
             val fbName = (info \ "name").as[String]
             val username = {
@@ -50,12 +57,12 @@ object SocialController extends Controller {
                     } else None
                 } else None
             }
-            val newUser = User.create(username, fbName, "", fbEmail.getOrElse(""), None, pic = pic)
+            val newUser = User.create(username, if(fbName.length < 21) fbName else fbName.substring(0, 20) , "", fbEmail.getOrElse(""), None, pic = pic)
             if (newUser.isDefined) {
                 SocialUser.createFBUser(fbId, newUser.get.toInt)
                 Found("/gettingstarted").withCookies(Auth.newSessionCookies(User.find(newUser.get.toInt).get.user_id.get))
             } else {
-                InternalServerError("Opps.")
+                InternalServerError("Oops.")
             }
         }
     }

@@ -123,12 +123,17 @@
         }(document, 'script', 'facebook-jssdk'));
 
         $(function() {
-            $('.fb-signup-button' ).click(function() {
+            $('.fb-signup-button').click(function(e) {
+                e.preventDefault();
                 FB.login(function(response) {
                     if (response.status === 'connected') {
-                        window.location.href = '/facebook/register?fb_token=' + response.authResponse.accessToken
+                        window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
                     }
                 });
+            });
+            $('.twit-signup-button').click(function(e) {
+                e.preventDefault();
+                window.open('/twitter/auth', 'Twitter Auth', 'width=450, height=450');
             });
         });
     </script>
@@ -182,9 +187,9 @@
                                 </a>
                             </div>
                             <div class="twit-signup">
-                                <a href="/twitter/auth" class="fb-signup-button">
+                                <a href="#" class="twit-signup-button">
                                     <div class="twit-register-fill">
-                                        <img alt="Facebook Signup" src="//static.cillo.co/twitterLogo.png" style="margin: 10px 5px;">
+                                        <img alt="Twitter Signup" src="//static.cillo.co/twitterLogo.png" style="margin: 10px 5px;">
                                         <div class="fb-register-text">
                                             <span class="register-bold">Sign Up</span>
                                             with

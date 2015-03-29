@@ -67,7 +67,7 @@ class FBInstance(t: String) {
     }
 
     def getPictureUrl: String = {
-        val res = WS.url(FB.facebookServerUrl + "/v2.3/me/picture").withQueryString("access_token" -> token).get()
+        val res = WS.url(FB.facebookServerUrl + "/v2.3/me/picture").withQueryString("access_token" -> token, "redirect" -> "false", "width" -> "160", "height" -> "160").get()
             .map { response =>
                 (response.json \ "data" \ "url").as[String]
             }

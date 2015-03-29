@@ -15,7 +15,9 @@ GET         /boards/explore                com.cillo.core.web.controllers.BoardC
 GET         /settings                      com.cillo.core.web.controllers.SettingsController.settingsPage
 GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
 GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
-GET         /facebook/register             com.cillo.core.web.controllers.SocialController.facebookAuth
+
+GET         /facebook/auth                 com.cillo.core.web.controllers.SocialController.facebookAuth
+GET         /twitter/auth
 
 GET         /debug                         com.cillo.core.web.controllers.EtcController.debug
 
