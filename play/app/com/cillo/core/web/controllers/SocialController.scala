@@ -31,58 +31,6 @@ object SocialController extends Controller {
         }
     }
 
-    private val twitService: OAuthService = {
-        if (Play.isProd) {
-            new ServiceBuilder()
-                .provider(TwitterApi)
-                .apiKey("key")
-                .apiSecret("secret")
-                .callback("https://www.cillo.co/twitter/auth")
-                .build()
-        } else {
-            new ServiceBuilder()
-                .provider(TwitterApi)
-                .apiKey("key")
-                .apiSecret("secret")
-                .callback("http://127.0.0.1:9000")
-                .build()
-        }
-    }
-
-
-    def twitterAuth = AuthAction { implicit user => implicit request =>
-        user match {
-            case Some(_) => Found("/")
-            case None =>
-                if (request.getQueryString("oauth_token").isDefined) {
-                    finalTwitterAuth(request)
-                } else {
-                    initTwitterAuth(request)
-                }
-        }
-    }
-
-    private def initTwitterAuth(request: Request[AnyContent]): Result = {
-        val reqToken: Token = twitService.getRequestToken
-        Memcached.set("twit_oauth-" + reqToken.getToken, reqToken.getSecret)
-        val authUrl = twitService.getAuthorizationUrl(reqToken)
-        Found(authUrl)
-    }
-
-    private def finalTwitterAuth(request: Request[AnyContent]): Result = {
-        val oauth_token = request.getQueryString("oauth_token")
-        val oauth_verifier = request.getQueryString("oauth_verifier")
-        if (oauth_token.isDefined && oauth_verifier.isDefined) {
-            val verf = new Verifier(oauth_verifier.get)
-            val reqToken = new Token(oauth_token.get, Memcached.get("twit_oauth-" + oauth_token.get))
-            val token = twitService.getAccessToken(reqToken, verf)
-            val req = new OAuthRequest(Verb.GET)
-            val resp = req.send()
-        } else {
-            NotFound(com.cillo.core.web.views.html.core.close_window())
-        }
-    }
-
     private def facebookAuth(request: Request[AnyContent]): Result = {
         val token = request.getQueryString("fb_token").get
         val fb = FB.createFBInstance(token)
