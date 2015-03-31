@@ -7,6 +7,7 @@
 
 } {
 
+    <!--suppress ALL -->
     <body class="main-background">
         @components.masthead(Some(user), searchBar = true)
         <div class="page-container">
@@ -17,7 +18,7 @@
                             Account Settings
                         </span>
                     </div>
-                    <form role="form" method="post" action="/settings">
+                    <form role="form" method="post" action="/settings" enctype="multipart/form-data">
                         <ul>
                             <li class="setting-li">
                                 <h4 class="setting-type">
@@ -32,7 +33,7 @@
                                     Username
                                 </h4>
                                 <div class="setting-input">
-                                    <input type="text" class="form-control" name="name" value="@user.username">
+                                    <input type="text" class="form-control" name="username" value="@user.username">
                                 </div>
                             </li>
                             <li class="setting-li">
@@ -53,7 +54,7 @@
                                 <div class="setting-input" style="margin-left:0px;display:inline-block;vertical-align:middle;">
                                     <div class="picture_upload btn btn-default" style="padding:7px 10px;margin-left:10px;">
                                         <span class="glyphicon glyphicon-camera"></span> Change picture
-                                        <input type="file" name="picture upload" id="picture_file_upload" class="file-input" tabindex="-1" multiple>
+                                        <input type="file" name="picture upload" id="picture_file_upload" class="file-input" tabindex="-1" name="picture">
                                     </div>
                                 </div>
                             </li>

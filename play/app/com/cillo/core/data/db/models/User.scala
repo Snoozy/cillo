@@ -141,10 +141,10 @@ object User {
         }
     }
 
-    def update(user_id: Int, name: String, bio: String, pic: Int) = {
+    def update(user_id: Int, name: String, username: String, bio: String, pic: Int) = {
         DB.withConnection { implicit connection =>
-            SQL("UPDATE user SET name = {name}, bio = {bio}, photo = {photo} WHERE user_id = {user}")
-                .on('name -> name, 'photo -> pic, 'user -> user_id, 'bio -> bio).executeUpdate()
+            SQL("UPDATE user SET name = {name}, username = {username}, bio = {bio}, photo = {photo} WHERE user_id = {user}")
+                .on('name -> name, 'photo -> pic, 'user -> user_id, 'bio -> bio, 'username -> username).executeUpdate()
         }
     }
 

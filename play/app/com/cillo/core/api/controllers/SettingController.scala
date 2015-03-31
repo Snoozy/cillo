@@ -14,14 +14,16 @@ object SettingController extends Controller{
                 val body: AnyContent = request.body
                 body.asFormUrlEncoded.map { form =>
                     val name = form.get("name").map(_.head).getOrElse(user.get.name)
+                    val username = form.get("username").map(_.head).getOrElse(user.get.bio)
                     val bio = form.get("bio").map(_.head).getOrElse(user.get.bio)
-                    var pic = 1
-                    try {
-                         pic = form.get("photo").map(_.head).getOrElse(user.get.photo_id + "").toInt
-                    } catch {
-                        case e: java.lang.NumberFormatException =>
+                    val pic = {
+                        try {
+                            form.get("photo").map(_.head).getOrElse(user.get.photo_id + "").toInt
+                        } catch {
+                            case e: java.lang.NumberFormatException => user.get.photo_id
+                        }
                     }
-                    if (User.update(user.get.user_id.get, name, bio, pic) > 0) {
+                    if (User.update(user.get.user_id.get, name, username, bio, pic) > 0) {
                         Ok(User.toJsonByUserID(user.get.user_id.get, self = user))
                     } else {
                         BadRequest(Json.obj("error" -> "Error updating user information."))
