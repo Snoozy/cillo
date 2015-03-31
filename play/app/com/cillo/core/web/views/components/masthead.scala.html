@@ -1,5 +1,7 @@
 @(user: Option[com.cillo.core.data.db.models.User] = None, searchBar: Boolean = false, searchQuery:String = "", fixed: Boolean = true, buttons: Boolean = true)
 
+@import com.cillo.utils.Etc
+
 <div style="height:45px;"></div>
 <div class="masthead" style="@if(!fixed){position:relative;}">
     <nav class="navbar navbar-default" style="margin-bottom:0px;min-height:45px;width:960px;margin:auto;border:none;">
@@ -40,7 +42,7 @@
                     </div>
                     <div class="navbar-user-info">
                         <span class="navbar-user-info-text">
-                        @user.get.name.substring(0, user.get.name.indexOf(' '))
+                        @Etc.parseFirstName(user.get.name)
                         </span>
                     </div>
                 </a>

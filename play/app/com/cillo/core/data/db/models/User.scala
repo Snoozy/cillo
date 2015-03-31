@@ -6,6 +6,7 @@ import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.core.data.db.models.Post.postParser
 import com.cillo.utils.Etc.makeDigest
 import play.api.Play.current
+import org.apache.commons.lang3.RandomStringUtils
 import play.api.db._
 import com.cillo.utils.Session
 import play.api.libs.json._
@@ -65,6 +66,12 @@ object User {
         }
     }
 
+    def findByEmail(email: String): Option[User] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM user WHERE email = {username}").on('username -> email).as(userParser.singleOpt)
+        }
+    }
+
     def checkUsername(s: String): Boolean = {
         !find(s).isDefined
     }
@@ -75,7 +82,22 @@ object User {
      * @param s Valid email
      * @return Valid username for user.
      */
-    def genUsername(s: String): String = {
+    def genUsername(s: String, backup: String = ""): String = {
+        val gen = genRawUsername(s)
+        if (!gen.isDefined) {
+            if (backup != "") {
+                val b = genRawUsername(backup)
+                if (!b.isDefined) {
+                    genRawUsername(RandomStringUtils.random(14)).get
+                } else
+                    b.get
+            } else
+                genRawUsername(RandomStringUtils.random(14)).get
+        } else
+            gen.get
+    }
+
+    private def genRawUsername(s: String): Option[String] = {
         val i = {
             val t = s.indexOf('@')
             if (t > 0 && t < 16) {
@@ -86,6 +108,7 @@ object User {
         }
         val parsed = s.substring(0, i)
         if (!checkUsername(parsed)) {
+            var count = 0
             val rand = "%04d".format(scala.util.Random.nextInt(1000))
             var check = parsed
             if (check.length > 14) {
@@ -93,11 +116,13 @@ object User {
             }
             check = check + rand
             while (!checkUsername(check)) {
-                print(check)
+                if (count > 4)
+                    return None
                 check = check.substring(0, 11) + "%04d".format(scala.util.Random.nextInt(1000))
+                count += 1
             }
-            check
-        } else parsed
+            Some(check)
+        } else Some(parsed)
     }
 
     def create(username: String, name: String, password: String, email: String, bio: Option[String] = None, pic: Option[Int] = None): Option[Long] = {

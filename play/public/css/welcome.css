@@ -44,11 +44,8 @@ input.span5 {
 
 .fb-signup {
     width: 250px;
-    margin-right: -10px;
     border-radius: 4px;
-    margin-bottom: 20px;
-    margin-top: 36px;
-    margin-left: auto;
+    margin: 36px -10px 20px auto;
 }
 
 .fb-register-text {

@@ -13,8 +13,12 @@ object Etc {
     implicit def bool2int(b: Boolean): Int = if (b) 1 else 0
     implicit def int2bool(i: Int): Boolean = if (i == 1) true else false
 
-    def cleanseData(s: String): String = {
-        ""
+    def parseFirstName(s: String) = {
+        val i = s.indexOf(' ')
+        if (i > -1)
+            s.substring(0, i)
+        else
+            s
     }
 
     def makeDigest(pass: String): String = {

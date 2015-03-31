@@ -34,7 +34,7 @@
                                             @if(user.bio.length > 0) {
                                                 user.bio
                                             } else {
-                                                @user.name does not have a bio.
+                                                @Etc.parseFirstName(user.name) does not have a bio.
                                             }
                                         </span>
                                     </div>
