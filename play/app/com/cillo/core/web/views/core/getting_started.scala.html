@@ -35,6 +35,10 @@
         .trending-group-name {
             font-size: 22px;
         }
+
+        .notfollowing .unfollow-text {
+            display: block;
+        }
     </style>
 }{
     <body class="main-background">
@@ -72,7 +76,6 @@
                                                             <div class="trending-group-bottom">
                                                                 <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.board_id.get">
                                                                     <span class="btn-text follow-text">Follow</span>
-                                                                    <span class="btn-text following-text">Following</span>
                                                                     <span class="btn-text unfollow-text">Unfollow</span>
                                                                 </button>
                                                                 <div class="trending-group-header">
@@ -105,7 +108,7 @@
 
                 </div>
                 <div class="next-container" style="text-align:right;margin-top:15px;">
-                    <a href="/" class="btn btn-primary">Continue</a>
+                    <a href="#" class="btn btn-primary cont-btn">Continue</a>
                 </div>
             </div>
         </div>
@@ -143,18 +146,14 @@
                     index++;
                 });
 
+                var follow = [];
+
                 $(document).on('click', '.notfollowing', function(e) {
                     var group_id = $(this).data('group-id');
                     var $this = $(this);
-                    $.ajax({
-                        url: '/a/group/' + group_id + '/follow',
-                        type: 'POST',
-                        dataType: 'json',
-                        success: function() {
-                            $this.addClass('following');
-                            $this.removeClass('notfollowing');
-                        }
-                    });
+                    follow.append(group_id);
+                    $this.addClass('following');
+                    $this.removeClass('notfollowing');
 
                     return false;
                 });
@@ -162,15 +161,17 @@
                 $(document).on('click', '.following', function() {
                     var group_id = $(this).data('group-id');
                     var $this = $(this);
-                    $.ajax({
-                        url: '/a/group/' + group_id + '/unfollow',
-                        type: 'POST',
-                        dataType: 'json',
-                        success: function() {
-                            $this.addClass('notfollowing');
-                            $this.removeClass('following');
-                        }
-                    });
+                    $this.addClass('notfollowing');
+                    $this.removeClass('following');
+                    var i = follow.indexOf(group_id);
+                    if (i > -1) {
+                        follow.splice(i, 1);
+                    }
+                    return false;
+                });
+
+                $('.cont-btn').click(function() {
+                    window.location.href = "/gettingstarted?follow=" + follow.toString();
                 });
 
             });

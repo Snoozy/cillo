@@ -22,8 +22,7 @@ object Build extends Build {
             "com.mohiva" %% "play-html-compressor" % "0.3.1",
             "com.google.code.gson" % "gson" % "2.3.1",
             "com.sksamuel.scrimage" %% "scrimage-core" % "1.4.2",
-            "com.sksamuel.scrimage" %% "scrimage-canvas" % "1.4.2",
-            "org.scribe" % "scribe" % "1.3.6"
+            "com.sksamuel.scrimage" %% "scrimage-canvas" % "1.4.2"
         ),
         unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
     ).enablePlugins(PlayScala)

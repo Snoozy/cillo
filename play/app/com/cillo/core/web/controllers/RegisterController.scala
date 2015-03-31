@@ -4,6 +4,7 @@ import com.cillo.core.data.db.models._
 import com.cillo.utils.Etc
 import com.cillo.utils.play.Auth
 import com.cillo.utils.play.Auth.AuthAction
+import com.cillo.utils.Session
 import play.api.mvc._
 import com.cillo.core.social.FB
 
@@ -52,8 +53,12 @@ object RegisterController extends Controller {
             val name = form.get("name").map(_.head)
             if (username.isDefined && name.isDefined && password.isDefined && email.isDefined) {
                 val newUser = User.create(username.get, name.get, password.get, email.get, None)
-                if (newUser.isDefined)
-                    Found("/gettingstarted").withCookies(Auth.newSessionCookies(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).user_id.get))
+                if (newUser.isDefined) {
+                    val token = Auth.getNewUserSessionId(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).user_id.get)
+                    val sess = new Session(token)
+                    sess.set("getting_started", "true")
+                    Found("/").withCookies(Auth.newSessionCookies(token))
+                }
                 else
                     BadRequest("Error: user creation failed.")
             } else

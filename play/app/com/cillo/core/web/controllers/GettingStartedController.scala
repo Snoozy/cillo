@@ -12,8 +12,17 @@ object GettingStartedController extends Controller {
         user match {
             case None => Found("/")
             case Some(_) =>
-                val boards = Map[String, Seq[Int]]("adsf" -> Seq(1,2,1,2,1), "qwerty" -> Seq(1,1,1,1,1,1,1), "zxcv" -> Seq(1,1,1,1,1,1))
-                Ok(com.cillo.core.web.views.html.core.getting_started(boards, user.get))
+                val follow = request.getQueryString("follow")
+                if (follow.isDefined) {
+                    val group_ids = follow.get.split(",").map(_.toInt)
+                    group_ids.foreach { id =>
+                        Board.addFollower(user.get.user_id.get, id)
+                    }
+                    if (user.get.session.isDefined) {
+                        user.get.session.get.remove("getting_started")
+                    }
+                }
+                Found("/")
         }
     }
 

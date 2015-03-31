@@ -5,53 +5,58 @@
 
 @components.base("Login | Cillo") {
     <link rel="stylesheet" href="@RemoteURLController.url("css/welcome.css")"/>
-    <style>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId : '911323222224791',
+                cookie : true,
+                xfbml : true,
+                version : 'v2.3'
+            });
+        };
 
-        .login-wrapper {
-            height: 225px;
-            width: 360px;
-            border:1px solid #ccc;
-            border-radius:8px;
-            background-color:white;
-            position: absolute;
-            left: 50%;
-            top: 232px;
-            margin-top: -170px;
-            padding:10px 10px 0px 10px;
-            margin-left: -180px;
-        }
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
 
-        .login-logo-wrapper {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .login-logo {
-            height: 60px;
-        }
-
-        .login-nav {
-            margin: 70px;
-        }
-
-        .login-header-wrapper {
-            font-weight: 600;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-    </style>
+        $(function() {
+            $('.fb-signup-button').click(function(e) {
+                e.preventDefault();
+                FB.login(function(response) {
+                    if (response.status === 'connected') {
+                        window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
+                    }
+                }, {scope: 'email,public_profile,user_friends'});
+            });
+        });
+    </script>
 } {
 
     <body class="main-background">
         @com.cillo.core.web.views.html.components.masthead(None, buttons = false)
         <div class="login-wrapper gradient-background" style="min-height:0px;">
             <div class="login-header-wrapper">
-                Cillo Login
+                Login to Cillo
             </div>
-            <form action="/login" method="POST">
-                <input class="form-control" type="text" name="username" value="" placeholder="Username">
-                <input class="form-control" type="password" name="password" style="margin-top: 5px;" value="" placeholder="Password">
+            <div class="fb-login-container">
+                <a href="#" class="fb-signup-button no-dec">
+                    <div class="fb-register-fill">
+                        <img alt="Facebook Signup" src="//static.cillo.co/facebookLogo.png" style="margin: 10px 5px;margin-left:7px;">
+                        <div class="fb-register-text">
+                            <span class="register-bold">Login</span>
+                            with
+                            <span class="register-bold">Facebook</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <form action="/login" method="POST" class="user-login-form">
+                <input class="form-control" type="email" name="email" value="" placeholder="Email" style="height:40px;">
+                <input class="form-control" type="password" name="password" style="margin-top: 8px;height:40px;" value="" placeholder="Password">
                 <p><input class="btn btn-primary" type="submit" name="login.submitted" value="Login" style="font-weight:bold;font-size:18px;width:100%;margin-bottom:-50px;"></p>
                 <br/>
             </form>

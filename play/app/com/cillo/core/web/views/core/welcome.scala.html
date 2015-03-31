@@ -123,17 +123,44 @@
         }(document, 'script', 'facebook-jssdk'));
 
         $(function() {
+            var rerequest_email = false;
             $('.fb-signup-button').click(function(e) {
                 e.preventDefault();
-                FB.login(function(response) {
-                    if (response.status === 'connected') {
-                        window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
-                    }
-                });
-            });
-            $('.twit-signup-button').click(function(e) {
-                e.preventDefault();
-                window.open('/twitter/auth', 'Twitter Auth', 'width=450, height=450');
+                if (!rerequest_email) {
+                    FB.login(function(response) {
+                        if (response.status === 'connected') {
+                            FB.api('/me/permissions', function (r) {
+                                for (i = 0; i < r.data.length; i++) {
+                                    var p = r.data[i];
+                                    if (p.permission === "email" && p.status === "granted") {
+                                        window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
+                                    } else if (p.permission === "email" && p.status === "declined") {
+                                        $('.fb-signup-button').tooltip({'title' : 'Oops! We need your email! Please try again.'});
+                                        $('.fb-signup-button').tooltip('show');
+                                        rerequest_email = true;
+                                    }
+                                }
+                            });
+                        }
+                    }, {scope: 'email,public_profile,user_friends'});
+                } else {
+                    FB.login(function(response) {
+                        if (response.status === 'connected') {
+                            FB.api('/me/permissions', function (r) {
+                                for (i = 0; i < r.data.length; i++) {
+                                    var p = r.data[i];
+                                    if (p.permission === "email" && p.status === "granted") {
+                                        window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
+                                    } else if (p.permission === "email" && p.status === "declined") {
+                                        $('.fb-signup-button').tooltip({'title' : 'Oops! We need your email! Please try again.'});
+                                        $('.fb-signup-button').tooltip('show');
+                                        rerequest_email = true;
+                                    }
+                                }
+                            });
+                        }
+                    }, {scope: 'email', auth_type: "rerequest"});
+                }
             });
         });
     </script>
@@ -146,7 +173,7 @@
             <div class="login-link-wrapper">
                 <a href="/login" class="login-link clear-btn">Login</a>
             </div>
-            <div class="container">
+            <div class="container" style="padding-bottom:15px;">
                 <div class="main-wrapper">
                     <div class="main-header" style="text-align: center">
                         <div class="logo" style="display:inline-block;vertical-align:text-bottom;">
@@ -175,25 +202,13 @@
                         <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
                             <div class="or">OR</div>
                             <div class="fb-signup">
-                                <a href="#" class="fb-signup-button">
+                                <a href="#" class="fb-signup-button no-dec">
                                     <div class="fb-register-fill">
-                                        <img alt="Facebook Signup" src="//static.cillo.co/facebookLogo.png" style="margin: 10px 5px;">
+                                        <img alt="Facebook Signup" src="//static.cillo.co/facebookLogo.png" style="margin: 10px 5px;margin-left:7px;">
                                         <div class="fb-register-text">
-                                            <span class="register-bold">Sign Up</span>
+                                            <span class="register-bold">Continue</span>
                                             with
                                             <span class="register-bold">Facebook</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="twit-signup">
-                                <a href="#" class="twit-signup-button">
-                                    <div class="twit-register-fill">
-                                        <img alt="Twitter Signup" src="//static.cillo.co/twitterLogo.png" style="margin: 10px 5px;">
-                                        <div class="fb-register-text">
-                                            <span class="register-bold">Sign Up</span>
-                                            with
-                                            <span class="register-bold">Twitter</span>
                                         </div>
                                     </div>
                                 </a>
@@ -259,5 +274,6 @@
             </div>
         </div>
 
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </body>
 }

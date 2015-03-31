@@ -40,7 +40,7 @@
                     </div>
                     <div class="navbar-user-info">
                         <span class="navbar-user-info-text">
-                        @user.get.name
+                        @user.get.name.substring(0, user.get.name.indexOf(' '))
                         </span>
                     </div>
                 </a>

@@ -33,11 +33,15 @@ object Auth {
         Cookie("auth_token", getNewUserSessionId(user_id))
     }
 
+    def newSessionCookies(token: String): Cookie ={
+        Cookie("auth_token", token)
+    }
+
     def deleteSessionCookies: DiscardingCookie = {
         DiscardingCookie("auth_token")
     }
 
-    private def getNewUserSessionId(id: Int): String = {
+    def getNewUserSessionId(id: Int): String = {
         val newSeshId = SecureRand.newSessionId()
         val currTime = System.currentTimeMillis().toString
         new Session(newSeshId).multiSet(Map("creation_time" -> currTime, "user_id" -> id.toString))
