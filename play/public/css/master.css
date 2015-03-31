@@ -1496,7 +1496,7 @@ a:hover {
 }
 
 .register-form-button {
-    text-align: center;
+    text-align: right;
     margin-top: 10px;
 }
 
@@ -1721,9 +1721,9 @@ body {
 .navbar-settings-wrapper {
     float: right;
     display: inline-block;
-    padding: 8px;
+    padding: 8px 8px 5px;
     margin-right: -8px;
-    margin-top: 2px;
+    margin-top: 5px;
 }
 
 .dropdown-menu>li>a:hover {
@@ -2119,4 +2119,44 @@ h2 {
 
 a.no-dec:hover, a.no-dec:focus, a.no-dec:active, a.no-dec {
     text-decoration: none;
+}
+
+.btn {
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+}
+
+.setting-type {
+    width: 200px;
+    float: left;
+    vertical-align: middle;
+    margin-bottom: 0;
+    margin-top: 7px;
+}
+
+.setting-li {
+    display: block;
+    border-top: 1px solid #dfdfdf;
+    padding: 15px 0;
+}
+
+.setting-input {
+    margin-left: 205px;
+}
+
+.setting-textarea {
+    resize: vertical;
+    line-height: 20px;
+}
+
+.picture-setting-container {
+    display: inline-block;
+}
+
+.picture-setting-avatar {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    height: 75px;
+    width: 75px;
 }

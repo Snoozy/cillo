@@ -6,22 +6,6 @@
     <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){
 
-    $('.masthead-nav.back').click(function() {
-    history.back();
-    return false;
-    });
-
-    $('.name-input').on('keyup', function(event) {
-    if ($('.name-input').val().indexOf(' ') >= 0){
-    $('.name-help').html('<span style="color:red">No spaces allowed.</span>');
-    $('.btn.btn-success').addClass('disabled');
-    } else {
-    var alias_text = encodeURIComponent($('.name-input').val()).replace(/[%][2][0]/g, '+');
-    $('.name-help').html('<span class="help-block name-help">Your board\'s URL will be: https://cillo.co/<span class="name-url">' + alias_text + '</span></span>')
-    $('.btn.btn-success').removeClass('disabled');
-    }
-    });
-
     $('.btn.btn-success').click(function(event) {
     event.preventDefault();
     if ($(this).hasClass('disabled'))

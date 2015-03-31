@@ -10,7 +10,7 @@ object SettingsController extends Controller {
     def settingsPage = AuthAction { implicit user => implicit request =>
         user match {
             case None => Found("/login")
-            case Some(_) => Ok("asdf")
+            case Some(_) => Ok(com.cillo.core.web.views.html.core.settings(user.get))
         }
     }
 

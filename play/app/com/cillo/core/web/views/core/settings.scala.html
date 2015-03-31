@@ -1,2 +1,91 @@
 @(user: com.cillo.core.data.db.models.User)
 
+@import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.controllers.RemoteURLController
+
+@components.base("Settings | Cillo") {
+
+} {
+
+    <body class="main-background">
+        @components.masthead(Some(user), searchBar = true)
+        <div class="page-container">
+            <div class="register-container">
+                <div class="register-inner">
+                    <div class="register-header" style="text-align:left;">
+                        <span class="register-text">
+                            Account Settings
+                        </span>
+                    </div>
+                    <form role="form" method="post" action="/settings">
+                        <ul>
+                            <li class="setting-li">
+                                <h4 class="setting-type">
+                                    Name
+                                </h4>
+                                <div class="setting-input">
+                                    <input type="text" class="form-control" name="name" value="@user.name">
+                                </div>
+                            </li>
+                            <li class="setting-li">
+                                <h4 class="setting-type">
+                                    Username
+                                </h4>
+                                <div class="setting-input">
+                                    <input type="text" class="form-control" name="name" value="@user.username">
+                                </div>
+                            </li>
+                            <li class="setting-li">
+                                <h4 class="setting-type">
+                                    Bio
+                                </h4>
+                                <div class="setting-input">
+                                    <textarea type="text" class="form-control setting-textarea" name="bio" style="height:85px;">@user.bio</textarea>
+                                </div>
+                            </li>
+                            <li class="setting-li">
+                                <h4 class="setting-type">
+                                    Picture
+                                </h4>
+                                <div class="picture-setting-container">
+                                    <img class="picture-setting-avatar" src="@user.photo">
+                                </div>
+                                <div class="setting-input" style="margin-left:0px;display:inline-block;vertical-align:middle;">
+                                    <div class="picture_upload btn btn-default" style="padding:7px 10px;margin-left:10px;">
+                                        <span class="glyphicon glyphicon-camera"></span> Change picture
+                                        <input type="file" name="picture upload" id="picture_file_upload" class="file-input" tabindex="-1" multiple>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="register-form-button">
+                            <button type="button" class="btn btn-default" style="width: 80px;margin-right:15px;" onclick="javascript:window.location.href='/@user.username'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" style="width:120px;" name="settings_submit">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function() {
+                function readURL(input) {
+
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            $('.picture-setting-avatar').attr('src', e.target.result);
+                        }
+
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+
+                $(document).on('change', '#picture_file_upload', function() {
+                    readURL(this);
+                });
+            });
+        </script>
+    </body>
+
+}
