@@ -20,7 +20,7 @@
     <div class="comment" data-comment-id="@comment.comment_id.get" data-post-id="@comment.post_id">
         <div class="comment-avatar">
             <a href="/user/@commenter.username">
-                <img src="@commenter.photo" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
+                <img src="@(commenter.photo + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
             </a>
         </div>
         <a href="/user/@commenter.username" style="margin-right:2px;margin-left:3px;">

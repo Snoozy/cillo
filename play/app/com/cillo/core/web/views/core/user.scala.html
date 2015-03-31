@@ -32,7 +32,7 @@
                                     <div class="board-descr-container">
                                         <span class="board-descr-text">
                                             @if(user.bio.length > 0) {
-                                                user.bio
+                                                @user.bio
                                             } else {
                                                 @Etc.parseFirstName(user.name) does not have a bio.
                                             }

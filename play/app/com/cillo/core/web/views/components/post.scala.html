@@ -58,7 +58,7 @@
                 <div class="user-avatar">
                     <a href="/user/@poster.username">
                         <div class="post-avatar-wrapper">
-                            <img class="post-avatar" src="@poster.photo">
+                            <img class="post-avatar" src="@(poster.photo + "_small")">
                         </div>
                     </a>
                 </div>
@@ -218,7 +218,7 @@
 
                 @if(user.isDefined) {
                     <div class="comment-form">
-                        <img class="comment-avatar" src="@user.get.photo">
+                        <img class="comment-avatar" src="@(user.get.photo + "_small")">
                         <form class="comment-input">
                             <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
                             <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">

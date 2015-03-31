@@ -24,6 +24,7 @@ GET         /debug                         com.cillo.core.web.controllers.EtcCon
 POST        /signup                        com.cillo.core.web.controllers.RegisterController.attemptRegister
 POST        /login                         com.cillo.core.web.controllers.AuthController.attemptLogin
 POST        /boards/create                 com.cillo.core.web.controllers.BoardController.attemptCreateBoard
+POST        /settings                      com.cillo.core.web.controllers.SettingsController.settingsChange
 
 #AJAX CALLS
 POST        /a/post                        com.cillo.core.web.controllers.PostController.post

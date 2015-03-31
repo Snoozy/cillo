@@ -53,10 +53,10 @@ object SocialController extends Controller {
             val newUser = User.create(username, if(fbName.length < 21) fbName else fbName.substring(0, 20) , "", fbEmail.getOrElse(""), None, pic = pic)
             if (newUser.isDefined) {
                 SocialUser.createFBUser(fbId, newUser.get.toInt)
-                val token = Auth.getNewUserSessionId(User.find(newUser.get.toInt).get.user_id.get)
-                val sess = new Session(token)
-                sess.set("getting_started", "true")
-                Found("/").withCookies(Auth.newSessionCookies(token))
+                val sess_token = Auth.getNewUserSessionId(User.find(newUser.get.toInt).get.user_id.get)
+                val sess = new Session(sess_token)
+                sess.multiSet(Map("getting_started" -> "true", "fb_token" -> token))
+                Found("/").withCookies(Auth.newSessionCookies(sess_token))
             } else {
                 InternalServerError("Oops.")
             }
