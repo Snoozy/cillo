@@ -3,9 +3,6 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models._
 import com.cillo.utils.play.Auth
 import com.cillo.utils.play.Auth.AuthAction
-import play.api.Play
-import play.api.libs.json.Json
-import com.cillo.core.data.cache.Memcached
 import com.cillo.core.social.FB
 import com.cillo.core.data.aws.S3
 import play.api.mvc._
@@ -39,7 +36,8 @@ object SocialController extends Controller {
             val username = {
                 if (fbEmail.isDefined)
                     User.genUsername(fbEmail.get)
-                else User.genUsername(fbName.replace(" ", ""))
+                else
+                    User.genUsername(fbName.replace(" ", ""))
             }
             val pic: Option[Int] = {
                 val id = S3.uploadURL(fb.getPictureUrl)

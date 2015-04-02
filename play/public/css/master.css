@@ -2173,3 +2173,23 @@ a.no-dec:hover, a.no-dec:focus, a.no-dec:active, a.no-dec {
     background: -webkit-linear-gradient(#3660BA, #3059AF);
     background: linear-gradient(#3660BA, #3059AF);
 }
+
+.c-logo-img {
+    height: 50px;
+    width: 50px;
+    margin-right: 5px;
+}
+
+.error-border {
+    border-color: red;
+}
+
+.ui-state-focus {
+    background: #3876b4 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.ui-state-focus a {
+    color: white !important;
+}

@@ -38,6 +38,10 @@ object CommentVote {
         val voteExists = CommentVote.findByCommentAndUser(comment_id, user_id)
         if (comment.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
             DB.withConnection { implicit connection =>
+                if (value == 1) {
+                    SQL("UPDATE user SET reputation = reputation + 10 WHERE user_id = {user}")
+                        .on('user -> user_id).executeUpdate()
+                }
                 val time = System.currentTimeMillis()
                 SQL("INSERT INTO comment_vote (comment_id, user_id, value, time) VALUES ({comment_id}, {user_id}, {value}, {time})")
                     .on('comment_id -> comment_id, 'user_id -> user_id, 'value -> value, 'time -> time).executeInsert()
@@ -48,6 +52,13 @@ object CommentVote {
         } else if (voteExists.isDefined && (value == -1 || value == 1) && comment.isDefined) {
             if (voteExists.get.value != value) {
                 DB.withConnection { implicit connection =>
+                    if (value == 1) {
+                        SQL("UPDATE user SET reputation = reputation + 10 WHERE user_id = {user}")
+                            .on('user -> user_id).executeUpdate()
+                    } else if (value == -1) {
+                        SQL("UPDATE user SET reputation = reputation - 10 WHERE user_id = {user}")
+                            .on('user -> user_id).executeUpdate()
+                    }
                     val time = System.currentTimeMillis()
                     SQL("UPDATE comment_vote SET value = {value}, time = {time} WHERE comment_id = {comment_id} AND user_id = {user_id}")
                         .on('value -> value, 'user_id -> user_id, 'comment_id -> comment_id, 'time -> time).executeUpdate()

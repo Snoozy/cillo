@@ -38,7 +38,6 @@ object FB {
                     .get()
                     .map { response =>
                         val body = response.body
-                        print(body)
                         body.substring(body.indexOf('=') + 1, body.indexOf('&'))
                     }
                 val resp = Await.result(longToken, 5 seconds)

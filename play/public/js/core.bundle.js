@@ -3302,8 +3302,13 @@ function insertParam(key, value) {
         $('.post-title').removeClass('displaynone');
         $('.post-board-wrapper').removeClass('displaynone');
         $('.post-board-text').removeClass('displaynone');
-        $('.post-form').addClass('post-form-expanded');
+        $(this).addClass('post-form-expanded');
+        $(this).removeClass('error-border');
         $(".post-submit").show();
+    });
+
+    $('.post-board').focus(function() {
+        $(this).removeClass('error-border');
     });
 
     function collapseFirstPost() {
@@ -3549,9 +3554,20 @@ function insertParam(key, value) {
     $(".post-submit").click(function () {
         $(this).addClass('disabled');
 
-        if ($('.post-form').val() == "" || $('.post-board').val() == "") {
+        if ($('.post-form').val() == "") {
+            $(this).removeClass('disabled');
+            $(this).effect("shake");
+            $('.post-form').addClass('error-border');
             return false;
         }
+
+        if ($('.post-board').val() == "") {
+            $(this).removeClass('disabled');
+            $(this).effect("shake");
+            $('.post-board').addClass('error-border');
+            return false;
+        }
+
 
         var post_content = $('.post-form').val();
         var post_title = $('.post-title').val();
@@ -3616,7 +3632,6 @@ function insertParam(key, value) {
                 complete: function () {
                     $('textarea.post-form').val('');
                     $('.post-title').val('');
-                    $('.post-board').val('');
                     collapseFirstPost();
                 }
             });

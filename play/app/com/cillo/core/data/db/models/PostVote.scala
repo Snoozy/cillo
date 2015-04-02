@@ -38,6 +38,10 @@ object PostVote {
         val voteExists = PostVote.findByPostAndUser(post_id, user_id)
         if (post.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
             DB.withConnection { implicit connection =>
+                if (value == 1) {
+                    SQL("UPDATE user SET reputation = reputation + 20 WHERE user_id = {user}")
+                        .on('user -> user_id).executeUpdate()
+                }
                 val time = System.currentTimeMillis()
                 SQL("INSERT INTO post_vote (post_id, user_id, value, time) VALUES ({post_id}, {user_id}, {value}, {time})")
                     .on('post_id -> post_id, 'user_id -> user_id, 'value -> value, 'time -> time).executeInsert()
@@ -48,6 +52,13 @@ object PostVote {
         } else if (voteExists.isDefined) {
             if (voteExists.get.value != value) {
                 DB.withConnection { implicit connection =>
+                    if (value == 1) {
+                        SQL("UPDATE user SET reputation = reputation + 20 WHERE user_id = {user}")
+                            .on('user -> user_id).executeUpdate()
+                    } else if (value == -1) {
+                        SQL("UPDATE user SET reputation = reputation - 20 WHERE user_id = {user}")
+                            .on('user -> user_id).executeUpdate()
+                    }
                     val time = System.currentTimeMillis()
                     SQL("UPDATE post_vote SET value = {value}, time = {time} WHERE post_id = {post_id} AND user_id = {user_id}")
                         .on('value -> value, 'user_id -> user_id, 'post_id -> post_id, 'time -> time).executeUpdate()
