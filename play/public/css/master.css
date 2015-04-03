@@ -2193,3 +2193,22 @@ a.no-dec:hover, a.no-dec:focus, a.no-dec:active, a.no-dec {
 .ui-state-focus a {
     color: white !important;
 }
+
+.stats-container {
+    margin-left: 160px;
+    margin-top: -25px;
+}
+
+.stat {
+    display: inline-block;
+    text-transform: uppercase;
+    margin-right: 15px;
+    font-size: 13px;
+    color: #999;
+}
+
+.stat-number {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}

@@ -48,7 +48,9 @@ CREATE TABLE post (
     media VARCHAR(200) DEFAULT '',
     time BIGINT NOT NULL,
     INDEX `post__user_id_idx` (`user_id` DESC),
+    INDEX `post__board_id_idx` (`board_id` DESC),    
     CONSTRAINT `board__post_fk`FOREIGN KEY (`board_id`) REFERENCES board(`board_id`),
+    CONSTRAINT `user__post_fk`FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),    
     PRIMARY KEY (post_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 

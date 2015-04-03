@@ -1,5 +1,5 @@
 @(user: com.cillo.core.data.db.models.User, visitor: Option[com.cillo.core.data.db.models.User], posts: Seq[com.cillo.core.data.db.models.Post],
-        comments: Seq[com.cillo.core.data.db.models.Comment], boards: Seq[com.cillo.core.data.db.models.Board])
+        comments: Seq[com.cillo.core.data.db.models.Comment], boards: Seq[com.cillo.core.data.db.models.Board], postsCount: Int)
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
@@ -37,6 +37,26 @@
                                                 @Etc.parseFirstName(user.name) does not have a bio.
                                             }
                                         </span>
+                                    </div>
+                                </div>
+                                <div class="stats-container">
+                                    <div class="stat reputation">
+                                        <span class="stat-number">
+                                            @user.reputation
+                                        </span>
+                                        Rep
+                                    </div>
+                                    <div class="stat boards">
+                                        <span class="stat-number">
+                                            @boards.size
+                                        </span>
+                                        Boards
+                                    </div>
+                                    <div class="stat posts">
+                                        <span class="stat-number">
+                                            @postsCount
+                                        </span>
+                                        Posts
                                     </div>
                                 </div>
                             </div>

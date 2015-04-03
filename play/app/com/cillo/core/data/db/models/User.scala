@@ -182,6 +182,12 @@ object User {
         }
     }
 
+    def getPostsCount(user_id: Int): Int = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT COUNT(*) FROM post WHERE user_id = {user}").on('user -> user_id).as(scalar[Long].single).toInt
+        }
+    }
+
     def toJsonByUserID(user_id: Int, self: Option[User] = None, email: Boolean = false): JsValue = {
         val userExists = User.find(user_id)
         if (!userExists.isDefined)

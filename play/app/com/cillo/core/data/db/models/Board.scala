@@ -77,6 +77,12 @@ object Board {
         }
     }
 
+    def getPostsCount(board_id: Int): Int = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT COUNT(*) FROM post WHERE board_id = {board}").on('board -> board_id).as(scalar[Long].single).toInt
+        }
+    }
+
     def addFollower(user_id: Int, board_id: Int): Boolean = {
         val time = System.currentTimeMillis()
 

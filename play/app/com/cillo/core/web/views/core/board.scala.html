@@ -12,6 +12,9 @@
         false
     }
 }
+@postCount = @{
+    Board.getPostsCount(board.board_id.get)
+}
 @trending = @{
     Board.getTrendingBoards
 }
@@ -47,6 +50,20 @@
                                         <span class="board-descr-text">
                                         @board.description
                                         </span>
+                                    </div>
+                                </div>
+                                <div class="stats-container">
+                                    <div class="stat followers">
+                                        <span class="stat-number">
+                                        @board.followers
+                                        </span>
+                                        Followers
+                                    </div>
+                                    <div class="stat posts">
+                                        <span class="stat-number">
+                                        @postCount
+                                        </span>
+                                        Posts
                                     </div>
                                 </div>
                             </div>
