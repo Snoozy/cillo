@@ -20,6 +20,8 @@ import scala.concurrent.Future
 object Global extends WithFilters(new GzipFilter()) with GlobalSettings {
 
     override def onRouteRequest(request: RequestHeader): Option[Handler] = {
+        super.onRouteRequest(request)
+        /*
         val x = request.headers.get("X-Forwarded-Proto")
         val ua = request.headers.get("User-Agent")
         if (Play.isProd && (!x.isDefined || x.size == 0 || !x.get.contains("https")) && !(ua.isDefined && ua.get.startsWith("ELB-HealthChecker"))) {
@@ -29,6 +31,7 @@ object Global extends WithFilters(new GzipFilter()) with GlobalSettings {
         } else {
             super.onRouteRequest(request)
         }
+        */
     }
 
     override def onError(request: RequestHeader, ex: Throwable) = {

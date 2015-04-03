@@ -85,7 +85,7 @@
                 }
                 <div class="user-info">
                     <label class="u-info-wrapper">
-                        <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="6username-anchor" style="margin-left:0px;">
+                        <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor" style="margin-left:0px;">
                             <strong class="hover-blue user-name-text">@poster.name</strong>
                         </a>
                     </label>
@@ -131,10 +131,10 @@
                                         @defining(User.find(repost.get.user_id)) { u =>
                                             <div class="repost-avatar-container">
                                                 <a href="/user/@u.get.username">
-                                                    <img class="repost-avatar" src="@u.get.photo">
+                                                    <img class="repost-avatar" src="@(u.get.photo + "_small")">
                                                 </a>
                                             </div>
-                                            <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor" style="margin-left : 0 px ;">
+                                            <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor">
                                                 <strong class="hover-blue user-name-text">@u.get.name</strong>
                                             </a>
                                         }

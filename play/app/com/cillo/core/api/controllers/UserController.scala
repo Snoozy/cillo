@@ -202,22 +202,13 @@ object UserController extends Controller {
         user match {
             case None => BadRequest(Json.obj("error" -> "User must be authenticated."))
             case Some(_) =>
-                var page = 1
-                var pageSize = Post.DefaultPageSize
-                try {
-                    val pageOpt = request.getQueryString("page")
-                    val pageSizeOpt = request.getQueryString("page_size")
-                    if (pageOpt.isDefined) {
-                        page = pageOpt.get.toInt
-                    }
-                    if (pageSizeOpt.isDefined) {
-                        pageSize = pageSizeOpt.get.toInt
-                    }
-
-                } catch {
-                    case e: java.lang.NumberFormatException => // do nothing so that the values stay as the defaults.
+                val afterPost = request.getQueryString("after")
+                val posts = {
+                    if (afterPost.isDefined)
+                        User.getFeedPaged(user.get.user_id.get, afterPost.get.toInt)
+                    else
+                        User.getFeed(user.get.user_id.get)
                 }
-                val posts = User.getFeed(user.get.user_id.get, pageSize * page).drop(pageSize * (page - 1))
                 Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user)))
         }
     }

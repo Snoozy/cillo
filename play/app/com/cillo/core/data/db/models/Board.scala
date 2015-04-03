@@ -111,9 +111,20 @@ object Board {
         }
     }
 
-    def getTrendingPosts(board_id: Int, limit: Int = 200): Seq[Post] = {
+    def getTrendingPosts(board_id: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY post_id DESC LIMIT {limit}").on('board_id -> board_id, 'limit -> limit).as(postParser *)
+        }
+    }
+
+    def getTrendingPostsPaged(board_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+        DB.withConnection { implicit connection =>
+            val posts = SQL("SELECT * FROM post WHERE post_id < {after} AND board_id = {board_id} ORDER BY post_id DESC LIMIT {limit}")
+                .on('board_id -> board_id, 'after -> after, 'limit -> limit).as(postParser *)
+            if (posts.length < limit)
+                posts
+            else
+                posts.takeRight(limit)
         }
     }
 

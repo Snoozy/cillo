@@ -64,11 +64,10 @@
                         <div class="board-posts-container">
                             <div class="posts-container" style="display:inline-block;margin-right:10px;width:696px;padding:0px;">
                                 <div class="posts-wrapper" style="text-align:left;">
-                                    <ol class="posts" style="margin:0;list-style-type:none;">
+                                    <ol class="posts">
                                         @for(post <- posts) {
                                             @components.post(post, visitor)
                                         }
-
                                     </ol>
                                     <div id="neverending_spinner"></div>
                                 </div>
@@ -108,5 +107,14 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
         <script type="text/javascript" src="@RemoteURLController.url("js/core.bundle.js")"></script>
+
+        <script>
+            $(function() {
+                $('ol.posts').neverending({
+                    context: 'user',
+                    entity_id: @user.user_id.get
+                });
+            });
+        </script>
     </body>
 }

@@ -18,7 +18,7 @@ object SearchController extends Controller {
                     val query = form.get("q").map(_.head)
                     if (query.isDefined) {
                         val boards = Search.boardSearch(query.get)
-                        Ok(Board.toJsonSeq(boards, user = user))
+                        Ok(Json.obj("results" -> Board.toJsonSeq(boards, user = user)))
                     } else {
                         BadRequest(Json.obj("error" -> "Search query required."))
                     }
@@ -35,7 +35,7 @@ object SearchController extends Controller {
                     val query = form.get("q").map(_.head)
                     if (query.isDefined) {
                         val boards = Search.autoComplete(query.get)
-                        Ok(Board.toJsonSeq(boards, user = user))
+                        Ok(Json.obj("results" -> Board.toJsonSeq(boards, user = user)))
                     } else {
                         BadRequest(Json.obj("error" -> "Search query required."))
                     }

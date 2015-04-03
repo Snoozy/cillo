@@ -157,77 +157,6 @@ function insertParam(key, value) {
         alert('This site needs cookies to function properly. Please enable them in the browser settings.');
     }
 
-    var n_defaults = {
-        type: 'post',
-        context: 'home_timeline',
-        id: 0,
-        post_selector: 'post',
-        spinner_selector: 'neverending_spinner'
-    };
-
-    $.fn.neverending = function (options) {
-
-        n_options = $.extend({}, n_defaults, options);
-        var scrolled = false,
-            $this = $(this),
-            _object = $this[0],
-            done = false;
-
-        //var scrolled is so not much work is done in window.scroll(). See: http://ejohn.org/blog/learning-from-twitter/
-
-        $(window).scroll(function () {
-            scrolled = true;
-        });
-
-        setInterval(function () {
-            if (scrolled) {
-                scrolled = false;
-
-                if (!done && ($(window).scrollTop() >= $(document).height() - $(window).height() - 200)) {
-
-                    var last_post_id = $(_object.lastElementChild).data('item-id');
-
-                    $('#neverending_spinner').show();
-
-                    // -1 because of the first user post
-                    n = $('.post').length - 1;
-
-                    $.ajax({
-                        url: '/a/neverending',
-                        type: 'GET',
-                        dataType: 'json',
-                        data: {
-                            'type': n_options.type,
-                            'context': n_options.context,
-                            'id': n_options.id,
-                            'last_post_id': last_post_id,
-                            'n': n
-                        },
-                        before: function () {
-                            n_options.spinner_selector.show();
-                        },
-                        success: function (response) {
-                            $this.append(response.items_html);
-
-                            colorVotes('post');
-                            colorVotes('comment');
-
-                            if (response.status == 'No more posts.') {
-                                done = true;
-                            }
-                            $('#neverending_spinner').hide();
-
-                        }
-                    });
-
-                }
-
-            }
-
-        }, 200);
-
-    };
-
     var
         defaults = {
             className: 'autosizejs',
@@ -3132,6 +3061,137 @@ function insertParam(key, value) {
 
 }(jQuery));
 
+$(function() {
+
+    var defaults = {
+        type : 'post',
+        context : 'home',
+        spinner_selector : '#neverending_spinner',
+        entity_id : 0
+    };
+
+    $.fn.neverending = function(options) {
+
+        options = $.extend({}, defaults, options || {});
+        var scrolled = false,
+            more = true,
+            $this = $(this),
+            _object = $this[0];
+        //Scrolled is so not much work is done in window.scroll(). See: http://ejohn.org/blog/learning-from-twitter/
+
+        $(window).scroll(function() {
+            if (more) {
+                scrolled = true;
+            }
+        });
+
+        setInterval(function() {
+            if (scrolled) {
+                scrolled = false;
+
+                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+
+                    var last_post_id = $(_object.lastElementChild).data('item-id');
+
+                    if (options.context === "home") {
+                        $.ajax({
+                            url: '/a/neverending',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                'type': options.type,
+                                'context': options.context,
+                                'after': last_post_id
+                            },
+                            async: false,
+                            success: function (response) {
+                                $this.append(response.item_html);
+
+                                if (response.item_html === "") {
+                                    more = false;
+                                    $(options.spinner_selector).hide();
+                                }
+
+                                $('.like-count').each(function () {
+                                    if (parseInt($(this).text(), 10) > 0) {
+                                        $(this).css('color', '#009900');
+                                    } else if (parseInt($(this).text(), 10) < 0) {
+                                        $(this).css('color', '#CC1100');
+                                    }
+                                });
+
+                            }
+                        });
+                    } else if (options.context === 'user' && options.entity_id !== 0) {
+                        $.ajax({
+                            url: '/a/neverending',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                'type': options.type,
+                                'context': options.context,
+                                'after': last_post_id,
+                                'user': options.entity_id
+                            },
+                            async: false,
+                            success: function (response) {
+                                $this.append(response.item_html);
+
+                                if (response.item_html === "") {
+                                    more = false;
+                                    $(options.spinner_selector).hide();
+                                }
+
+                                $('.like-count').each(function () {
+                                    if (parseInt($(this).text(), 10) > 0) {
+                                        $(this).css('color', '#009900');
+                                    } else if (parseInt($(this).text(), 10) < 0) {
+                                        $(this).css('color', '#CC1100');
+                                    }
+                                });
+
+                            }
+                        });
+                    } else if (options.context === "board" && options.entity_id !== 0) {
+                        $.ajax({
+                            url: '/a/neverending',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                'type': options.type,
+                                'context': options.context,
+                                'after': last_post_id,
+                                'board': options.entity_id
+                            },
+                            async: false,
+                            success: function (response) {
+                                $this.append(response.item_html);
+
+                                if (response.item_html === "") {
+                                    more = false;
+                                    $(options.spinner_selector).hide();
+                                }
+
+                                $('.like-count').each(function () {
+                                    if (parseInt($(this).text(), 10) > 0) {
+                                        $(this).css('color', '#009900');
+                                    } else if (parseInt($(this).text(), 10) < 0) {
+                                        $(this).css('color', '#CC1100');
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                }
+
+            }
+
+        }, 200);
+
+    }
+});
+
 (function ($) {
 
     function htmlWithBreaks(text) {
@@ -3186,7 +3246,9 @@ function insertParam(key, value) {
         post_content.find('.post-actions').remove();
         post_content.find('.hr-no-margin').remove();
         post_content.find('.comments-container').remove();
-        post_content.find('.user-avatar').remove();
+        post_content.find('.post-avatar').addClass('repost-avatar');
+        post_content.find('.post-avatar').removeClass('post-avatar');
+        post_content.find('.post-avatar-wrapper').addClass("modal-repost-avatar");
         post_content.find('.margin-maker').removeClass('margin-maker');
         $('#repost-modal').find('.repost-post-container').empty();
         $('#repost-modal').find('.repost-post-container').append(post_content);

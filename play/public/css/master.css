@@ -16,7 +16,7 @@ body {
 
 body:after {
     display: none;
-    content: url(//static.cillo.co/upvote-arrow.png) url(//static.cillo.co/upvoted-arrow.png) url(//static.cillo.co/downvote-arrow.png) url(//static.cillo.co/downvoted-arrow.png) url(//static.cillo.co/dropdown-arrow.png) url(//static.cillo.co/ajax-spinner.gif);
+    content: url(//static.cillo.co/upvote-arrow.png) url(//static.cillo.co/upvoted-arrow.png) url(//static.cillo.co/downvote-arrow.png) url(//static.cillo.co/downvoted-arrow.png) url(//static.cillo.co/dropdown-arrow.png) url(//static.cillo.co/loading2.gif);
 }
 
 .inside-box {
@@ -1264,13 +1264,10 @@ a:hover {
 }
 
 #neverending_spinner {
-    height: 100px;
-    width: 100px;
-    margin: auto;
-    background: url(//static.cillo.co/ajax-spinner.gif);
-    margin-bottom: 10px;
-    margin-top: -20px;
-    display: none;
+    height: 32px;
+    width: 32px;
+    background: url(//static.cillo.co/loading2.gif);
+    margin: -20px auto 10px;
 }
 
 .displaynone {
@@ -2069,6 +2066,7 @@ strong {
 
 .repost-avatar {
     width: 24px;
+    height: 24px;
     border-radius: 2px;
 }
 
@@ -2211,4 +2209,15 @@ a.no-dec:hover, a.no-dec:focus, a.no-dec:active, a.no-dec {
     color: #333;
     font-size: 16px;
     font-weight: bold;
+}
+
+ol.posts {
+    list-style-type:none;
+    margin: 0 0 40px;
+}
+
+.modal-repost-avatar {
+    margin-left: 0px;
+    margin-right: 5px;
+    margin-top: 3px;
 }
