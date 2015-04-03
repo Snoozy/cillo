@@ -12,7 +12,7 @@ filename=${fullfile%????}
 
 echo "Package is located at ${package_path}"
 
-server_ips="54.69.177.193"
+server_ips="54.187.215.200"
 
 echo 'Starting deployment...'
 
@@ -20,16 +20,16 @@ if [ -e "$package_path" ]; then
     for server in "$server_ips"
     do
         echo "Deploying to ${server}."
-        scp "$package_path" ubuntu@${server}:/home/ubuntu/cillo-api.zip
-        rsync -avz $HOME/.cillo/prod_api.conf ubuntu@${server}:/home/ubuntu/
+        scp "$package_path" ubuntu@${server}:/home/ubuntu/cillo-web.zip
+        rsync -avz $HOME/.cillo/prod_web.conf ubuntu@${server}:/home/ubuntu/
         ssh ubuntu@${server} bash -c "'
-            unzip cillo-api.zip
+            unzip cillo-web.zip
             chmod 755 ./${filename}/bin/cillo
-            rm cillo-api.zip
+            rm cillo-web.zip
         '"
         ssh ubuntu@${server} "eval kill \$(ps aux | grep [c]illo | awk '{print \$2}')"
         ssh ubuntu@${server} bash -c "'
-            sudo ./${filename}/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_api.conf &
+            ./${filename}/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_web.conf &
             disown
         '"
     done

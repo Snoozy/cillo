@@ -6,7 +6,7 @@ import play.api.mvc._
 
 object RemoteURLController extends Controller {
 
-    private val CdnUrl = "static.cillo.co/"
+    private val CdnUrl = "https://static.cillo.co/"
 
     def url(file: String) = {
         Play.isProd match {
