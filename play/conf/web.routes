@@ -12,7 +12,7 @@ GET         /boards/create                 com.cillo.core.web.controllers.BoardC
 GET         /:name/posts/:id               com.cillo.core.web.controllers.PostController.viewPostPage(name: String, id: Int)
 GET         /logout                        com.cillo.core.web.controllers.AuthController.logout
 GET         /boards/explore                com.cillo.core.web.controllers.BoardController.exploreBoards
-GET         /settings                      com.cillo.core.web.controllers.SettingsController.settingsPage
+GET         /settings                      com.cillo.core.web.controllers.SettingsController.userSettingsChange
 GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
 GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
 GET         /a/neverending                 com.cillo.core.web.controllers.PageController.neverending
@@ -24,7 +24,7 @@ GET         /debug                         com.cillo.core.web.controllers.EtcCon
 POST        /signup                        com.cillo.core.web.controllers.RegisterController.attemptRegister
 POST        /login                         com.cillo.core.web.controllers.AuthController.attemptLogin
 POST        /boards/create                 com.cillo.core.web.controllers.BoardController.attemptCreateBoard
-POST        /settings                      com.cillo.core.web.controllers.SettingsController.settingsChange
+POST        /settings                      com.cillo.core.web.controllers.SettingsController.userSettingsChange
 
 #AJAX CALLS
 POST        /a/post                        com.cillo.core.web.controllers.PostController.post

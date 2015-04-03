@@ -1,4 +1,4 @@
-@(user: com.cillo.core.data.db.models.User)
+@(user: com.cillo.core.data.db.models.User, board: com.cillo.core.data.db.models.Board)
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
@@ -15,33 +15,17 @@
                 <div class="register-inner">
                     <div class="register-header" style="text-align:left;">
                         <span class="register-text">
-                            Account Settings
+                            Board Settings for @board.name
                         </span>
                     </div>
-                    <form role="form" method="post" action="/settings" enctype="multipart/form-data">
+                    <form role="form" method="post" action="/@board.name/settings" enctype="multipart/form-data">
                         <ul>
                             <li class="setting-li">
                                 <h4 class="setting-type">
-                                    Name
+                                    Description
                                 </h4>
                                 <div class="setting-input">
-                                    <input type="text" class="form-control" name="name" value="@user.name">
-                                </div>
-                            </li>
-                            <li class="setting-li">
-                                <h4 class="setting-type">
-                                    Username
-                                </h4>
-                                <div class="setting-input">
-                                    <input type="text" class="form-control" name="username" value="@user.username">
-                                </div>
-                            </li>
-                            <li class="setting-li">
-                                <h4 class="setting-type">
-                                    Bio
-                                </h4>
-                                <div class="setting-input">
-                                    <textarea type="text" class="form-control setting-textarea" name="bio" style="height:85px;">@user.bio</textarea>
+                                    <textarea type="text" class="form-control setting-textarea" name="desc" style="height:85px;">@user.bio</textarea>
                                 </div>
                             </li>
                             <li class="setting-li">
@@ -49,7 +33,7 @@
                                     Picture
                                 </h4>
                                 <div class="picture-setting-container">
-                                    <img class="picture-setting-avatar" src="@user.photo">
+                                    <img class="picture-setting-avatar" src="@board.photo">
                                 </div>
                                 <div class="setting-input" style="margin-left:0px;display:inline-block;vertical-align:middle;">
                                     <div class="picture_upload btn btn-default" style="padding:7px 10px;margin-left:10px;">
