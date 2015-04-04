@@ -26,16 +26,16 @@ object Memcached {
         Option(res)
     }
 
-    def getTouch(key: String, duration: Int = 2592000): Option[String] = {
+    def getTouch[T](key: String, duration: Int = 2592000): Option[T] = {
         if (!addr.isDefined)
             throw new MemcachedAddressUndefined("Memcached address has not been set.")
         val client = builder.build()
-        val res: String = client.getAndTouch(key, duration)
+        val res: T = client.getAndTouch(key, duration)
         client.shutdown()
         Option(res)
     }
 
-    def set(key: String, value: String, duration: Int = 2592000): Boolean = {
+    def set[T](key: String, value: T, duration: Int = 2592000): Boolean = {
         if (!addr.isDefined)
             throw new MemcachedAddressUndefined("Memcached address has not been set.")
         val client = builder.build()

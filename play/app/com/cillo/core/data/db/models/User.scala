@@ -2,13 +2,13 @@ package com.cillo.core.data.db.models
 
 import anorm.SqlParser._
 import anorm._
+import com.cillo.core.data.cache.Session
 import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.core.data.db.models.Post.postParser
 import com.cillo.utils.Etc.makeDigest
 import play.api.Play.current
 import org.apache.commons.lang3.RandomStringUtils
 import play.api.db._
-import com.cillo.utils.Session
 import play.api.libs.json._
 
 case class User(

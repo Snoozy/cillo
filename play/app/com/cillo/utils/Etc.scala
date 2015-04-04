@@ -1,5 +1,7 @@
 package com.cillo.utils
 
+import java.util.regex.{Matcher, Pattern}
+
 import org.apache.commons.lang3.StringEscapeUtils.escapeHtml4
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -76,8 +78,17 @@ object Etc {
         text.substring(0, end) + "..."
     }
 
+    private val multiNewLineRegex: Pattern = Pattern.compile("\n{2,}")
+    private val newLineRegex: Pattern = Pattern.compile("\n", Pattern.LITERAL)
+    private val linkRegex: Pattern = Pattern.compile("(?i)\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))")
+    private val usernameRegex: Pattern = Pattern.compile("""(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z_]+[A-Za-z0-9_]+)""")
+    private val hashtagRegex: Pattern = Pattern.compile("""(?<=^|(?<=[^a-zA-Z0-9-\.]))#([A-Za-z_]+[A-Za-z0-9_]+)""")
+
+
     def parseHTML(raw: String): String = {
-        escapeHtml4(raw).replaceAll("\n{2,}", "</p><p class=\"post-text\">").replace("\n", "<br/>").replaceAll("(?i)\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", "<a href=\"http://$1\" target=\"_blank\">$1</a>")
+        hashtagRegex.matcher(usernameRegex.matcher(linkRegex.matcher(newLineRegex.matcher(multiNewLineRegex.matcher(escapeHtml4(raw)).replaceAll("</p><p class=\"post-text\">")).replaceAll(Matcher.quoteReplacement("<br/>")))
+            .replaceAll("<a href=\"http://$1\" target=\"_blank\">$1</a>")).replaceAll("<a href=\"https://www.cillo.co/user/$1\" target=\"_blank\">@$1</a>"))
+            .replaceAll("<a href=\"https://www.cillo.co/$1\" target=\"_blank\">#$1</a>")
     }
 
     def serializeMap(m: Map[String, String]): String = {

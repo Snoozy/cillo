@@ -1,12 +1,12 @@
 package com.cillo.core.web.controllers
 
+import com.cillo.core.data.cache.Session
 import com.cillo.core.data.db.models._
 import com.cillo.utils.play.Auth
 import com.cillo.utils.play.Auth.AuthAction
 import com.cillo.core.social.FB
 import com.cillo.core.data.aws.S3
 import play.api.mvc._
-import com.cillo.utils.Session
 
 object SocialController extends Controller {
 

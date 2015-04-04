@@ -38,7 +38,7 @@
                 </ul>
             </div>
             <div class="navbar-user-wrapper">
-                <a href="/user/@user.get.username" class="navbar-user-anchor">
+                <a href="/user/@user.get.username" class="no-dec navbar-user-anchor">
                     <div class="navbar-user-avatar-wrapper">
                         <img class="navbar-user-avatar" src="@(user.get.photo + "_small")">
                     </div>
@@ -52,7 +52,7 @@
         }
         @if(buttons) {
             <div class="navbar-button-wrapper">
-                <a href="/boards/explore" class="navbar-button-anchor">
+                <a href="/boards/explore" class="no-dec navbar-button-anchor">
                     <div class="navbar-button-div">
                         <span class="navbar-button-text">
                             Explore
@@ -64,7 +64,7 @@
                 <span class="navbar-button-separator">|</span>
             </div>
             <div class="navbar-button-wrapper">
-                <a href="/boards/create" class="navbar-button-anchor">
+                <a href="/boards/create" class="no-dec navbar-button-anchor">
                     <div class="navbar-button-div">
                         <span class="navbar-button-text">
                             Create

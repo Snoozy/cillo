@@ -1,11 +1,10 @@
 package com.cillo.utils.play
 
-import com.cillo.core.data.cache.Memcached
+import com.cillo.core.data.cache.{Session, Memcached}
 import com.cillo.core.data.db.models.User
 import com.cillo.utils.Etc
 import com.cillo.utils.security.SecureRand
 import play.api.mvc._
-import com.cillo.utils.Session
 
 object Auth {
 
@@ -44,45 +43,32 @@ object Auth {
     def getNewUserSessionId(id: Int): String = {
         val newSeshId = SecureRand.newSessionId()
         val currTime = System.currentTimeMillis().toString
-        new Session(newSeshId).multiSet(Map("creation_time" -> currTime, "user_id" -> id.toString))
+        new Session(newSeshId).newSession(id.toString)
         newSeshId
     }
 
     private def parseUserFromCookie(implicit request: Request[AnyContent]): Option[User] = {
         val byToken = request.cookies.get("auth_token").getOrElse(return None).value
-        val memcachedRes: Option[String] = Memcached.getTouch(byToken)
-        if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
-            throw AuthTokenCookieExpired("Cookie auth token expired.")
-        parseMemcached(memcachedRes.get, byToken)
+        parseMemcached(byToken)
     }
 
     private def parseUserFromPostData(implicit request: Request[AnyContent]): Option[User] = {
         val token = request.body.asFormUrlEncoded.getOrElse(return None).getOrElse("auth_token", return None).head
-        val memcachedRes: Option[String] = Memcached.getTouch(token)
-        if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
-            return None
-        parseMemcached(memcachedRes.get, token)
+        parseMemcached(token)
     }
 
     private def parseUserFromQueryString(implicit request: Request[AnyContent]): Option[User] = {
         val token = request.getQueryString("auth_token").getOrElse(return None)
-        val memcachedRes: Option[String] = Memcached.getTouch(token)
-        if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
-            return None
-        parseMemcached(memcachedRes.get, token)
+        parseMemcached(token)
     }
 
     private def parseUserFromHeader(implicit request: Request[AnyContent]): Option[User] = {
         val token = request.headers.get("X-Auth-Token").getOrElse(return None)
-        val memcachedRes: Option[String] = Memcached.getTouch(token)
-        if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
-            return None
-        parseMemcached(memcachedRes.get, token)
+        parseMemcached(token)
     }
 
-    private def parseMemcached(memcached: String, token: String): Option[User] = {
-        val map = Etc.deserializeMap(memcached)
-        val user_id = map.getOrElse("user_id", return None).toInt
+    private def parseMemcached(token: String): Option[User] = {
+        val user_id = new Session(token).get("user_id").getOrElse(return None).toInt
         val user = User.find(user_id)
         if (user.isDefined) {
             Some(user.get.copy(token = Some(token), session = Some(new Session(token))))
