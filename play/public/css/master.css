@@ -2188,6 +2188,7 @@ a.no-dec:hover, a.no-dec:focus, a.no-dec:active, a.no-dec {
     background: #3876b4 !important;
     color: white !important;
     border: none !important;
+    margin: 0;
 }
 
 .ui-state-focus a {

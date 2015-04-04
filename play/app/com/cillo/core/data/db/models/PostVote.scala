@@ -38,7 +38,7 @@ object PostVote {
         val voteExists = PostVote.findByPostAndUser(post_id, user_id)
         if (post.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
             DB.withConnection { implicit connection =>
-                if (value == 1) {
+                if (value == 1 && (user_id != post.get.user_id)) {
                     SQL("UPDATE user SET reputation = reputation + 20 WHERE user_id = {user}")
                         .on('user -> user_id).executeUpdate()
                 }

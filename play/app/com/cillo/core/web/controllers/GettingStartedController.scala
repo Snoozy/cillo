@@ -14,12 +14,16 @@ object GettingStartedController extends Controller {
             case Some(_) =>
                 val follow = request.getQueryString("follow")
                 if (follow.isDefined) {
-                    val group_ids = follow.get.split(",").map(_.toInt)
-                    group_ids.foreach { id =>
-                        Board.addFollower(user.get.user_id.get, id)
-                    }
-                    if (user.get.session.isDefined) {
-                        user.get.session.get.remove("getting_started")
+                    try {
+                        val group_ids = follow.get.split(",").map(_.toInt)
+                        group_ids.foreach { id =>
+                            Board.addFollower(user.get.user_id.get, id)
+                        }
+                        if (user.get.session.isDefined) {
+                            user.get.session.get.remove("getting_started")
+                        }
+                    } catch {
+                        case e: java.lang.NumberFormatException => user.get.session.get.remove("getting_started")
                     }
                 }
                 Found("/")
