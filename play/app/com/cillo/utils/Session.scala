@@ -7,12 +7,12 @@ class Session(t: String) {
 
     val token: String = t
 
-    def get(key: String): Option[String] = Etc.deserializeMap(Memcached.get(token)).get(key)
+    def get(key: String): Option[String] = Etc.deserializeMap(Memcached.getTouch(token).getOrElse("")).get(key)
 
     def set(key: String, value: String) = multiSet(Map(key -> value))
 
     def multiSet(m: Map[String, String]) = {
-        val curr = Option(Etc.deserializeMap(Memcached.get(token)))
+        val curr = Option(Etc.deserializeMap(Memcached.getTouch(token).getOrElse("")))
         val newMap: mutable.Map[String, String] = new mutable.HashMap[String, String]()
         if (curr.isDefined) {
             curr.get.foreach {
@@ -29,7 +29,7 @@ class Session(t: String) {
     }
 
     def remove(key: String) = {
-        val curr = Option(Etc.deserializeMap(Memcached.get(token)))
+        val curr = Option(Etc.deserializeMap(Memcached.getTouch(token).getOrElse("")))
         if (curr.isDefined) {
             val newMap = curr.get - key
             Memcached.set(token, Etc.serializeMap(newMap))
@@ -37,7 +37,7 @@ class Session(t: String) {
     }
 
     override def toString = {
-        Memcached.get(token)
+        Memcached.getTouch(token).getOrElse("")
     }
 
 }

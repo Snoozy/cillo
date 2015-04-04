@@ -50,7 +50,7 @@ object Auth {
 
     private def parseUserFromCookie(implicit request: Request[AnyContent]): Option[User] = {
         val byToken = request.cookies.get("auth_token").getOrElse(return None).value
-        val memcachedRes: Option[String] = Option(Memcached.get(byToken))
+        val memcachedRes: Option[String] = Memcached.getTouch(byToken)
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             throw AuthTokenCookieExpired("Cookie auth token expired.")
         parseMemcached(memcachedRes.get, byToken)
@@ -58,7 +58,7 @@ object Auth {
 
     private def parseUserFromPostData(implicit request: Request[AnyContent]): Option[User] = {
         val token = request.body.asFormUrlEncoded.getOrElse(return None).getOrElse("auth_token", return None).head
-        val memcachedRes: Option[String] = Option(Memcached.get(token))
+        val memcachedRes: Option[String] = Memcached.getTouch(token)
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             return None
         parseMemcached(memcachedRes.get, token)
@@ -66,7 +66,7 @@ object Auth {
 
     private def parseUserFromQueryString(implicit request: Request[AnyContent]): Option[User] = {
         val token = request.getQueryString("auth_token").getOrElse(return None)
-        val memcachedRes: Option[String] = Option(Memcached.get(token))
+        val memcachedRes: Option[String] = Memcached.getTouch(token)
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             return None
         parseMemcached(memcachedRes.get, token)
@@ -74,7 +74,7 @@ object Auth {
 
     private def parseUserFromHeader(implicit request: Request[AnyContent]): Option[User] = {
         val token = request.headers.get("X-Auth-Token").getOrElse(return None)
-        val memcachedRes: Option[String] = Option(Memcached.get(token))
+        val memcachedRes: Option[String] = Memcached.getTouch(token)
         if (!memcachedRes.isDefined || memcachedRes.get.isEmpty)
             return None
         parseMemcached(memcachedRes.get, token)

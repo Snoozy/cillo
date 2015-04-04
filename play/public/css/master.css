@@ -927,7 +927,9 @@ a {
 }
 
 .no-posts {
-    font-size:25;
+    font-size: 18px;
+    padding: 10px;
+    text-align: center;
 }
 
 hr {

@@ -41,8 +41,9 @@ POST        /a/upload                      com.cillo.core.web.controllers.MediaC
 
 #Board catchalls
 GET         /:name                         com.cillo.core.web.controllers.BoardController.boardPage(name: String)
-GET         /:name/settings                com.cillo.core.web.controllers.BoardController.boardSettingsPage(name: String)
+GET         /:name/settings                com.cillo.core.web.controllers.SettingsController.boardSettingsPage(name: String)
 
+POST        /:name/settings                com.cillo.core.web.controllers.SettingsController.boardSettingsChange(name: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                  controllers.Assets.at(path="/public", file)

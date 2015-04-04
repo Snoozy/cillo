@@ -3,6 +3,7 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models.{Board, Post, User}
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.mvc._
+import com.cillo.core.data.cache.Memcached
 
 object IndexController extends Controller {
 
@@ -19,6 +20,17 @@ object IndexController extends Controller {
                 }
             case None =>
                 Ok(com.cillo.core.web.views.html.core.welcome(getWelcomeBoards))
+        }
+    }
+
+    def cachedWelcomeHtml = {
+        val cached = Memcached.get("welcome_cache")
+        if (cached.isDefined) {
+            Ok(cached.get)
+        } else {
+            val comp = com.cillo.core.web.views.html.core.welcome(getWelcomeBoards)
+            Memcached.set("welcome_cache", comp.toString(), duration = 3600)
+            Ok(comp)
         }
     }
 

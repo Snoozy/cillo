@@ -51,13 +51,13 @@ object SettingsController extends Controller {
                                         if (mediaID.isDefined) {
                                             mediaID.get.toInt
                                         } else
-                                            user.get.photo_id
+                                            board.get.photo_id
                                     } else
-                                        user.get.photo_id
+                                        board.get.photo_id
                                 } else
-                                    user.get.photo_id
+                                    board.get.photo_id
                             } else
-                                user.get.photo_id
+                                board.get.photo_id
                         }
                         val res = body.get.asFormUrlEncoded
                         val desc = res.get("desc").map(_.head).getOrElse(user.get.name)

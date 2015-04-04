@@ -81,8 +81,12 @@
                                             @components.post(post, user)
                                         }
 
+                                        @if(posts.length < 1) {
+                                            @components.no_posts()
+                                        }
+
                                     </ol>
-                                    <div id="neverending_spinner"></div>
+                                    <div @if(posts.length < 19){class="displaynone" }id="neverending_spinner"></div>
                                 </div>
                             </div>
                         </div>
