@@ -1,0 +1,111 @@
+@(user: Option[com.cillo.core.data.db.models.User], boards: Seq[com.cillo.core.data.db.models.Board])
+
+@import com.cillo.core.web.views.html.components
+@import com.cillo.utils.Etc
+@import com.cillo.core.web.controllers.RemoteURLController
+
+@components.base("Explore Cillo") {
+    <link rel="stylesheet" href="@RemoteURLController.url("css/welcome.css")"/>
+
+    <script type="text/javascript" charset="utf-8">
+
+        var colCount = 0;
+        var colWidth = 256;
+        var margin = 30;
+        var spaceLeft = 0;
+        var windowWidth = 0;
+        var blocks = [];
+
+        $(function(){
+            $(window).resize(setupBlocks);
+            $('.block').addClass('load');
+        });
+
+        function setupBlocks() {
+            windowWidth = $(window).width();
+            blocks = [];
+
+            // Calculate the margin so the blocks are evenly spaced within the window
+            colCount = Math.floor(windowWidth/(colWidth+margin*2));
+            spaceLeft = (windowWidth - ((colWidth*colCount)+(margin*(colCount-1)))) / 2;
+
+            for(var i=0;i<colCount;i++){
+                blocks.push(margin);
+            }
+            positionBlocks();
+        }
+
+        function positionBlocks() {
+            $('.block').each(function(i){
+                var min = Array.min(blocks);
+                var index = $.inArray(min, blocks);
+                var leftPos = margin+(index*(colWidth+margin));
+                $(this).css({
+                    'left':(leftPos+spaceLeft-90)+'px',
+                    'top': 75+min+'px'
+                });
+                blocks[index] = min+$(this).outerHeight()+margin;
+            });
+        }
+
+        // Function to get the Min value in Array
+        Array.min = function(array) {
+            return Math.min.apply(Math, array);
+        };
+
+    </script>
+
+    <style>
+        .trending-topics-wrapper {
+            padding: 0;
+        }
+        .trending-topics-header {
+            padding-right: 30px;
+            padding-top: 20px;
+        }
+        .trending-topics-container {
+            width: 140px;
+            margin: auto;
+        }
+    </style>
+} {
+    <body class="main-background" style="margin:0" onload="setupBlocks();">
+        @components.masthead(user, searchBar = true, fixed = false)
+        <div class="trending-topics-container">
+            <div class="trending-topics-wrapper">
+                <div class="trending-topics-inner">
+                    <div class="trending-topics-header">
+                        <span class="trending-topics-text">Explore</span>
+                    </div>
+                    <div class="trending-topics-content">
+                        <div class="trending-topics-centering">
+                        @for(b <- boards) {
+                            <div class="trending-group-wrapper block" onclick="window.location.href='/@b.name'">
+                                <div class="trending-group-content">
+                                    <div class="trending-group-avatar">
+                                        <a href="/@b.name">
+                                            <img class="trending-group-avatar" src="@b.photo">
+                                        </a>
+                                    </div>
+                                    <div class="trending-group-bottom">
+                                        <div class="trending-group-header">
+                                            <span class="trending-group-name">
+                                            @b.name
+                                            </span>
+                                        </div>
+                                        <div class="trending-group-descr">
+                                            <span class="trending-group-descr-content">
+                                            @Etc.ellipsize(b.description, 52)
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+}

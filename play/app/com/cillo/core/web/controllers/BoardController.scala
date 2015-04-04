@@ -25,10 +25,6 @@ object BoardController extends Controller {
         }
     }
 
-    def exploreBoards = AuthAction { implicit user => implicit request =>
-        Ok("Coming soon...")
-    }
-
     def followBoard(board_id: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))

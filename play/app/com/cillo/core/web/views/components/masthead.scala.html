@@ -2,7 +2,9 @@
 
 @import com.cillo.utils.Etc
 
-<div style="height:45px;"></div>
+@if(fixed) {
+    <div style="height:45px;"></div>
+}
 <div class="masthead" style="@if(!fixed){position:relative;}">
     <nav class="navbar navbar-default" style="margin-bottom:0px;min-height:45px;width:960px;margin:auto;border:none;">
         <div class="navbar-header">

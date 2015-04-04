@@ -11,7 +11,7 @@ GET         /login                         com.cillo.core.web.controllers.AuthCo
 GET         /boards/create                 com.cillo.core.web.controllers.BoardController.createBoardPage
 GET         /:name/posts/:id               com.cillo.core.web.controllers.PostController.viewPostPage(name: String, id: Int)
 GET         /logout                        com.cillo.core.web.controllers.AuthController.logout
-GET         /boards/explore                com.cillo.core.web.controllers.BoardController.exploreBoards
+GET         /boards/explore                com.cillo.core.web.controllers.ExploreController.explore
 GET         /settings                      com.cillo.core.web.controllers.SettingsController.userSettingsChange
 GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
 GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
