@@ -36,6 +36,13 @@
                                     <span class="btn-text unfollow-text">Unfollow</span>
                                 </button>
                             </div>
+                            @if(user.isDefined && board.creator_id == user.get.user_id.get) {
+                                <a href="/@board.name/settings">
+                                    <div class="group-settings-btn">
+                                        <span class="glyphicon glyphicon-cog" style="font-size:19px;color:black;"></span>
+                                    </div>
+                                </a>
+                            }
                             <div class="board-info">
                                 <div class="board-data-container">
                                     <div class="board-avatar">

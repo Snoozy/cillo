@@ -2224,3 +2224,8 @@ ol.posts {
     margin-right: 5px;
     margin-top: 3px;
 }
+
+.group-settings-btn {
+    float: right;
+    margin: 8px 15px 8px 8px;
+}

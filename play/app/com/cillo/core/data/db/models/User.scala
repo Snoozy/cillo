@@ -28,7 +28,7 @@ case class User(
 
 object User {
 
-    private val DefaultPhotoString = "0.png"
+    private val DefaultPhotoString = "default"
     private val ImageURLBase = "https://static.cillo.co/image/"
 
     private[models] val userParser: RowParser[User] = {

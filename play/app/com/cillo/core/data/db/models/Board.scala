@@ -21,7 +21,7 @@ case class Board (
 
 object Board {
 
-    private val DefaultPhotoString = "0.png"
+    private val DefaultPhotoString = "default_group"
     private val ImageURLBase = "https://static.cillo.co/image/"
 
     private[data] val boardParser: RowParser[Board] = {
