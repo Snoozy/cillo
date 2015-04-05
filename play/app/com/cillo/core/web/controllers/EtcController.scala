@@ -2,6 +2,7 @@ package com.cillo.core.web.controllers
 
 import play.api.mvc._
 import com.cillo.utils.play.Auth._
+import com.cillo.core.email.Email
 
 object EtcController extends Controller {
 
@@ -10,6 +11,7 @@ object EtcController extends Controller {
     }
 
     def debug = AuthAction { implicit user => implicit request =>
+        Email.sendHTML("testing", "danielli803@gmail.com", "info@cillo.co", "<p>Hi</p>")
         user.get.session.get.remove("getting_started")
         Ok(user.get.session.get.toString())
     }
