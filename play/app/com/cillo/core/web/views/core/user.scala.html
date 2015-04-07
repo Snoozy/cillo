@@ -101,6 +101,8 @@
 
         @if(visitor.isDefined) {
             @components.repost_modal(User.getBoards(visitor.get.user_id.get))
+        } else {
+            @components.logged_out()
         }
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>

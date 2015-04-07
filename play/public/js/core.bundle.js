@@ -3293,6 +3293,10 @@ $(function() {
     }, 'li.post');
 
     $('.following .board-follow-btn').click(function() {
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         var group_id = $(this).closest('.board-follow-btn-container').data('board-id');
         $.ajax({
             url: '/a/group/' + group_id + '/unfollow',
@@ -3305,6 +3309,10 @@ $(function() {
     });
 
     $('.notfollowing .board-follow-btn').click(function() {
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         var group_id = $(this).closest('.board-follow-btn-container').data('board-id');
         $.ajax({
             url: '/a/group/' + group_id + '/follow',
@@ -3402,6 +3410,11 @@ $(function() {
 
     $(document).on('click', '.action-link-comment', function() {
 
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
+
         var comment_form = $(this).closest('.post-actions').siblings('.comments-container').find('.comment-form');
 
         $(comment_form).removeClass('displaynone');
@@ -3415,6 +3428,10 @@ $(function() {
     });
 
     $(document).on('click', '.action-link-like', function () {
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         var $this = $(this);
         var post_id = $this.closest('.post').data('item-id');
 
@@ -3444,6 +3461,10 @@ $(function() {
     });
 
     $(document).on('click', '.action-link-dislike', function () {
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         var $this = $(this);
         var post_id = $this.closest('.post').data('item-id');
 
@@ -3473,6 +3494,10 @@ $(function() {
     });
 
     $(document).on('click', '.c-action.like', function () {
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         var $this = $(this);
         var comment_id = $(this).closest('.comment').data('comment-id');
 
@@ -3499,6 +3524,10 @@ $(function() {
     });
 
     $(document).on('click', '.c-action.dislike', function () {
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         var $this = $(this);
         var comment_id = $this.closest('.comment').data('comment-id');
 
@@ -3522,6 +3551,10 @@ $(function() {
     });
 
     $(document).on('click', '.c-action.reply', function(e) {
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         e.preventDefault();
         var reply_form = $(this).closest('.comments-container').find('.comment-form').first().clone();
         reply_form.addClass('comment-reply');
