@@ -27,9 +27,9 @@ if [ -e "$package_path" ]; then
             chmod 755 ./${filename}/bin/cillo
             rm cillo-api.zip
         '"
-        ssh ubuntu@${server} "eval kill \$(ps aux | grep [c]illo | awk '{print \$2}')"
+        ssh ubuntu@${server} "eval sudo kill \$(ps aux | grep [c]illo | awk '{print \$2}')"
         ssh ubuntu@${server} bash -c "'
-            sudo ./${filename}/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_api.conf &
+            sudo ./${filename}/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_api.conf -Dhttp.port=80 &
             disown
         '"
     done

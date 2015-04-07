@@ -25,8 +25,7 @@ object Search {
 
     private def partialBoardSearch(query: String): Seq[Board] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM board WHERE MATCH(name) AGAINST({query}* IN BOOLEAN MODE)")
-                .on('query -> query).as(boardParser *)
+            SQL("""SELECT * FROM board WHERE MATCH(name) AGAINST({q} IN BOOLEAN MODE)""").on('q -> (query + "*")).as(boardParser *)
         }
     }
 

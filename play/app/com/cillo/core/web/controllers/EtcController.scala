@@ -3,6 +3,7 @@ package com.cillo.core.web.controllers
 import play.api.mvc._
 import com.cillo.utils.play.Auth._
 import com.cillo.core.email._
+import com.cillo.core.data.search.Search
 
 object EtcController extends Controller {
 
@@ -11,7 +12,8 @@ object EtcController extends Controller {
     }
 
     def debug = AuthAction { implicit user => implicit request =>
-        Ok(user.get.session.get.get("getting_started").isDefined.toString)
+        val b = Search.autoComplete("asdf")
+        Ok(b.toString())
     }
 
     def redirectHttp = Action { implicit request =>
