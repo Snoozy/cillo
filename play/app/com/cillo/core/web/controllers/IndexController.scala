@@ -3,7 +3,7 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models.{Board, Post, User}
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.mvc._
-import com.cillo.core.data.cache.Memcached
+import com.cillo.core.data.cache.Redis
 
 object IndexController extends Controller {
 
@@ -24,12 +24,12 @@ object IndexController extends Controller {
     }
 
     def cachedWelcomeHtml = {
-        val cached = Memcached.get("welcome_cache")
+        val cached = Redis.get("welcome_cache")
         if (cached.isDefined) {
-            Ok(cached.get)
+            Ok(cached.get).as(HTML)
         } else {
             val comp = com.cillo.core.web.views.html.core.welcome(getWelcomeBoards)
-            Memcached.set("welcome_cache", comp.toString(), duration = 3600)
+            Redis.setex("welcome_cache", comp.toString(), expire = 3600)
             Ok(comp)
         }
     }

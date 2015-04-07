@@ -2,6 +2,7 @@ package com.cillo.core.api
 
 import com.cillo.core.api.controllers.EtcController
 import com.cillo.core.data.cache.Memcached
+import com.cillo.core.data.cache.Redis
 import play.api.Play.current
 import play.api.libs.json.Json
 import play.api.mvc.Results._
@@ -43,9 +44,14 @@ object Global extends WithFilters(new GzipFilter()) with GlobalSettings {
     }
 
     override def onStart(app: Application) {
+        val addr = Play.current.configuration.getString("redis.address").getOrElse("127.0.0.1:6379")
+        Redis.init(addr)
+
+        /* TRANSFER LOGICAL CACHE TO REDIS, USE MEMCACHED WITH OBJECT CACHE
         val addr = Play.current.configuration.getString("memcached.address").getOrElse("127.0.0.1:11211")
         Memcached.setAddr(addr)
         Memcached.get("initializing...") // warm up connection pool and lazy val for memcached builder
+        */
     }
 
 }

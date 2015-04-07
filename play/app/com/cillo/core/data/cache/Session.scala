@@ -9,7 +9,7 @@ class Session(t: String) {
 
     var map: Option[java.util.Map[String, String]] = {
         try {
-            val string = Memcached.getTouch[String](token)
+            val string = Redis.get[String](token)
             if (string.isDefined) {
                 Option(deserializeMap(string.get))
             } else
@@ -20,7 +20,7 @@ class Session(t: String) {
     }
 
     def refresh() = {
-        val string = Memcached.getTouch[String](token)
+        val string = Redis.get[String](token)
         if (string.isDefined) {
             this.map = Option(deserializeMap(string.get))
         } else
@@ -43,32 +43,32 @@ class Session(t: String) {
 
     def multiSet(m: Map[String, String]) = {
         try {
-            val curr = Memcached.getTouch[String](token)
+            val curr = Redis.get[String](token)
             if (curr.isDefined) {
                 val newMap: java.util.Map[String, String] = deserializeMap(curr.get)
                 newMap.putAll(m)
-                Memcached.set(token, serializeMap(newMap))
+                Redis.set(token, serializeMap(newMap))
                 this.map = Option(newMap)
             } else {
-                Memcached.set(token, serializeMap(m))
+                Redis.set(token, serializeMap(m))
                 this.map = Option(m)
             }
         } catch {
-            case e: java.lang.ClassCastException => Memcached.set(token, serializeMap(m))
+            case e: java.lang.ClassCastException => Redis.set(token, serializeMap(m))
         }
     }
 
     def remove(key: String) = {
         try {
-            val curr = Memcached.getTouch[String](token)
+            val curr = Redis.get[String](token)
             if (curr.isDefined) {
                 val newMap = deserializeMap(curr.get)
                 newMap.remove(key)
-                Memcached.set(token, serializeMap(newMap))
+                Redis.set(token, serializeMap(newMap))
                 this.map = Option(newMap)
             }
         } catch {
-            case e: java.lang.ClassCastException => Memcached.set(token, "{}")
+            case e: java.lang.ClassCastException => Redis.set(token, "{}")
         }
     }
 

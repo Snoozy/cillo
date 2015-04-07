@@ -1,13 +1,18 @@
 package com.cillo.core.web
 
 import com.cillo.core.data.cache.Memcached
+import com.cillo.core.data.cache.Redis
 import com.cillo.core.web.controllers.EtcController
 import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
 import play.api.Play.current
+import play.api.libs.json.Json
+import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Application, GlobalSettings, Play}
 import com.cillo.core.social.FB
 import play.filters.gzip.GzipFilter
+
+import scala.concurrent.Future
 
 object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with GlobalSettings {
 
@@ -23,10 +28,19 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         }
     }
 
+    override def onError(request: RequestHeader, ex: Throwable) = {
+        Future.successful(InternalServerError("Oops. Something broke..."))
+    }
+
     override def onStart(app: Application) {
+        val addr: String = Play.current.configuration.getString("redis.address").getOrElse("127.0.0.1:6379")
+        Redis.init(addr)
+
+        /* USING REDIS FOR LOGICAL CACHE, MOVE OBJECT CACHE TO MEMCACHED
         val addr: String = Play.current.configuration.getString("memcached.address").getOrElse("127.0.0.1:11211")
         Memcached.setAddr(addr)
         Memcached.get("init")
+        */
         val fbId: Option[String] = Play.current.configuration.getString("facebook.client_id")
         val fbSecret: Option[String] = Play.current.configuration.getString("facebook.client_secret")
         if (fbId.isDefined && fbSecret.isDefined)
