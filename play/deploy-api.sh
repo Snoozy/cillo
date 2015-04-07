@@ -23,7 +23,7 @@ if [ -e "$package_path" ]; then
         scp "$package_path" ubuntu@${server}:/home/ubuntu/cillo-api.zip
         rsync -avz $HOME/.cillo/prod_api.conf ubuntu@${server}:/home/ubuntu/
         ssh ubuntu@${server} bash -c "'
-            unzip cillo-api.zip
+            unzip -o cillo-api.zip
             chmod 755 ./${filename}/bin/cillo
             rm cillo-api.zip
         '"

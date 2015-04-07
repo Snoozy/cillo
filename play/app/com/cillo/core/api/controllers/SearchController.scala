@@ -13,16 +13,13 @@ object SearchController extends Controller {
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required. Code: 10"))
             case Some(_) =>
-                val body: AnyContent = request.body
-                body.asFormUrlEncoded.map { form =>
-                    val query = form.get("q").map(_.head)
-                    if (query.isDefined) {
-                        val boards = Search.boardSearch(query.get)
-                        Ok(Json.obj("results" -> Board.toJsonSeq(boards, user = user)))
-                    } else {
-                        BadRequest(Json.obj("error" -> "Search query required."))
-                    }
-                }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
+                val query = request.getQueryString("q")
+                if (query.isDefined) {
+                    val boards = Search.boardSearch(query.get)
+                    Ok(Json.obj("results" -> Board.toJsonSeq(boards, user = user)))
+                } else {
+                    BadRequest(Json.obj("error" -> "Search query required."))
+                }
         }
     }
 
@@ -30,16 +27,13 @@ object SearchController extends Controller {
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required. Code: 10"))
             case Some(_) =>
-                val body: AnyContent = request.body
-                body.asFormUrlEncoded.map { form =>
-                    val query = form.get("q").map(_.head)
-                    if (query.isDefined) {
-                        val boards = Search.autoComplete(query.get)
-                        Ok(Json.obj("results" -> Board.toJsonSeq(boards, user = user)))
-                    } else {
-                        BadRequest(Json.obj("error" -> "Search query required."))
-                    }
-                }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
+                val query = request.getQueryString("q")
+                if (query.isDefined) {
+                    val boards = Search.autoComplete(query.get)
+                    Ok(Json.obj("results" -> Board.toJsonSeq(boards, user = user)))
+                } else {
+                    BadRequest(Json.obj("error" -> "Search query required."))
+                }
 
         }
     }

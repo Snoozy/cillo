@@ -6,7 +6,7 @@ import sbt.Keys._
 object Build extends Build {
     lazy val cillo = Project(id = "cillo", base = file(".")).settings(
         name := "cillo",
-        version := "1.0",
+        version := "1.3",
         scalaVersion := "2.11.1",
         libraryDependencies ++= Seq(
             jdbc,
@@ -23,6 +23,8 @@ object Build extends Build {
             "com.google.code.gson" % "gson" % "2.3.1",
             "com.sksamuel.scrimage" %% "scrimage-core" % "1.4.2",
             "javax.mail" % "mail" % "1.4.7",
+            "io.fastjson" % "boon" % "0.31",
+            "net.debasishg" %% "redisclient" % "2.13",
             "com.sksamuel.scrimage" %% "scrimage-canvas" % "1.4.2"
         ),
         unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )

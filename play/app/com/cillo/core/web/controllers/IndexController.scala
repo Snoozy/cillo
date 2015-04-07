@@ -19,7 +19,7 @@ object IndexController extends Controller {
                     Ok(com.cillo.core.web.views.html.core.index(posts, user.get))
                 }
             case None =>
-                Ok(com.cillo.core.web.views.html.core.welcome(getWelcomeBoards))
+                cachedWelcomeHtml
         }
     }
 

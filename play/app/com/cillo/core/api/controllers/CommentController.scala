@@ -48,7 +48,7 @@ object CommentController extends Controller {
                         if (post_id.isDefined && data.isDefined) {
                             val comment_id = Comment.create(post_id.get.toInt, user.get.user_id.get, data.get, parent_id)
                             if (comment_id.isDefined)
-                                Ok(Comment.toJson(Comment.find(comment_id.get.toInt).get))
+                                Ok(Comment.toJson(Comment.find(comment_id.get.toInt).get, user = user))
                             else
                                 BadRequest(Json.obj("error" -> "Invalid request format."))
                         } else

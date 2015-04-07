@@ -76,6 +76,7 @@
                                                             <div class="trending-group-bottom">
                                                                 <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.board_id.get">
                                                                     <span class="btn-text follow-text">Follow</span>
+                                                                    <span class="btn-text following-text">Following</span>
                                                                     <span class="btn-text unfollow-text">Unfollow</span>
                                                                 </button>
                                                                 <div class="trending-group-header">
@@ -151,7 +152,7 @@
                 $(document).on('click', '.notfollowing', function(e) {
                     var group_id = $(this).data('group-id');
                     var $this = $(this);
-                    follow.append(group_id);
+                    follow.push(group_id);
                     $this.addClass('following');
                     $this.removeClass('notfollowing');
 

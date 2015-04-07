@@ -19,11 +19,11 @@ object GettingStartedController extends Controller {
                         group_ids.foreach { id =>
                             Board.addFollower(user.get.user_id.get, id)
                         }
-                        if (user.get.session.isDefined) {
-                            user.get.session.get.remove("getting_started")
-                        }
                     } catch {
-                        case e: java.lang.NumberFormatException => user.get.session.get.remove("getting_started")
+                        case e: java.lang.NumberFormatException =>
+                    }
+                    if (user.get.session.isDefined) {
+                        user.get.session.get.remove("getting_started")
                     }
                 }
                 Found("/")

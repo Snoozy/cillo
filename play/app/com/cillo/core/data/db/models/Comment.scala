@@ -58,10 +58,10 @@ object Comment {
         }
     }
 
-    def toJson(comment: Comment): JsValue = {
+    def toJson(comment: Comment, user: Option[User] = None): JsValue = {
         Json.obj(
             "comment_id" -> comment.comment_id.get,
-            "user" -> User.toJsonByUserID(comment.user_id),
+            "user" -> User.toJsonByUserID(comment.user_id, self = user),
             "content" -> Json.toJson(comment.data),
             "time" -> Json.toJson(comment.time),
             "votes" -> Json.toJson(comment.votes)
@@ -71,7 +71,7 @@ object Comment {
     def toJsonSeqWithUser(comments: Seq[Comment], user: Option[User]): JsValue = {
         var json = Json.arr()
         comments.foreach { comment =>
-           json = json.+:(toJson(comment).as[JsObject] + ("post" -> Post.toJsonSingle(Post.find(comment.post_id).get, user)))
+           json = json.+:(toJson(comment, user).as[JsObject] + ("post" -> Post.toJsonSingle(Post.find(comment.post_id).get, user)))
         }
         json
     }
