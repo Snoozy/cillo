@@ -138,13 +138,13 @@ object Post {
                 if (board.isDefined && poster.isDefined && reposter.isDefined && repost_board.isDefined) {
                     newPost = newPost.as[JsObject] +
                         ("repost" -> Post.toJsonSingle(reposted_post.get, user)) +
-                        ("content" -> Json.toJson(reposted_post.get.data)) +
-                        ("title" -> Json.toJson(reposted_post.get.title)) +
-                        ("board" -> Board.toJson(board.get)) +
-                        ("user" -> User.toJson(poster.get, self = user)) +
-                        ("time" -> Json.toJson(reposted_post.get.time)) +
-                        ("votes" -> Json.toJson(reposted_post.get.votes)) +
-                        ("comment_count" -> Json.toJson(reposted_post.get.comment_count))
+                        ("content" -> Json.toJson(post.data)) +
+                        ("title" -> Json.toJson(post.title)) +
+                        ("board" -> Board.toJson(repost_board.get)) +
+                        ("user" -> User.toJson(reposter.get, self = user)) +
+                        ("time" -> Json.toJson(post.time)) +
+                        ("votes" -> Json.toJson(post.votes)) +
+                        ("comment_count" -> Json.toJson(post.comment_count))
                 }
             }
         } else {

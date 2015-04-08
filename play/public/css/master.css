@@ -1479,10 +1479,8 @@ a:hover {
 .register-container {
     border-radius: 6px;
     width: 750px;
-    margin: auto;
-    margin-top: 55px;
     background: #EEEEEE;
-    margin-bottom: 35px;
+    margin: 55px auto 35px;
 }
 
 .register-inner {
@@ -1568,8 +1566,15 @@ input.active-ph {
 .active-ph:focus {
     border-color: #00bafa;
 }
+.has-error .active-ph:focus {
+    color: #a94442;
+    border-color: #a94442;
+}
 .active-ph:focus + label[placeholder].active-ph:before {
     color: #00bafa;
+}
+.has-error .active-ph:focus + label[placeholder].active-ph:before {
+    color: #a94442;
 }
 .active-ph:focus + label[placeholder].active-ph:before,
 .active-ph.filled + label[placeholder].active-ph:before {
@@ -1578,6 +1583,9 @@ input.active-ph {
     -webkit-transform: translate(0, -1.3em) scale(0.9, 0.9);
     -ms-transform: translate(0, -1.3em) scale(0.9, 0.9);
     transform: translate(0, -1.3em) scale(0.9, 0.9);
+}
+.has-error .active-ph.filled + label[placeholder].active-ph:before {
+    color: #a94442;
 }
 .active-ph:not(.filled) + label[placeholder][alt].active-ph:before {
     content: attr(alt);

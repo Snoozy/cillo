@@ -158,7 +158,7 @@
                             @if(repost.get.media.nonEmpty) {
                                 @defining(Media.find(repost.get.media.head)) { m =>
                                     <div class="post-picture-container">
-                                        <img src="@media.head.get.media_url" class="post-picture">
+                                        <img src="@m.get.media_url" class="post-picture">
                                     </div>
                                 }
                             }

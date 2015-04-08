@@ -68,12 +68,16 @@ object User {
 
     def findByEmail(email: String): Option[User] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM user WHERE email = {username}").on('username -> email).as(userParser.singleOpt)
+            SQL("SELECT * FROM user WHERE email = {email}").on('email -> email).as(userParser.singleOpt)
         }
     }
 
     def checkUsername(s: String): Boolean = {
         !find(s).isDefined
+    }
+
+    def checkEmail(s: String): Boolean = {
+        !findByEmail(s).isDefined
     }
 
     /**
@@ -134,11 +138,14 @@ object User {
             else password
         }
 
-        DB.withConnection { implicit connection =>
-            SQL("INSERT INTO user (username, name, password, email, bio, time, reputation, photo) VALUES ({username}, {name}," +
-                " {password}, {email}, {bio}, {time}, 0, {pic})").on('username -> username, 'name -> name,
-                    'password -> pass, 'email -> email, 'bio -> bio.getOrElse(""), 'time -> time, 'pic -> pic).executeInsert()
-        }
+        if (checkEmail(email)) {
+            DB.withConnection { implicit connection =>
+                SQL("INSERT INTO user (username, name, password, email, bio, time, reputation, photo) VALUES ({username}, {name}," +
+                    " {password}, {email}, {bio}, {time}, 0, {pic})").on('username -> username, 'name -> name,
+                        'password -> pass, 'email -> email, 'bio -> bio.getOrElse(""), 'time -> time, 'pic -> pic).executeInsert()
+            }
+        } else
+            None
     }
 
     def update(user_id: Int, name: String, username: String, bio: String, pic: Int) = {

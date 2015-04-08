@@ -29,11 +29,9 @@ object AuthController extends Controller {
 
     def logout = AuthAction { implicit user => implicit request =>
         user match {
-            case Some(_) => val success = logOutSession(user.get.token.get)
-                if (success)
-                    Ok(Json.obj("success" -> "Successfully logged out."))
-                else
-                    BadRequest(Json.obj("error" -> "Unknown error."))
+            case Some(_) =>
+                logOutSession(user.get.token.get)
+                Ok(Json.obj("success" -> "Successfully logged out."))
             case None => Ok(Json.obj("error" -> "User not logged in."))
         }
     }

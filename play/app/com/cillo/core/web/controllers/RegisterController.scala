@@ -1,8 +1,8 @@
 package com.cillo.core.web.controllers
 
-import com.cillo.core.data.cache.Session
+import com.cillo.core.data.cache
 import com.cillo.core.data.db.models._
-import com.cillo.core.email.{AsyncMailer, EmailAddress, Email}
+import com.cillo.core.email._
 import com.cillo.utils.Etc
 import com.cillo.utils.play.Auth
 import com.cillo.utils.play.Auth.AuthAction
@@ -37,10 +37,10 @@ object RegisterController extends Controller {
                 val newUser = User.create(User.genUsername(email.get, backup = name.get.replace(" ", "")), name.get, password.get, email.get, None)
                 if (newUser.isDefined) {
                     val token = Auth.getNewUserSessionId(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).user_id.get)
-                    val sess = new Session(token)
+                    val sess = new cache.Session(token)
                     sess.set("getting_started", "true")
                     val firstName = Etc.parseFirstName(name.get)
-                    sendWelcomEmail(firstName, email.get)
+                    sendWelcomeEmail(firstName, email.get)
                     Found("/").withCookies(Auth.newSessionCookies(token))
                 }
                 else
@@ -50,7 +50,7 @@ object RegisterController extends Controller {
         }.getOrElse(return BadRequest("Error."))
     }
 
-    def sendWelcomEmail(firstName: String, email: String) = {
+    def sendWelcomeEmail(firstName: String, email: String) = {
         val sendEmail = Email(
             subject = "Welcome to Cillo!",
             from = EmailAddress("Cillo", "info@cillo.co"),

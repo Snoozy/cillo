@@ -4,6 +4,7 @@ import com.cillo.utils.play.Auth.AuthAction
 import play.api.mvc._
 import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html.core
+import play.api.libs.json.Json
 
 object UserController extends Controller {
 
@@ -21,6 +22,15 @@ object UserController extends Controller {
             } else {
                 NotFound("User not found.")
             }
+        }
+    }
+
+    def checkEmail = AuthAction { implicit user => implicit request =>
+        val email = request.getQueryString("email")
+        if (email.isDefined && User.checkEmail(email.get)) {
+            Ok(Json.obj("success" -> "Username is available."))
+        } else {
+            NotFound(Json.obj("error" -> "Username not available."))
         }
     }
 

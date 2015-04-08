@@ -80,4 +80,14 @@ object Redis {
         }
     }
 
+    def del(key: String) = {
+        if (!addr.isDefined)
+            throw new RedisAddressUndefined("Redis client is not initialized.")
+        clients.withClient {
+            client => {
+                client.del(key)
+            }
+        }
+    }
+
 }

@@ -6,7 +6,7 @@ import sbt.Keys._
 object Build extends Build {
     lazy val cillo = Project(id = "cillo", base = file(".")).settings(
         name := "cillo",
-        version := "1.4",
+        version := "1.5",
         scalaVersion := "2.11.1",
         libraryDependencies ++= Seq(
             jdbc,

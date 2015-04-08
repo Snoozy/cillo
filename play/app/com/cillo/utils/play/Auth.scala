@@ -1,6 +1,6 @@
 package com.cillo.utils.play
 
-import com.cillo.core.data.cache.{Session, Memcached}
+import com.cillo.core.data.cache.{Session, Redis}
 import com.cillo.core.data.db.models.User
 import com.cillo.utils.Etc
 import com.cillo.utils.security.SecureRand
@@ -24,8 +24,8 @@ object Auth {
         Some(getNewUserSessionId(user.get.user_id.get))
     }
 
-    def logOutSession(token: String): Boolean = {
-        Memcached.delete(token)
+    def logOutSession(token: String) = {
+        Redis.del(token)
     }
 
     def newSessionCookies(user_id: Int): Cookie = {

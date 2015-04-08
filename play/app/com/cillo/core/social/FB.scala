@@ -38,7 +38,11 @@ object FB {
                     .get()
                     .map { response =>
                         val body = response.body
-                        body.substring(body.indexOf('=') + 1, body.indexOf('&'))
+                        try {
+                            body.substring(body.indexOf('=') + 1, body.indexOf('&'))
+                        } catch {
+                            case e: java.lang.StringIndexOutOfBoundsException => throw new FBTokenInvalid("Facebook token invalid.")
+                        }
                     }
                 val resp = Await.result(longToken, 5 seconds)
                 if (resp.length > 10) {
