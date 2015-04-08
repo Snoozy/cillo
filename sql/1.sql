@@ -5,7 +5,7 @@ CREATE TABLE user (
     username VARCHAR(15) NOT NULL UNIQUE,
     name VARCHAR(20) NOT NULL,
     password VARCHAR(105) NOT NULL,
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     time BIGINT NOT NULL,
     reputation INT,
     photo INT DEFAULT NULL,

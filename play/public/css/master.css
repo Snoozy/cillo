@@ -2444,16 +2444,18 @@ input.signup-input:focus, input.signup-input:active {
 }
 
 .login-link-wrapper {
-    position: absolute;
-    top: 18px;
-    right: 30px;
-    width: 250px;
+    top: 0;
+    left: 0;
+    min-width: 780px;
+    max-width: 1500px;
+    position: relative;
+    height: 52px;
+    margin: auto;
     text-align: right;
-    font-size: 14px;
-    font-weight: bold;
     font: normal 14px/1.4 "Helvetica Neue","HelveticaNeue",Helvetica,Arial,sans-serif;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     color: white;
+    padding: 0 20px 0 15px;
 }
 
 .login-link {
@@ -2705,4 +2707,13 @@ a.login-link:hover {
 .signup-modal-login-container {
     text-align: center;
     margin-top: 10px;
+}
+
+.login-link-outer {
+
+}
+
+.login-link-inner {
+    float: right;
+    margin-top: 22px;
 }
