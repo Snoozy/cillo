@@ -5,7 +5,6 @@ import com.cillo.utils.play.Auth._
 import com.cillo.core.email._
 import com.cillo.core.data.search.Search
 import com.cillo.core.web.controllers.RegisterController.sendWelcomEmail
-import scala.concurrent.ExecutionContext.Implicits.global
 
 object EtcController extends Controller {
 
@@ -14,7 +13,7 @@ object EtcController extends Controller {
     }
 
     def debug = AuthAction { implicit user => implicit request =>
-        sendWelcomEmail("Daniel", "danielli803@gmail.com")
+        //sendWelcomEmail("Daniel", "danielli803@gmail.com")
         Ok("Ok")
     }
 
