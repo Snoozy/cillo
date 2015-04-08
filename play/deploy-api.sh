@@ -24,12 +24,15 @@ if [ -e "$package_path" ]; then
         rsync -avz $HOME/.cillo/prod_api.conf ubuntu@${server}:/home/ubuntu/
         ssh ubuntu@${server} bash -c "'
             unzip -o cillo-api.zip
-            chmod 755 ./${filename}/bin/cillo
+            sudo rm -rf cillo-backup/
+            mv cillo/ cillo-backup/
+            mv ${filename}/ cillo/
+            chmod 755 ./cillo/bin/cillo
             rm cillo-api.zip
         '"
         ssh ubuntu@${server} "eval sudo kill \$(ps aux | grep [c]illo | awk '{print \$2}')"
         ssh ubuntu@${server} bash -c "'
-            sudo ./${filename}/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_api.conf -Dhttp.port=80 &
+            sudo ./cillo/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_api.conf -Dhttp.port=80 &
             disown
         '"
     done

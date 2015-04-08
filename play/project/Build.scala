@@ -29,4 +29,7 @@ object Build extends Build {
         ),
         unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
     ).enablePlugins(PlayScala)
+
+    doc in Compile <<= target.map(_ / "none")
+
 }

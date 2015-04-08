@@ -125,12 +125,11 @@ object Post {
 
     def toJsonSingle(post: Post, user: Option[User]): JsValue = {
         var newPost = Json.obj(
-            "post_id" -> Json.toJson(post.post_id),
-            "repost" -> Json.toJson(post.repost_id.isDefined)
+            "post_id" -> Json.toJson(post.post_id)
         )
 
         if (post.repost_id.isDefined) {
-            val reposted_post = Post.find(post.data.toInt)
+            val reposted_post = Post.find(post.repost_id.get)
             if (reposted_post.isDefined) {
                 val board = Board.find(reposted_post.get.board_id)
                 val poster = User.find(reposted_post.get.user_id)
@@ -138,9 +137,7 @@ object Post {
                 val repost_board = Board.find(post.board_id)
                 if (board.isDefined && poster.isDefined && reposter.isDefined && repost_board.isDefined) {
                     newPost = newPost.as[JsObject] +
-                        ("repost_user" -> User.toJson(reposter.get, self = user)) +
-                        ("repost_board" -> Board.toJson(repost_board.get)) +
-                        ("repost_id" -> Json.toJson(post.data.toInt)) +
+                        ("repost" -> Post.toJsonSingle(reposted_post.get, user)) +
                         ("content" -> Json.toJson(reposted_post.get.data)) +
                         ("title" -> Json.toJson(reposted_post.get.title)) +
                         ("board" -> Board.toJson(board.get)) +

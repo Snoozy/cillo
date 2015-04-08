@@ -29,7 +29,11 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
     }
 
     override def onError(request: RequestHeader, ex: Throwable) = {
-        Future.successful(InternalServerError("Oops. Something broke..."))
+        if (Play.isProd) {
+            Future.successful(InternalServerError("Oops. Something broke..."))
+        } else {
+            super.onError(request, ex)
+        }
     }
 
     override def onStart(app: Application) {
