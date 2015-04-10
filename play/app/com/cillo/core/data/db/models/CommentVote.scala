@@ -38,7 +38,7 @@ object CommentVote {
         val voteExists = CommentVote.findByCommentAndUser(comment_id, user_id)
         if (comment.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
             DB.withConnection { implicit connection =>
-                if (value == 1) {
+                if (value == 1 && (user_id != comment.get.user_id)) {
                     SQL("UPDATE user SET reputation = reputation + 10 WHERE user_id = {user}")
                         .on('user -> user_id).executeUpdate()
                 }
@@ -52,10 +52,10 @@ object CommentVote {
         } else if (voteExists.isDefined && (value == -1 || value == 1) && comment.isDefined) {
             if (voteExists.get.value != value) {
                 DB.withConnection { implicit connection =>
-                    if (value == 1) {
+                    if (value == 1 && (user_id != comment.get.user_id)) {
                         SQL("UPDATE user SET reputation = reputation + 10 WHERE user_id = {user}")
                             .on('user -> user_id).executeUpdate()
-                    } else if (value == -1) {
+                    } else if (value == -1 && (user_id != comment.get.user_id)) {
                         SQL("UPDATE user SET reputation = reputation - 10 WHERE user_id = {user}")
                             .on('user -> user_id).executeUpdate()
                     }

@@ -11,14 +11,7 @@ object BoardController extends Controller {
     def boardPage(name: String) = AuthAction { implicit user => implicit request =>
         val board = Board.find(name)
         if (board.isDefined) {
-            val posts = Board.getTrendingPosts(board.get.board_id.get)
-            val boards = {
-                if (user.isDefined) {
-                    User.getBoards(user.get.user_id.get)
-                } else {
-                    Seq()
-                }
-            }
+            val posts = Board.getFeed(board.get.board_id.get)
             Ok(core.board(board.get, user, posts))
         } else {
             NotFound("Board not found.")

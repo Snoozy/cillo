@@ -208,6 +208,17 @@ object User {
         }
     }
 
+    def getCommentsPaged(user_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Comment] = {
+        DB.withConnection { implicit connection =>
+            val comments = SQL("SELECT * FROM comment WHERE comment_id < {after} AND user_id = {id} ORDER BY comment_id DESC LIMIT {limit}")
+                .on('id -> user_id, 'after -> after, 'limit -> limit).as(commentParser *)
+            if (comments.length < limit)
+                comments
+            else
+                comments.takeRight(limit)
+        }
+    }
+
     def userIsFollowing(user_id: Int, board_id: Int): Boolean = {
         DB.withConnection { implicit connection =>
             val count = SQL("SELECT COUNT(*) FROM user_to_board WHERE user_id = {user_id} AND board_id = {board_id}")

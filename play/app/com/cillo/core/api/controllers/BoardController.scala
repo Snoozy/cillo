@@ -79,7 +79,14 @@ object BoardController extends Controller {
                 if (!board.isDefined)
                     BadRequest(Json.obj("error" -> "Board does not exist."))
                 else {
-                    val posts = Board.getTrendingPosts(board_id)
+                    val after = request.getQueryString("after")
+                    val posts = {
+                        if (after.isDefined) {
+                            Board.getFeedPaged(board_id, after.get.toInt)
+                        } else {
+                            Board.getFeed(board_id)
+                        }
+                    }
                     Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user)))
                 }
         }

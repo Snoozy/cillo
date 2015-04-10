@@ -32,6 +32,16 @@ object SocialController extends Controller {
             Found("/").withCookies(Auth.newSessionCookies(User.find(user_id.get).get.user_id.get))
         } else {
             val fbEmail = (info \ "email").asOpt[String]
+            if (fbEmail.isDefined) {
+                val user = User.findByEmail(fbEmail.get)
+                if (user.isDefined) {
+                    val social = SocialUser.findFbUserId(fbId)
+                    if (!social.isDefined) {
+                        SocialUser.createFBUser(fbId, user.get.user_id.get)
+                    }
+                    return Found("/").withCookies(Auth.newSessionCookies(user.get.user_id.get))
+                }
+            }
             val fbName = (info \ "name").as[String]
             val username = {
                 if (fbEmail.isDefined)

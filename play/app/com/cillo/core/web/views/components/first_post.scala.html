@@ -19,6 +19,10 @@
             <input class="post-board form-control" id="post-autocomplete" placeholder="Board" type="text" autocomplete="off" @if(boardPage){value="@boards.head.name" disabled}>
             <span class="post-board-text displaynone">on Board:</span>
         </div>
+        <div class="post-board-as-user-container displaynone">
+            <input class="form-control post-board" placeholder="User" type="text" style="width:312px;">
+            <span class="post-board-text">as User:</span>
+        </div>
         <div class="displaynone first-post-clear"></div>
     </div>
     @if(!boardPage) {

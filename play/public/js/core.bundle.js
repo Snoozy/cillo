@@ -3372,6 +3372,7 @@ $(function() {
         $('.post-title').removeClass('displaynone');
         $('.post-board-wrapper').removeClass('displaynone');
         $('.post-board-text').removeClass('displaynone');
+        $('.post-board-as-user-container').removeClass('displaynone');
         $(this).addClass('post-form-expanded');
         $(this).removeClass('error-border');
         $(".post-submit").show();
@@ -3389,6 +3390,7 @@ $(function() {
         $('.post-title').addClass('displaynone');
         $('.post-board-wrapper').addClass('displaynone');
         $('.post-board-text').addClass('displaynone');
+        $('.post-board-as-user-container').addClass('displaynone');
         $('.post-form').removeClass('post-form-expanded');
         $('.post-submit').hide();
     }
@@ -3646,19 +3648,31 @@ $(function() {
         $(this).replaceWith($(this).clone());
     });
 
+    jQuery.fn.shake = function(intShakes, intDistance, intDuration) {
+        this.each(function() {
+            $(this).css("position","relative");
+            for (var x=1; x<=intShakes; x++) {
+                $(this).animate({left:(intDistance*-1)}, (((intDuration/intShakes)/4)))
+                    .animate({left:intDistance}, ((intDuration/intShakes)/2))
+                    .animate({left:0}, (((intDuration/intShakes)/4)));
+            }
+        });
+        return this;
+    };
+
     $(".post-submit").click(function () {
         $(this).addClass('disabled');
 
         if ($('.post-form').val() == "") {
             $(this).removeClass('disabled');
-            $(this).effect("shake");
+            $('.post-submit').shake(3, 15, 250);
             $('.post-form').addClass('error-border');
             return false;
         }
 
         if ($('.post-board').val() == "") {
             $(this).removeClass('disabled');
-            $(this).effect("shake");
+            $('.post-submit').shake(3, 15, 250);
             $('.post-board').addClass('error-border');
             return false;
         }

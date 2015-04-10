@@ -135,23 +135,15 @@ object UserController extends Controller {
                 if (!userExists.isDefined)
                     BadRequest(Json.obj("error" -> "User does not exist."))
                 else {
-                    var page = 1
-                    var pageSize = Post.DefaultPageSize
-                    try {
-                        val pageOpt = request.getQueryString("page")
-                        val pageSizeOpt = request.getQueryString("page_size")
-                        if (pageOpt.isDefined) {
-                            page = pageOpt.get.toInt
-                        }
-                        if (pageSizeOpt.isDefined) {
-                            pageSize = pageSizeOpt.get.toInt
-                        }
-
-                    } catch {
-                        case e: java.lang.NumberFormatException => // do nothing so that the values stay as the defaults.
-                    }
+                    val after = request.getQueryString("after")
                     val describingUser = userExists.get
-                    val comments = User.getComments(describingUser.user_id.get, pageSize * page).drop(pageSize * (page - 1))
+                    val comments = {
+                        if (after.isDefined) {
+                            User.getCommentsPaged(describingUser.user_id.get, after.get.toInt)
+                        } else {
+                            User.getComments(describingUser.user_id.get)
+                        }
+                    }
                     Ok(Json.obj("comments" -> Comment.toJsonSeqWithUser(comments, user)))
                 }
         }
@@ -171,23 +163,15 @@ object UserController extends Controller {
                 if (!userExists.isDefined)
                     BadRequest(Json.obj("error" -> "User does not exist."))
                 else {
-                    var page = 1
-                    var pageSize = Post.DefaultPageSize
-                    try {
-                        val pageOpt = request.getQueryString("page")
-                        val pageSizeOpt = request.getQueryString("page_size")
-                        if (pageOpt.isDefined) {
-                            page = pageOpt.get.toInt
-                        }
-                        if (pageSizeOpt.isDefined) {
-                            pageSize = pageSizeOpt.get.toInt
-                        }
-
-                    } catch {
-                        case e: java.lang.NumberFormatException => // do nothing so that the values stay as the defaults.
-                    }
+                    val after = request.getQueryString("after")
                     val describingUser = userExists.get
-                    val posts = User.getPosts(describingUser.user_id.get, pageSize * page).drop(pageSize * (page - 1))
+                    val posts = {
+                        if (after.isDefined) {
+                            User.getPostsPaged(describingUser.user_id.get, after.get.toInt)
+                        } else {
+                            User.getPosts(describingUser.user_id.get)
+                        }
+                    }
                     Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user)))
                 }
         }

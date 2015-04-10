@@ -1,6 +1,5 @@
-
+@(error: Boolean = false)
 @import com.cillo.core.web.views.html.components
-@import com.cillo.core.web.controllers.RemoteURLController
 
 
 @components.base("Login | Cillo") {
@@ -56,6 +55,9 @@
             <form action="/login" method="POST" class="user-login-form">
                 <input class="form-control" type="email" name="email" value="" placeholder="Email" style="height:40px;">
                 <input class="form-control" type="password" name="password" style="margin-top: 8px;height:40px;" value="" placeholder="Password">
+                @if(error) {
+                    <div class="login-error">Hmm, wrong email or password. Try again!</div>
+                }
                 <p><input class="btn btn-primary" type="submit" name="login.submitted" value="Login" style="font-weight:bold;font-size:18px;width:100%;margin-bottom:-50px;"></p>
                 <br/>
             </form>

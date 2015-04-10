@@ -52,10 +52,10 @@ object PostVote {
         } else if (voteExists.isDefined) {
             if (voteExists.get.value != value) {
                 DB.withConnection { implicit connection =>
-                    if (value == 1) {
+                    if (value == 1 && (user_id != post.get.user_id)) {
                         SQL("UPDATE user SET reputation = reputation + 20 WHERE user_id = {user}")
                             .on('user -> user_id).executeUpdate()
-                    } else if (value == -1) {
+                    } else if (value == -1 && (user_id != post.get.user_id)) {
                         SQL("UPDATE user SET reputation = reputation - 20 WHERE user_id = {user}")
                             .on('user -> user_id).executeUpdate()
                     }

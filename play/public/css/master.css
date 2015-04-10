@@ -468,13 +468,9 @@ a.repost-user-link:hover {
 }
 
 .login-error {
-    background-color:black;
-    border: 1px solid #ccc;
-    border-radius:15px;
-    color: #EEEEEE;
-    font-size:17px;
-    font-weight:bold;
-    padding:10px;
+    color: #cb2027;
+    margin-top: 5px;
+    margin-bottom: -7px;
 }
 
 .user-profile {
@@ -2717,3 +2713,9 @@ a.login-link:hover {
     float: right;
     margin-top: 22px;
 }
+
+.post-board-as-user-container {
+    margin-top: 55px;
+    margin-right: 138px;
+}
+

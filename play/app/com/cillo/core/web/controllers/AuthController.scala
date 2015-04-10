@@ -34,13 +34,13 @@ object AuthController extends Controller {
             if (username.isDefined && password.isDefined) {
                 val token = logInSession(username.get, password.get)
                 if (!token.isDefined)
-                    Ok(html.core.login())
+                    Ok(html.core.login(error = true))
                 else
                     Redirect("/").withCookies(Cookie("auth_token", token.get))
             } else {
-                Ok(html.core.login())
+                Ok(html.core.login(error = true))
             }
-        }.getOrElse(Ok(html.core.login()))
+        }.getOrElse(Ok(html.core.login(error = true)))
     }
 
 }
