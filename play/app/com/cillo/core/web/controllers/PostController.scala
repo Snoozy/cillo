@@ -104,10 +104,29 @@ object PostController extends Controller {
                             title = None
                         }
                         val newPost = {
-                            if (!media_ids.isDefined || media_ids.get == "") {
-                                Post.createSimplePost(user.user_id.get, title, data.get, board.get.board_id.get)
+                            if (user.session.isDefined && user.session.get.get("admin").isDefined) {
+                                val newUserName = form.get("user").map(_.head)
+                                if (newUserName.isDefined) {
+                                    val newUserId = User.create(User.genUsername(newUserName.get + "@cillo.co"), newUserName.get, newUserName.get, newUserName.get + "@cillo.co", None)
+                                    val newUser = User.find(newUserId.get.toInt)
+                                    if (!media_ids.isDefined || media_ids.get == "") {
+                                        Post.createSimplePost(newUser.get.user_id.get, title, data.get, board.get.board_id.get)
+                                    } else {
+                                        Post.createMediaPost(newUser.get.user_id.get, title, data.get, board.get.board_id.get, media_ids.get.split("~").map(_.toInt))
+                                    }
+                                } else {
+                                    if (!media_ids.isDefined || media_ids.get == "") {
+                                        Post.createSimplePost(user.user_id.get, title, data.get, board.get.board_id.get)
+                                    } else {
+                                        Post.createMediaPost(user.user_id.get, title, data.get, board.get.board_id.get, media_ids.get.split("~").map(_.toInt))
+                                    }
+                                }
                             } else {
-                                Post.createMediaPost(user.user_id.get, title, data.get, board.get.board_id.get, media_ids.get.split("~").map(_.toInt))
+                                if (!media_ids.isDefined || media_ids.get == "") {
+                                    Post.createSimplePost(user.user_id.get, title, data.get, board.get.board_id.get)
+                                } else {
+                                    Post.createMediaPost(user.user_id.get, title, data.get, board.get.board_id.get, media_ids.get.split("~").map(_.toInt))
+                                }
                             }
                         }
                         if (newPost.isDefined)

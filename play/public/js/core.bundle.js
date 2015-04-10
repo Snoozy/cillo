@@ -3681,6 +3681,7 @@ $(function() {
         var post_content = $('.post-form').val();
         var post_title = $('.post-title').val();
         var post_board = $('.post-board').val();
+        var user = $('.post-user').val();
 
         if ($('.thumbnail-container .previews').children().length > 0) {
             var media_ids = null;
@@ -3730,7 +3731,8 @@ $(function() {
                 data: {
                     "data": post_content,
                     "title": post_title,
-                    "board_name": post_board
+                    "board_name": post_board,
+                    "user": user
                 },
                 success: function (response, textStatus, jqXHR) {
                     $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');

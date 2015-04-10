@@ -1,4 +1,4 @@
-@(user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board], boardPage: Boolean = false)
+@(user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board], boardPage: Boolean = false, admin: Boolean = false)
 
 <li class="post first-post">
     <div class="posting-wrapper" style="margin-left:48px;">
@@ -19,10 +19,12 @@
             <input class="post-board form-control" id="post-autocomplete" placeholder="Board" type="text" autocomplete="off" @if(boardPage){value="@boards.head.name" disabled}>
             <span class="post-board-text displaynone">on Board:</span>
         </div>
+        @if(admin) {
         <div class="post-board-as-user-container displaynone">
-            <input class="form-control post-board" placeholder="User" type="text" style="width:312px;">
+            <input class="form-control post-user" placeholder="User" type="text" style="width:312px;">
             <span class="post-board-text">as User:</span>
         </div>
+        }
         <div class="displaynone first-post-clear"></div>
     </div>
     @if(!boardPage) {

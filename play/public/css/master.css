@@ -1522,6 +1522,10 @@ a:hover {
     margin-top: 10px;
 }
 
+.post-user {
+    float: right;
+}
+
 .ui-menu .ui-menu-item {
     display: list-item;
 }

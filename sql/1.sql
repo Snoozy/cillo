@@ -13,6 +13,13 @@ CREATE TABLE user (
     PRIMARY KEY (user_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+CREATE TABLE admin (
+    admin_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    PRIMARY KEY (admin_id),
+    CONSTRAINT `user__admin_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
 CREATE TABLE social_user (
     social_user_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
