@@ -18,8 +18,8 @@ object Auth {
         }
     }
 
-    def logInSession(username: String, password: String): Option[String] = {
-        val user = User.find(username)
+    def logInSession(email: String, password: String): Option[String] = {
+        val user = User.findByEmail(email)
         Etc.checkPass(password, user.getOrElse(return None).password)
         Some(getNewUserSessionId(user.get.user_id.get))
     }

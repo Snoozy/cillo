@@ -29,7 +29,14 @@ object SocialController extends Controller {
         val fbId = (info \ "id").as[String].toLong
         val user_id = SocialUser.findFbUserId(fbId)
         if (user_id.isDefined) {
-            Found("/").withCookies(Auth.newSessionCookies(User.find(user_id.get).get.user_id.get))
+            val user = User.find(user_id.get)
+            val admin = Admin.isUserAdmin(user.get.user_id.get)
+            val token = Auth.getNewUserSessionId(user.get.user_id.get)
+            if (admin) {
+                val sess = new Session(token)
+                sess.set("admin", "true")
+            }
+            Found("/").withCookies(Cookie("auth_token", token))
         } else {
             val fbEmail = (info \ "email").asOpt[String]
             if (fbEmail.isDefined) {
@@ -38,6 +45,10 @@ object SocialController extends Controller {
                     val social = SocialUser.findFbUserId(fbId)
                     if (!social.isDefined) {
                         SocialUser.createFBUser(fbId, user.get.user_id.get)
+                    }
+                    val admin = Admin.isUserAdmin(user.get.user_id.get)
+                    if (admin) {
+                        user.get.session.get.set("admin", "true")
                     }
                     return Found("/").withCookies(Auth.newSessionCookies(user.get.user_id.get))
                 }

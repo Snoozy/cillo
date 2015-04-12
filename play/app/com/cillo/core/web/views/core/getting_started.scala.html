@@ -95,7 +95,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                            } else {}
+                                            }
                                         }
                                     }
                                 </ul>
@@ -171,7 +171,8 @@
                     return false;
                 });
 
-                $('.cont-btn').click(function() {
+                $('.cont-btn').click(function(e) {
+                    e.preventDefault();
                     window.location.href = "/gettingstarted?follow=" + follow.toString();
                 });
 

@@ -2,7 +2,7 @@
 
 @import com.cillo.core.web.views.html.components
 
-@components.base("Create a board") {
+@components.base("Create a board | Cillo") {
     <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){
 
@@ -37,7 +37,7 @@
 
 } {
     <body class="main-background">
-        @components.masthead(Some(user)))
+        @components.masthead(Some(user), searchBar = true)
         <div class="page-container">
             <div class="register-container">
                 <div class="register-inner">

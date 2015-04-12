@@ -24,7 +24,14 @@ case class User(
     bio: String,
     token: Option[String] = None,
     session: Option[Session] = None
-)
+) {
+    lazy val admin: Boolean = {
+        if (token.isDefined) {
+            new Session(token.get).get("admin").isDefined
+        } else
+            false
+    }
+}
 
 object User {
 

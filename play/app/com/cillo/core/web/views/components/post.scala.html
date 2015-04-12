@@ -85,13 +85,13 @@
                 }
                 <div class="user-info">
                     <label class="u-info-wrapper">
-                        <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor" style="margin-left:0px;">
+                        <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor no-dec" style="margin-left:0px;">
                             <strong class="hover-blue user-name-text">@poster.name</strong>
                         </a>
                     </label>
                     on
                     <label class="u-info-wrapper">
-                        <a href="/@board.name">
+                        <a href="/@board.name" class="no-dec">
                             <strong class="hover-blue board-name-text">@board.name</strong>
                         </a>
                     </label>
@@ -115,13 +115,19 @@
                 @if(media.nonEmpty) {
                     @if(media.head.isDefined) {
                         <div class="post-picture-container">
-                            <img src="@media.head.get.media_url" class="post-picture">
+                            <a class="fancybox" href="@media.head.get.media_url"@if(post.title.isDefined){ title="@post.title.get"}>
+                                <img src="@(media.head.get.media_url + "_med")" class="post-picture">
+                            </a>
                         </div>
                     }
                 }
-                <p class="post-text">
-                    @Html(Etc.parseHTML(post.data))
-                </p>
+                @if(!repost.isDefined || post.data != "") {
+                    <div class="post-text-container">
+                        <p class="post-text">
+                        @Html(Etc.parseHTML(post.data))
+                        </p>
+                    </div>
+                }
                 @if(repost.isDefined) {
                     @defining(Board.find(repost.get.board_id)) { b =>
                         <div class="repost-content">
@@ -134,14 +140,14 @@
                                                     <img class="repost-avatar" src="@(u.get.photo + "_small")">
                                                 </a>
                                             </div>
-                                            <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor">
+                                            <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor no-dec">
                                                 <strong class="hover-blue user-name-text">@u.get.name</strong>
                                             </a>
                                         }
                                     </label>
                                     on
                                     <label class="u-info-wrapper">
-                                            <a href="/@b.get.name">
+                                            <a href="/@b.get.name" class="no-dec">
                                                 <strong class="hover-blue board-name-text">@b.get.name</strong>
                                             </a>
                                     </label>
@@ -158,7 +164,9 @@
                             @if(repost.get.media.nonEmpty) {
                                 @defining(Media.find(repost.get.media.head)) { m =>
                                     <div class="post-picture-container">
-                                        <img src="@m.get.media_url" class="post-picture">
+                                        <a class="fancybox" href="@m.get.media_url"@if(repost.get.title.isDefined){ title="@repost.get.title.get"}>
+                                            <img src="@(m.get.media_url + "_med")" class="post-picture">
+                                        </a>
                                     </div>
                                 }
                             }

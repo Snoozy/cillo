@@ -38,13 +38,13 @@
                 @comment.votes
             </span>
             ·
-            <a href="#" class="c-action like@if(vote.isDefined && vote.get.value == 1){ liked}">
+            <a href="#" class="c-action no-dec like@if(vote.isDefined && vote.get.value == 1){ liked}">
                 <i class="icon-upvote"></i>
             </a>
 
             <span style="color:#ccc"> | </span>
 
-            <a href="#" class="c-action dislike@if(vote.isDefined && vote.get.value == -1){ disliked}" style="margin-left:-2px;margin-right:-2px;">
+            <a href="#" class="c-action no-dec dislike@if(vote.isDefined && vote.get.value == -1){ disliked}" style="margin-left:-2px;margin-right:-2px;">
                 <i class="icon-downvote"></i>
             </a>
             ·

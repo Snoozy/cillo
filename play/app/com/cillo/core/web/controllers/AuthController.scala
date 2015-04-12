@@ -1,8 +1,10 @@
 package com.cillo.core.web.controllers
 
+import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html
 import com.cillo.utils.play.Auth._
 import play.api.mvc._
+import com.cillo.core.data.cache.Session
 
 object AuthController extends Controller {
 
@@ -29,13 +31,18 @@ object AuthController extends Controller {
     private def processLogin(request: Request[AnyContent])(implicit r: RequestHeader): Result = {
         val body: AnyContent = request.body
         body.asFormUrlEncoded.map { form =>
-            val username = form.get("username").map(_.head)
+            val email = form.get("email").map(_.head)
             val password = form.get("password").map(_.head)
-            if (username.isDefined && password.isDefined) {
-                val token = logInSession(username.get, password.get)
+            if (email.isDefined && password.isDefined) {
+                val token = logInSession(email.get, password.get)
                 if (!token.isDefined)
                     Ok(html.core.login(error = true))
                 else {
+                    val admin = Admin.isUserAdmin(User.findByEmail(email.get).get.user_id.get)
+                    if (admin) {
+                        val sess = new Session(token.get)
+                        sess.set("admin", "true")
+                    }
                     Redirect("/").withCookies(Cookie("auth_token", token.get))
                 }
             } else {

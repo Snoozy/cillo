@@ -27,10 +27,12 @@ object S3 {
                 val s3client = new AmazonS3Client(aws_creds)
                 val metadata = new ObjectMetadata()
                 metadata.setContentType("image/jpeg")
-                val normal = Image(img).constrain(1000, 1000).writer(Format.JPEG).toStream
+                val normal = Image(img).constrain(2000, 2000).writer(Format.JPEG).toStream
                 val thumb = Image(img).cover(50, 50).writer(Format.JPEG).toStream
+                val med = Image(img).constrain(550, 550).writer(Format.JPEG).toStream
                 s3client.putObject(new PutObjectRequest(bucketName, key + "_small", thumb, metadata))
                 s3client.putObject(new PutObjectRequest(bucketName, key, normal, metadata))
+                s3client.putObject(new PutObjectRequest(bucketName, key + "_med", med, metadata))
                 Some(uuid.toString)
             } catch {
                 case e: AmazonClientException => println("Amazon Client Exception. Error: " + e.getMessage)

@@ -14,7 +14,7 @@ object EtcController extends Controller {
 
     def debug = AuthAction { implicit user => implicit request =>
         //sendWelcomeEmail("Daniel", "danielli803@gmail.com")
-        Ok("Ok")
+        Ok(user.get.admin.toString)
     }
 
     def redirectHttp = Action { implicit request =>

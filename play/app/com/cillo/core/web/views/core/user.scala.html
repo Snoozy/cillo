@@ -62,11 +62,15 @@
                             </div>
                         </div>
                         <div class="board-posts-container">
-                            <div class="posts-container" style="display:inline-block;margin-right:10px;width:696px;padding:0px;">
+                            <div class="posts-container" style="display:inline-block;margin-right:10px;width:606px;padding:0px;">
                                 <div class="posts-wrapper" style="text-align:left;">
                                     <ol class="posts">
                                         @for(post <- posts) {
                                             @components.post(post, visitor)
+                                        }
+
+                                        @if(posts.length < 1) {
+                                            @components.no_posts()
                                         }
                                     </ol>
                                     <div @if(posts.length < 19){class="displaynone" }id="neverending_spinner"></div>

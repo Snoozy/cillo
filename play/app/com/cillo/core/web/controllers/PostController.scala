@@ -106,9 +106,16 @@ object PostController extends Controller {
                         val newPost = {
                             if (user.session.isDefined && user.session.get.get("admin").isDefined) {
                                 val newUserName = form.get("user").map(_.head)
-                                if (newUserName.isDefined) {
-                                    val newUserId = User.create(User.genUsername(newUserName.get + "@cillo.co"), newUserName.get, newUserName.get, newUserName.get + "@cillo.co", None)
-                                    val newUser = User.find(newUserId.get.toInt)
+                                if (newUserName.isDefined && newUserName.get != "") {
+                                    val newUserId = {
+                                        val userExists = User.find(newUserName.get)
+                                        if (userExists.isDefined) {
+                                            userExists.get.user_id.get
+                                        } else {
+                                            User.create(User.genUsername(newUserName.get + "@cillo.co"), newUserName.get, newUserName.get, newUserName.get + "@cillo.co", None).get.toInt
+                                        }
+                                    }
+                                    val newUser = User.find(newUserId)
                                     if (!media_ids.isDefined || media_ids.get == "") {
                                         Post.createSimplePost(newUser.get.user_id.get, title, data.get, board.get.board_id.get)
                                     } else {
