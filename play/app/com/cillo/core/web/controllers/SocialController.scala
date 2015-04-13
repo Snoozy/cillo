@@ -61,7 +61,7 @@ object SocialController extends Controller {
                     User.genUsername(fbName.replace(" ", ""))
             }
             val pic: Option[Int] = {
-                val id = S3.uploadURL(fb.getPictureUrl)
+                val id = S3.uploadURL(fb.getPictureUrl, profile = true)
                 if (id.isDefined) {
                     val media = Media.create(0, id.get)
                     if (media.isDefined) {

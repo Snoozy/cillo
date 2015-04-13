@@ -32,7 +32,7 @@ object S3 {
                     val med = Image(img).constrain(550, 550).writer(Format.JPEG).toStream
                     s3client.putObject(new PutObjectRequest(bucketName, key + "_med", med, metadata))
                 } else {
-                    val thumb = Image(img).cover(50, 50).writer(Format.JPEG).toStream
+                    val thumb: InputStream = Image(img).cover(50, 50).writer(Format.JPEG).toStream
                     val prof = Image(img).cover(150, 150).writer(Format.JPEG).toStream
                     s3client.putObject(new PutObjectRequest(bucketName, key + "_small", thumb, metadata))
                     s3client.putObject(new PutObjectRequest(bucketName, key + "_prof", prof, metadata))
@@ -48,8 +48,23 @@ object S3 {
         } else None
     }
 
-    def upload(file: File, profile: Boolean = false): Option[String] = {
-        uploadImg(Image(file), profile = profile)
+    def upload(file: File, profile: Boolean = false, x: Option[Double] = None, y: Option[Double] = None,
+               height: Option[Double] = None, width: Option[Double] = None): Option[String] = {
+        val img = {
+            if (x.isDefined && y.isDefined && width.isDefined && height.isDefined) {
+                val temp = Image(file)
+                val imgWidth = temp.width
+                val imgHeight = temp.height
+                if (x.get > imgWidth || width.get > imgWidth || y.get > imgHeight || height.get > imgHeight) {
+                    temp
+                } else {
+                    temp.trim(x.get.toInt, y.get.toInt, imgWidth - (width.get.toInt + x.get.toInt), imgHeight - (height.get.toInt + y.get.toInt))
+                }
+            } else {
+                Image(file)
+            }
+        }
+        uploadImg(img, profile = profile)
     }
 
     def uploadURL(url: String, profile: Boolean = false): Option[String] = {

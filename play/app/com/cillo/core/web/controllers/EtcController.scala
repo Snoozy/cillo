@@ -14,7 +14,12 @@ object EtcController extends Controller {
 
     def debug = AuthAction { implicit user => implicit request =>
         //sendWelcomeEmail("Daniel", "danielli803@gmail.com")
+        log("asdf")
         Ok(user.get.admin.toString)
+    }
+
+    def log(s: String) = {
+        play.api.Logger.debug(s)
     }
 
     def redirectHttp = Action { implicit request =>

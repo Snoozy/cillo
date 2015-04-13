@@ -62,7 +62,7 @@
                         </div>
                     </a>
                 </div>
-                @if(user.isDefined && poster.user_id.get == user.get.user_id.get) {
+                @if(user.isDefined && (poster.user_id.get == user.get.user_id.get || user.get.admin)) {
                     <div class="post-functions dropdown displaynone">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="icon-drop-arrow"></i>
