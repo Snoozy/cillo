@@ -19,7 +19,7 @@
                             <div class="board-info">
                                 <div class="board-data-container">
                                     <div class="board-avatar">
-                                        <img src="@user.photo" class="board-avatar-img">
+                                        <img src="@(user.photo + "_prof")" class="board-avatar-img">
                                     </div>
                                     <div class="board-name-container">
                                         <span class="main-board-name-text">
@@ -83,7 +83,7 @@
                             @for(b <- boards) {
                                 <div class="board" style="cursor:pointer;" onclick="window.location.href = '/@b.name'">
                                     <a href="/@b.name" style="display:inline;">
-                                        <img class="avatar" style="margin-left:-52px;margin-right:0px;" alt="Board Picture" src="@b.photo">
+                                        <img class="avatar" style="margin-left:-52px;margin-right:0px;" alt="Board Picture" src="@(b.photo + "_prof")">
                                     </a>
                                     <div class="board-desc-wrapper">
                                         <span>
@@ -109,7 +109,6 @@
             @components.logged_out()
         }
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
         <script type="text/javascript" src="@RemoteURLController.url("js/core.bundle.js")"></script>

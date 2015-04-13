@@ -117,7 +117,7 @@ object User {
                 15
             }
         }
-        val parsed = s.substring(0, i)
+        val parsed = s.substring(0, i).replace(" ", "")
         if (!checkUsername(parsed)) {
             var count = 0
             val rand = "%04d".format(scala.util.Random.nextInt(1000))
@@ -159,6 +159,13 @@ object User {
         DB.withConnection { implicit connection =>
             SQL("UPDATE user SET name = {name}, username = {username}, bio = {bio}, photo = {photo} WHERE user_id = {user}")
                 .on('name -> name, 'photo -> pic, 'user -> user_id, 'bio -> bio, 'username -> username).executeUpdate()
+        }
+    }
+
+    def updatePassword(user_id: Int, password: String) = {
+        DB.withConnection { implicit connection =>
+            val pass = makeDigest(password)
+            SQL("UPDATE user SET password = {pass} WHERE user_id = {user}").on('pass -> pass, 'user -> user_id).executeUpdate()
         }
     }
 

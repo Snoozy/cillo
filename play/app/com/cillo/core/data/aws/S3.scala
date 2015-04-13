@@ -16,7 +16,7 @@ object S3 {
 
     private final val bucketName = "cillo-static"
 
-    def uploadImg(img: Image): Option[String] = {
+    def uploadImg(img: Image, profile: Boolean = false): Option[String] = {
         val aws_key = Play.current.configuration.getString("aws.key")
         val aws_secret = Play.current.configuration.getString("aws.secret")
         if (aws_key.isDefined && aws_secret.isDefined) {
@@ -28,11 +28,16 @@ object S3 {
                 val metadata = new ObjectMetadata()
                 metadata.setContentType("image/jpeg")
                 val normal = Image(img).constrain(2000, 2000).writer(Format.JPEG).toStream
-                val thumb = Image(img).cover(50, 50).writer(Format.JPEG).toStream
-                val med = Image(img).constrain(550, 550).writer(Format.JPEG).toStream
-                s3client.putObject(new PutObjectRequest(bucketName, key + "_small", thumb, metadata))
+                if (!profile) {
+                    val med = Image(img).constrain(550, 550).writer(Format.JPEG).toStream
+                    s3client.putObject(new PutObjectRequest(bucketName, key + "_med", med, metadata))
+                } else {
+                    val thumb = Image(img).cover(50, 50).writer(Format.JPEG).toStream
+                    val prof = Image(img).cover(150, 150).writer(Format.JPEG).toStream
+                    s3client.putObject(new PutObjectRequest(bucketName, key + "_small", thumb, metadata))
+                    s3client.putObject(new PutObjectRequest(bucketName, key + "_prof", prof, metadata))
+                }
                 s3client.putObject(new PutObjectRequest(bucketName, key, normal, metadata))
-                s3client.putObject(new PutObjectRequest(bucketName, key + "_med", med, metadata))
                 Some(uuid.toString)
             } catch {
                 case e: AmazonClientException => println("Amazon Client Exception. Error: " + e.getMessage)
@@ -43,13 +48,13 @@ object S3 {
         } else None
     }
 
-    def upload(file: File): Option[String] = {
-        uploadImg(Image(file))
+    def upload(file: File, profile: Boolean = false): Option[String] = {
+        uploadImg(Image(file), profile = profile)
     }
 
-    def uploadURL(url: String): Option[String] = {
+    def uploadURL(url: String, profile: Boolean = false): Option[String] = {
         val image = Image(ImageIO.read(new URL(url)))
-        uploadImg(image)
+        uploadImg(image, profile = profile)
     }
 
 }

@@ -30,4 +30,11 @@ object SocialUser {
         }
     }
 
+    def userIsSocial(id: Int): Boolean = {
+        DB.withConnection { implicit connection =>
+            val check = SQL("SELECT user_id FROM social_user WHERE user_id = {id}").on('id -> id).as(scalar[Int].singleOpt)
+            check.isDefined
+        }
+    }
+
 }

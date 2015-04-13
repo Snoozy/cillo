@@ -1423,6 +1423,7 @@ a:hover {
 
 .board-info {
     display: inline-block;
+    width: 698px;
 }
 
 .error-message {
@@ -2731,4 +2732,16 @@ a.login-link:hover {
     -moz-border-radius: 4px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.change-password {
+    font-weight: bold;
+}
+
+.input-error {
+    border-color: #a94442;
+}
+
+.password-error, .curr-password-error {
+    color: #cb2027;
 }

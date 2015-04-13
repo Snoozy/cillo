@@ -23,6 +23,10 @@ object Etc {
             s
     }
 
+    def checkPasswordValidity(p: String) = {
+        true
+    }
+
     def makeDigest(pass: String): String = {
         Password.createHash(pass)
     }

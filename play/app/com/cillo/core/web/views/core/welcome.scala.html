@@ -68,7 +68,7 @@
                 var leftPos = margin+(index*(colWidth+margin));
                 $(this).css({
                     'left':(leftPos+spaceLeft-90)+'px',
-                    'top': 340+min+'px'
+                    'top': 360+min+'px'
                 });
                 blocks[index] = min+$(this).outerHeight()+margin;
             });
@@ -83,6 +83,15 @@
 
     <script>
         $(function() {
+
+            $('.active-ph').each(function() {
+                if ($(this).val()) {
+                    $(this).addClass('filled');
+                } else if (!$(this).val()) {
+                    $(this).removeClass('filled');
+                }
+            });
+
             $('.active-ph').blur(function() {
                 if ($(this).val()) {
                     $(this).addClass('filled');
@@ -281,7 +290,7 @@
                                         <div class="trending-group-content">
                                             <div class="trending-group-avatar">
                                                 <a href="/@b.name">
-                                                    <img class="trending-group-avatar" src="@b.photo">
+                                                    <img class="trending-group-avatar" src="@(b.photo + "_prof")">
                                                 </a>
                                             </div>
                                             <div class="trending-group-bottom">
@@ -294,7 +303,7 @@
                                                 </div>
                                                 <div class="trending-group-descr">
                                                     <span class="trending-group-descr-content">
-                                                        @Etc.ellipsize(b.description, 52)
+                                                        @Etc.ellipsize(b.description, 57)
                                                     </span>
                                                 </div>
                                             </div>

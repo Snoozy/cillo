@@ -39,6 +39,8 @@ POST        /a/post/:id/delete             com.cillo.core.web.controllers.PostCo
 POST        /a/group/:id/follow            com.cillo.core.web.controllers.BoardController.followBoard(id: Int)
 POST        /a/group/:id/unfollow          com.cillo.core.web.controllers.BoardController.unfollowBoard(id: Int)
 POST        /a/upload                      com.cillo.core.web.controllers.MediaController.upload
+POST        /a/setPass                     com.cillo.core.web.controllers.AuthController.setPassword
+POST        /a/changePass                  com.cillo.core.web.controllers.AuthController.changePassword
 
 #Board catchalls
 GET         /:name                         com.cillo.core.web.controllers.BoardController.boardPage(name: String)

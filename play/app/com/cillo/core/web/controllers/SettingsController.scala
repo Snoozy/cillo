@@ -21,7 +21,7 @@ object SettingsController extends Controller {
             case Some(_) =>
                 val board = Board.find(name)
                 if (board.isDefined) {
-                    if (board.get.creator_id == user.get.user_id.get) {
+                    if (board.get.creator_id == user.get.user_id.get || user.get.admin) {
                         Ok(com.cillo.core.web.views.html.core.board_settings(user.get, board.get))
                     } else {
                         NotFound("Permission denied.")
@@ -37,7 +37,7 @@ object SettingsController extends Controller {
             case None => Found("/login")
             case Some(_) =>
                 val board = Board.find(name)
-                if (board.isDefined) {
+                if (board.isDefined && (user.get.user_id.get == board.get.creator_id || user.get.admin)) {
                     val body = request.body.asMultipartFormData
                     if (body.isDefined) {
                         val picID: Int = {
@@ -45,7 +45,7 @@ object SettingsController extends Controller {
                             if (file.isDefined) {
                                 val pic = file.get.ref.file
                                 if (pic.length() < 3145728) {
-                                    val id = S3.upload(pic)
+                                    val id = S3.upload(pic, profile = true)
                                     if (id.isDefined) {
                                         val mediaID = Media.create(0, id.get)
                                         if (mediaID.isDefined) {
@@ -63,7 +63,7 @@ object SettingsController extends Controller {
                         val desc = res.get("desc").map(_.head).getOrElse(user.get.name)
                         Board.update(board.get.board_id.get, desc, picID)
                     }
-                    Found("/" + board.get.name + "/settings")
+                    Found("/" + board.get.name)
                 } else {
                     NotFound("Board not found.")
                 }
@@ -81,7 +81,7 @@ object SettingsController extends Controller {
                         if (file.isDefined) {
                             val pic = file.get.ref.file
                             if (pic.length() < 3145728) {
-                                val id = S3.upload(pic)
+                                val id = S3.upload(pic, profile = true)
                                 if (id.isDefined) {
                                     val mediaID = Media.create(0, id.get)
                                     if (mediaID.isDefined) {
@@ -101,7 +101,7 @@ object SettingsController extends Controller {
                     val bio = res.get("bio").map(_.head).getOrElse(user.get.name)
                     User.update(user.get.user_id.get, name, username, bio, picID)
                 }
-                Found("/settings")
+                Found("/user/" + user.get.username)
         }
     }
 
