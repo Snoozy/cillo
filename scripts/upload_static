@@ -12,9 +12,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-js", "--javascript", action="store_true", help="marks file as js file")
 parser.add_argument("-css", "--stylesheet", action="store_true", help="marks file as css file")
 parser.add_argument("path", help="path of file to be uploaded")
+parser.add_argument("prefix", help="prefix of all static files.")
 args = parser.parse_args()
 
 path = args.path
+prefix = args.prefix
 
 if not os.path.isabs(args.path):
     path = os.path.join(os.path.dirname(__file__), args.path)
@@ -41,7 +43,7 @@ def upload():
     bucket = conn.get_bucket('cillo-static')
     key = Key(bucket)
     if args.javascript:
-        key.key = 'js/' + ntpath.basename(path)        
+        key.key = 'js/' + prefix + "-" + ntpath.basename(path)        
         key.set_contents_from_filename('/tmp/' + ntpath.basename(path), headers=headers)
     elif args.stylesheet:
         g = gzip.open('/tmp/' + ntpath.basename(path), 'wb', 5)
@@ -49,7 +51,7 @@ def upload():
         g.writelines(f)
         g.close()
         f.close()
-        key.key = 'css/' + ntpath.basename(path)
+        key.key = 'css/' + prefix + "-" + ntpath.basename(path)
         key.set_contents_from_filename('/tmp/' + ntpath.basename(path), headers=headers)
     else:
         key.key = ntpath.basename(path)

@@ -5,7 +5,6 @@ import com.cillo.core.data.cache.Redis
 import com.cillo.core.web.controllers.EtcController
 import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
 import play.api.Play.current
-import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Application, GlobalSettings, Play}
@@ -40,6 +39,11 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         val addr: String = Play.current.configuration.getString("redis.address").getOrElse("127.0.0.1:6379")
         Redis.init(addr)
 
+        val staticPrefix = Play.current.configuration.getString("static.prefix")
+        if (Play.isProd && !staticPrefix.isDefined) {
+            throw new StaticPrefixMissing("Static prefix is missing.")
+        }
+
         /* USING REDIS FOR LOGICAL CACHE, MOVE OBJECT CACHE TO MEMCACHED
         val addr: String = Play.current.configuration.getString("memcached.address").getOrElse("127.0.0.1:11211")
         Memcached.setAddr(addr)
@@ -52,3 +56,5 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
     }
 
 }
+
+case class StaticPrefixMissing(message: String) extends Exception(message)
