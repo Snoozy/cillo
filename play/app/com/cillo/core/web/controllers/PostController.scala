@@ -13,7 +13,7 @@ object PostController extends Controller {
         val board = Board.find(board_name)
         val post = Post.find(post_id)
         if (post.isDefined && board.isDefined && post.get.board_id == board.get.board_id.get) {
-            Ok(core.view_post(user, post.get))
+            Ok(core.view_post(user, post.get)())
         } else {
             NotFound("Post not found.")
         }
