@@ -25,6 +25,12 @@ object CommentTree {
         Json.obj("post_id" -> tree.post_id, "comments" -> commentTreeJsonRecurse(tree.rootComments, user))
     }
 
+    def getTopRootComments(post_id: Int): Seq[Comment] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM comment WHERE post_id = {id} AND path = \"\"").on('id -> post_id).as(commentParser *)
+        }
+    }
+
     private def commentsByTop(comments: Seq[Comment]): CommentTree = {
         if (comments.isEmpty) {
             CommentTree(Seq(), 0)

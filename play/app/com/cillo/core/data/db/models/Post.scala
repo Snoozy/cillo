@@ -187,7 +187,7 @@ object Post {
 
     def toHTMLWIthUser(posts: Seq[Post], user: Option[User]): String = {
         posts.map { post =>
-            components.post(post, user)
+            components.post(post, user)()
         }.mkString("")
     }
 

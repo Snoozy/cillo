@@ -1,56 +1,16 @@
-@(post: com.cillo.core.data.db.models.Post, user: Option[com.cillo.core.data.db.models.User], expanded: Boolean = false,
-        boardOpt: Option[com.cillo.core.data.db.models.Board] = None, posterOpt: Option[com.cillo.core.data.db.models.User] = None,
-        full: Boolean = false)
+@(post: Post, user: Option[User])(board: Board = Board.find(post.board_id).get,
+        poster: User = User.find(post.user_id).get,
+        vote: Option[PostVote] = user.flatMap{u => PostVote.findByPostAndUser(post.post_id.get, u.user_id.get)},
+        repost: Option[Post] = post.repost_id.flatMap(Post.find),
+        reposted: Boolean = user.exists{ u => Post.userHasReposted(u.user_id.get, post.post_id.get)},
+        full: Boolean = false,
+        anonImg: String = "https://static.cillo.co/image/anon",
+        expanded: Boolean = false,
+        media: Seq[Option[Media]] = post.media.map(m => Media.find(m))
+        )
 
-@import com.cillo.core.data.db.models._
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
-
-@anonImg = @{"https://static.cillo.co/image/anon"}
-@poster = @{
-    if (posterOpt.isDefined)
-        posterOpt.get
-    else
-        User.find(post.user_id).get
-}
-@board = @{
-    if (boardOpt.isDefined)
-        boardOpt.get
-    else
-        Board.find(post.board_id).get
-}
-@vote = @{
-    if (user.isDefined) {
-        PostVote.findByPostAndUser(post.post_id.get, user.get.user_id.get)
-    } else {
-        None
-    }
-}
-@repost = @{
-    if (post.repost_id.isDefined) {
-        Post.find(post.repost_id.get)
-    } else {
-        None
-    }
-}
-@reposted = @{
-    if (user.isDefined) {
-        Post.userHasReposted(user.get.user_id.get, post.post_id.get)
-    } else {
-        false
-    }
-}
-@comments = @{
-    CommentTree.getPostCommentsTop(post.post_id.get)
-}
-
-@media = @{
-    if (post.media.nonEmpty) {
-        post.media.map(m => Media.find(m))
-    } else {
-        Seq()
-    }
-}
 
 <li class="post" data-item-id="@post.post_id.get">
     <div class="post-wrapper">
@@ -237,50 +197,80 @@
                     </span>
                 }
             </div>
-            @if(comments.rootComments.nonEmpty) {
-                <hr class="hr-no-margin comment-hr">
-            }
-            <div class="comments-container">
 
-                @if(user.isDefined) {
-                    <div class="comment-form">
-                        @if(board.privacy == 0) {
-                            <img class="comment-avatar" src="@(user.get.photo + "_small")">
-                        } else {
-                            <img class="comment-avatar anon" src="@(anonImg + "_small")">
+
+                @if(!expanded) {
+                    @defining(CommentTree.getTopRootComments(post.post_id.get)) { comments =>
+                        @if(comments.nonEmpty) {
+                            <hr class="hr-no-margin comment-hr">
                         }
-                        <form class="comment-input">
-                            <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
-                            <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
-                            <div class="clear"></div>
-                        </form>
-                    </div>
-                }
+                        <div class="comments-container">
 
-                @if(!expanded && comments.rootComments.nonEmpty) {
-                    <div class="view-all-comments-wrapper">
-                        <a href="/@board.name/posts/@post.post_id.get">
-                            <div class="view-all-comments">
-                                <span class="view-all-comments-text">View all comments</span>
+                        @if(user.isDefined) {
+                            <div class="comment-form">
+                                @if(board.privacy == 0) {
+                                    <img class="comment-avatar" src="@(user.get.photo + "_small")">
+                                } else {
+                                    <img class="comment-avatar anon" src="@(anonImg + "_small")">
+                                }
+                                <form class="comment-input">
+                                    <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                                    <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
+                                    <div class="clear"></div>
+                                </form>
                             </div>
-                        </a>
-                    </div>
-                }
+                        }
 
-                @for(comment <- comments.rootComments.take(5)) {
-                    @components.comment(comment, user, expanded = expanded, root = true, anon = board.privacy == 1)
-                    @if(comment.children.nonEmpty && !expanded) {
-                        <div class="view-replies-wrapper">
-                            <a href="/@board.name/posts/@post.post_id.get">
-                                <div class="view-replies">
-                                    <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
-                                    <span class="view-replies-text">View @comment.children.size repl@if(comment.children.size != 1){ies}else{y}</span>
-                                </div>
-                            </a>
+                        @if(comments.nonEmpty) {
+                            <div class="view-all-comments-wrapper">
+                                <a href="/@board.name/posts/@post.post_id.get">
+                                    <div class="view-all-comments">
+                                        <span class="view-all-comments-text">View all comments</span>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                        @for(comment <- comments.take(5)) {
+                            @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
+                            <div class="view-replies-wrapper">
+                                <a href="/@board.name/posts/@post.post_id.get">
+                                    <div class="view-replies">
+                                        <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
+                                        <span class="view-replies-text">
+                                            View replies</span>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                        </div>
+                    }
+                } else {
+                    @defining(CommentTree.getPostCommentsTop(post.post_id.get)) { comments =>
+                        @if(comments.rootComments.nonEmpty) {
+                            <hr class="hr-no-margin comment-hr">
+                        }
+                        <div class="comments-container">
+
+                        @if(user.isDefined) {
+                            <div class="comment-form">
+                                @if(board.privacy == 0) {
+                                    <img class="comment-avatar" src="@(user.get.photo + "_small")">
+                                } else {
+                                    <img class="comment-avatar anon" src="@(anonImg + "_small")">
+                                }
+                                <form class="comment-input">
+                                    <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                                    <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
+                                    <div class="clear"></div>
+                                </form>
+                            </div>
+                        }
+                        @for(comment <- comments.rootComments.take(5)) {
+                            @components.comment(comment, user)(expanded = expanded, root = true, anon = board.privacy == 1)
+                        }
                         </div>
                     }
                 }
-            </div>
         </div>
     </div>
 </li>

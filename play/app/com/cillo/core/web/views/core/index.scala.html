@@ -1,11 +1,9 @@
-@(posts: Seq[com.cillo.core.data.db.models.Post], user: com.cillo.core.data.db.models.User)
+@(posts: Seq[com.cillo.core.data.db.models.Post], user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board])
 
 @import com.cillo.core.web.controllers.RemoteURLController
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.data.db.models._
 @import com.cillo.utils.Etc
-
-@boards = @{User.getBoards(user.user_id.get)}
 
 @components.base("Cillo"){
 
@@ -22,7 +20,7 @@
                                         @components.first_post(user, boards)
 
                                         @for(post <- posts) {
-                                            @components.post(post, Some(user))
+                                            @components.post(post, Some(user))()
                                         }
 
                                 </ol>
@@ -67,7 +65,6 @@
 
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
         <script type="text/javascript" src="@RemoteURLController.jsurl("core.bundle.js")"></script>
 
         <script type="text/javascript" charset="utf-8">

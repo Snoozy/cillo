@@ -1,24 +1,15 @@
-@(commentTreeNode: com.cillo.core.data.db.models.CommentTreeNode, user: Option[com.cillo.core.data.db.models.User],
-        expanded: Boolean = false, root: Boolean = false, anon: Boolean = false)
+@(commentTreeNode: CommentTreeNode, user: Option[User])(expanded: Boolean = false,
+        vote: Option[CommentVote] = user.flatMap{u => CommentVote.findByCommentAndUser(commentTreeNode.comment.comment_id.get, u.user_id.get)},
+        commenter: User = User.find(commentTreeNode.comment.user_id).get,
+        root: Boolean = false,
+        anon: Boolean = false,
+        anonImg: String = "https://static.cillo.co/image/anon")
 
-@import com.cillo.core.data.db.models._
 @import com.cillo.utils.Etc
 @import com.cillo.core.web.views.html.components
 
-@comment = @{commentTreeNode.comment}
-
-@vote = @{
-    if (user.isDefined) {
-        CommentVote.findByCommentAndUser(comment.comment_id.get, user.get.user_id.get)
-    } else {
-        None
-    }
-}
-@anonImg = @{"https://static.cillo.co/image/anon"}
-@commenter = @{User.find(comment.user_id).get}
-
 <div class="@if(root){root-comment }comment-container">
-    <div class="comment" data-comment-id="@comment.comment_id.get" data-post-id="@comment.post_id">
+    <div class="comment" data-comment-id="@commentTreeNode.comment.comment_id.get" data-post-id="@commentTreeNode.comment.post_id">
         @if(!anon) {
             <div class="comment-avatar">
                 <a href="/user/@commenter.username">
@@ -36,14 +27,14 @@
         }
         ·
         <span class="comment-timestamp">
-            @Etc.convertEpochToTimestamp(comment.time)
+            @Etc.convertEpochToTimestamp(commentTreeNode.comment.time)
         </span>
         <p class="comment-content">
-            @Html(Etc.parseHTML(comment.data))
+            @Html(Etc.parseHTML(commentTreeNode.comment.data))
         </p>
         <div class="comment-actions">
             <span class="like-count" style="margin: 0px;">
-                @comment.votes
+                @commentTreeNode.comment.votes
             </span>
             ·
             <a href="#" class="c-action no-dec like@if(vote.isDefined && vote.get.value == 1){ liked}">
@@ -63,7 +54,7 @@
             <div class="comment-children-container">
                 @if(expanded) {
                     @for(child <- commentTreeNode.children) {
-                        @components.comment(child, user, expanded = expanded, anon = anon)
+                        @components.comment(child, user)(expanded = expanded, anon = anon)
                     }
                 }
             </div>

@@ -1,13 +1,9 @@
-@(user: Option[com.cillo.core.data.db.models.User], post: com.cillo.core.data.db.models.Post)
+@(user: Option[com.cillo.core.data.db.models.User], post: com.cillo.core.data.db.models.Post)(poster: Option[User] = User.find(post.user_id),
+        board: Option[Board] = Board.find(post.board_id))
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
 @import com.cillo.core.data.db.models._
-
-@poster = @{
-    User.find(post.user_id)
-}
-@board = @{Board.find(post.board_id)}
 
 @components.base(poster.get.name + "'s post on " + board.get.name + " | Cillo") {
     <style>
@@ -22,7 +18,7 @@
             <div id="content">
                 <div class="container-fluid inner-background" style="width: 900px;">
                     <div class="main-row" style="padding: 20px;">
-                        @components.post(post, user, expanded = true, boardOpt = board, posterOpt = poster)
+                        @components.post(post, user)(expanded = true, board = board.get, poster = poster.get)
                     </div>
                 </div>
             </div>
@@ -34,9 +30,7 @@
             @components.logged_out()
         }
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
         <script type="text/javascript" src="@RemoteURLController.jsurl("core.bundle.js")"></script>
 
     </body>

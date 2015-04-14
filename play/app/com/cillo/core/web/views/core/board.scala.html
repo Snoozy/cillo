@@ -1,4 +1,8 @@
-@(board: com.cillo.core.data.db.models.Board, user: Option[com.cillo.core.data.db.models.User], posts: Seq[com.cillo.core.data.db.models.Post])
+@(board: com.cillo.core.data.db.models.Board, user: Option[com.cillo.core.data.db.models.User],
+        posts: Seq[com.cillo.core.data.db.models.Post])(trending: Seq[Board] = Board.getTrendingBoards,
+        postCount: Int = Board.getPostsCount(board.board_id.get),
+        following: Boolean = false
+        )
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
@@ -11,12 +15,6 @@
     } else {
         false
     }
-}
-@postCount = @{
-    Board.getPostsCount(board.board_id.get)
-}
-@trending = @{
-    Board.getTrendingBoards
 }
 
 @components.base(board.name + " | Cillo") {
@@ -85,7 +83,7 @@
                                         }
 
                                         @for(post <- posts) {
-                                            @components.post(post, user)
+                                            @components.post(post, user)()
                                         }
 
                                         @if(posts.length < 1) {
@@ -130,7 +128,6 @@
         }
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
         <script type="text/javascript" src="@RemoteURLController.jsurl("core.bundle.js")"></script>
 
         <script>

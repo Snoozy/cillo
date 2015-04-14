@@ -23,7 +23,8 @@ object IndexController extends Controller {
                     cachedGettingStartedHtml
                 } else {
                     val posts = User.getFeed(user.get.user_id.get)
-                    Ok(com.cillo.core.web.views.html.core.index(posts, user.get))
+                    val boards = User.getBoards(user.get.user_id.get)
+                    Ok(com.cillo.core.web.views.html.core.index(posts, user.get, boards))
                 }
             case None =>
                 cachedWelcomeHtml

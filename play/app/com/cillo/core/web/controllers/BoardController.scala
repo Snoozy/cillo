@@ -13,7 +13,13 @@ object BoardController extends Controller {
         val board = Board.find(name)
         if (board.isDefined) {
             val posts = Board.getFeed(board.get.board_id.get)
-            Ok(core.board(board.get, user, posts))
+            val following = {
+                if (user.isDefined)
+                    User.userIsFollowing(user.get.user_id.get, board.get.board_id.get)
+                else
+                    false
+            }
+            Ok(core.board(board.get, user, posts)(following = following))
         } else {
             NotFound("Board not found.")
         }

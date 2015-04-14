@@ -1,5 +1,6 @@
 import play.PlayImport._
 import play.PlayScala
+import play.twirl.sbt.Import.TwirlKeys
 import sbt._
 import sbt.Keys._
 
@@ -27,6 +28,7 @@ object Build extends Build {
             "net.debasishg" %% "redisclient" % "2.13",
             "com.sksamuel.scrimage" %% "scrimage-canvas" % "1.4.2"
         ),
+        TwirlKeys.templateImports += "com.cillo.core.data.db.models._",
         unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
     ).enablePlugins(PlayScala)
 

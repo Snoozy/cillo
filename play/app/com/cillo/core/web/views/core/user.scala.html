@@ -68,7 +68,7 @@
                                         @for(post <- posts) {
                                             @defining(Board.find(post.board_id)) { b =>
                                                 @if(b.get.privacy != 1) {
-                                                    @components.post(post, visitor, boardOpt = b)
+                                                    @components.post(post, visitor)(board = b.get)
                                                 }
                                             }
                                         }
@@ -114,7 +114,6 @@
         }
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
         <script type="text/javascript" src="@RemoteURLController.jsurl("core.bundle.js")"></script>
 
         <script>

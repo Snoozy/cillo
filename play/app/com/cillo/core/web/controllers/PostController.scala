@@ -53,7 +53,7 @@ object PostController extends Controller {
                             }
                             val newPost = Post.createSimplePost(user.user_id.get, None, comment.getOrElse(""), board.get.board_id.get, repost_id)
                             if (newPost.isDefined) {
-                                Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user)).toString())))
+                                Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user))().toString())))
                             } else {
                                 BadRequest("Invalid parameters.")
                             }
@@ -77,7 +77,7 @@ object PostController extends Controller {
             case None => BadRequest("User not authenticated.")
             case Some(_) =>
                 val post = Post.find(post_id)
-                if (post.isDefined && post.get.user_id == user.get.user_id.get) {
+                if (post.isDefined && (post.get.user_id == user.get.user_id.get || user.get.admin)) {
                     if (Post.deletePost(post_id)) {
                         Ok(Json.obj("success" -> "Successfully deleted post."))
                     } else {
@@ -137,7 +137,7 @@ object PostController extends Controller {
                             }
                         }
                         if (newPost.isDefined)
-                            Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user)).toString())))
+                            Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user))().toString())))
                         else
                             BadRequest("Invalid request.")
                     } else {
