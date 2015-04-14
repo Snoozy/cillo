@@ -9,13 +9,17 @@ object RemoteURLController extends Controller {
     private val CdnUrl = "https://static.cillo.co/"
     private val staticPrefix = Play.current.configuration.getString("static.prefix")
 
-    def url(file: String) = {
+    def jsurl(file: String) = {
         Play.isProd match {
-            case true =>
-                val i = file.lastIndexOf('/')
-                val path = file.substring(0, i + 1) + staticPrefix.get + "-" + file.substring(i + 1)
-                CdnUrl + path
-            case false => "/assets/" + file
+            case true => CdnUrl + "js/" + staticPrefix.get + "-" + file
+            case false => "/assets/js/" + file
+        }
+    }
+
+    def cssurl(file: String) = {
+        Play.isProd match {
+            case true => CdnUrl + "css/" + staticPrefix.get + "-" + file
+            case false => "/assets/css/" + file
         }
     }
 

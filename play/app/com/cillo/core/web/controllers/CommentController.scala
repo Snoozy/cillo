@@ -20,8 +20,9 @@ object CommentController extends Controller {
                         val parent_id: Option[Int] = if (parent_id_raw.isDefined && parent_id_raw.get == 0) None else parent_id_raw
                         val comment_id = Comment.create(post_id, user.get.user_id.get, data.get, parent_id)
                         if (comment_id.isDefined) {
+                            val board = Board.find(post.get.board_id)
                             val ctn = CommentTreeNode(Comment.find(comment_id.get.toInt).get, Seq())
-                            Ok(Json.obj("status" -> "success", "item_html" -> Json.toJson(components.comment(ctn, user, expanded = false).toString)))
+                            Ok(Json.obj("status" -> "success", "item_html" -> Json.toJson(components.comment(ctn, user, expanded = false, anon = board.get.privacy == 1).toString())))
                         } else {
                             BadRequest(Json.obj("error" -> "Request invalid."))
                         }

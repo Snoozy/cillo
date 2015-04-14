@@ -19,18 +19,21 @@
 
 <div class="@if(root){root-comment }comment-container">
     <div class="comment" data-comment-id="@comment.comment_id.get" data-post-id="@comment.post_id">
-        <div class="comment-avatar">
-            @if(!anon) {
+        @if(!anon) {
+            <div class="comment-avatar">
                 <a href="/user/@commenter.username">
-                    <img src="@(commenter.photo + "_small")" class="avatar" style="height : 32 px ; width : 32 px ; border-radius : 3 px ;"/>
+                    <img src="@(commenter.photo + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
                 </a>
-            } else {
-                <img src="@(anonImg + "_small")" class="avatar" style="height : 32 px ; width : 32 px ; border-radius : 3 px ;"/>
-            }
-        </div>
-        <a href="/user/@commenter.username" style="margin-right:2px;margin-left:3px;">
-            <strong style="font-weight: 500;">@commenter.name</strong>
-        </a>
+            </div>
+            <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;">
+                <strong style="font-weight:500;">@commenter.name</strong>
+            </a>
+        } else {
+            <div class="comment-avatar">
+                <img src="@(anonImg + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
+            </div>
+            <strong style="font-weight:500;margin-right:2px;margin-left:5px;" class="anonymous-user">Anonymous</strong>
+        }
         ·
         <span class="comment-timestamp">
             @Etc.convertEpochToTimestamp(comment.time)

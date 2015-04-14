@@ -35,9 +35,7 @@ if [ -e "$package_path" ]; then
             mv ${filename}/ cillo/
             chmod 755 ./cillo/bin/cillo
             rm cillo-web.zip
-        '"
-        ssh ubuntu@${server} bash -c "'
-            kill $(head -n 1 /home/ubuntu/cillo-backup/RUNNING_PID)
+            kill \$(head -n 1 /home/ubuntu/cillo-backup/RUNNING_PID)
             ./cillo/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_web.conf &
             disown
         '"
