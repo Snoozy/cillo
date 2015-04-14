@@ -68,7 +68,7 @@
                 var leftPos = margin+(index*(colWidth+margin));
                 $(this).css({
                     'left':(leftPos+spaceLeft-90)+'px',
-                    'top': 360+min+'px'
+                    'top': 375+min+'px'
                 });
                 blocks[index] = min+$(this).outerHeight()+margin;
             });
@@ -248,15 +248,15 @@
                                     <input type="text" class="form-control active-ph input-name" name="name">
                                     <label placeholder="Full Name" class="active-ph"></label>
                                 </div>
-                                <div class="form-group password-form">
-                                    <input type="password" class="form-control active-ph input-password" name="password">
-                                    <label placeholder="Password" class="active-ph"></label>
-                                </div>
                                 <div class="form-group email-form">
                                     <input type="email" class="form-control active-ph input-email" name="email">
                                     <label placeholder="Email" class="active-ph"></label>
                                 </div>
-                                <button type="submit" class="btn btn-primary signup-submit" name="submit">Sign Up for Cillo</button>
+                                <div class="form-group password-form">
+                                    <input type="password" class="form-control active-ph input-password" name="password">
+                                    <label placeholder="Password" class="active-ph"></label>
+                                </div>
+                                <button type="submit" class="btn btn-primary signup-submit" name="submit" style="margin-top:5px;">Sign Up for Cillo</button>
                             </form>
                             <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
                                 <div class="or">OR</div>

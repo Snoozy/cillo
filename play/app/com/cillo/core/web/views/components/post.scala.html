@@ -232,15 +232,6 @@
                         }
                         @for(comment <- comments.take(5)) {
                             @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
-                            <div class="view-replies-wrapper">
-                                <a href="/@board.name/posts/@post.post_id.get">
-                                    <div class="view-replies">
-                                        <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
-                                        <span class="view-replies-text">
-                                            View replies</span>
-                                    </div>
-                                </a>
-                            </div>
                         }
                         </div>
                     }
@@ -265,7 +256,7 @@
                                 </form>
                             </div>
                         }
-                        @for(comment <- comments.rootComments.take(5)) {
+                        @for(comment <- comments.rootComments) {
                             @components.comment(comment, user)(expanded = expanded, root = true, anon = board.privacy == 1)
                         }
                         </div>
