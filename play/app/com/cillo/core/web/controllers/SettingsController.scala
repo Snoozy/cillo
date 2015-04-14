@@ -109,8 +109,10 @@ object SettingsController extends Controller {
                     val username = res.get("username").map(_.head).getOrElse(user.get.name)
                     val bio = res.get("bio").map(_.head).getOrElse(user.get.name)
                     User.update(user.get.user_id.get, name, username, bio, picID)
+                    Found("/user/" + username)
+                } else {
+                    Found("/user/" + user.get.username)
                 }
-                Found("/user/" + user.get.username)
         }
     }
 

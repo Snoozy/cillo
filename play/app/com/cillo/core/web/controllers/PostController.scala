@@ -104,7 +104,7 @@ object PostController extends Controller {
                             title = None
                         }
                         val newPost = {
-                            if (user.session.isDefined && user.session.get.get("admin").isDefined) {
+                            if (user.admin) {
                                 val newUserName = form.get("user").map(_.head)
                                 if (newUserName.isDefined && newUserName.get != "") {
                                     val newUserId = {

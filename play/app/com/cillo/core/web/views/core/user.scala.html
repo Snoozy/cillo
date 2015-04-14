@@ -66,7 +66,11 @@
                                 <div class="posts-wrapper" style="text-align:left;">
                                     <ol class="posts">
                                         @for(post <- posts) {
-                                            @components.post(post, visitor)
+                                            @defining(Board.find(post.board_id)) { b =>
+                                                @if(b.get.privacy != 1) {
+                                                    @components.post(post, visitor, boardOpt = b)
+                                                }
+                                            }
                                         }
 
                                         @if(posts.length < 1) {

@@ -109,15 +109,16 @@ object User {
     }
 
     private def genRawUsername(s: String): Option[String] = {
+        val raw = s.replace(" ", "")
         val i = {
-            val t = s.indexOf('@')
+            val t = raw.indexOf('@')
             if (t > 0 && t < 16) {
                 t
             } else {
                 15
             }
         }
-        val parsed = s.substring(0, i).replace(" ", "")
+        val parsed = raw.substring(0, i)
         if (!checkUsername(parsed)) {
             var count = 0
             val rand = "%04d".format(scala.util.Random.nextInt(1000))

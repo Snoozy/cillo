@@ -741,6 +741,7 @@ strong {
 .comment-content {
     margin-left:37px;
     margin-bottom:0px;
+    margin-top: -2px;
 }
 
 .user-boards {
@@ -1477,7 +1478,7 @@ a:hover {
 
 .register-container {
     border-radius: 6px;
-    width: 750px;
+    width: 600px;
     background: #EEEEEE;
     margin: 55px auto 35px;
 }
@@ -2744,4 +2745,12 @@ a.login-link:hover {
 
 .password-error, .curr-password-error {
     color: #cb2027;
+}
+
+.comment strong {
+    font-size: 15px;
+}
+
+.anonymous-user:hover {
+    color: #2f2f2f;
 }

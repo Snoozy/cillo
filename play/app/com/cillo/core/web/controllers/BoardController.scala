@@ -80,12 +80,19 @@ object BoardController extends Controller {
                 body.asFormUrlEncoded.map { form =>
                     val board_name = form.get("name").map(_.head)
                     val board_descr = form.get("description").map(_.head)
+                    val board_type = form.get("board-type").map(_.head).getOrElse("public")
                     if (board_name.isDefined) {
                         val nameMatcher = whiteSpace.matcher(board_name.get)
                         if (!nameMatcher.find()) {
                             val boardExists = Board.find(board_name.get)
                             if (!boardExists.isDefined) {
-                                val board_id = Board.create(board_name.get, board_descr, user.get.user_id.get)
+                                val privacy = {
+                                    if (board_type == "anonymous")
+                                        1
+                                    else
+                                        0
+                                }
+                                val board_id = Board.create(board_name.get, board_descr, user.get.user_id.get, privacy = privacy)
                                 if (board_id.isDefined) {
                                     val newBoard = Board.find(board_id.get.toInt)
                                     Board.addFollower(user.get.user_id.get, newBoard.get.board_id.get)

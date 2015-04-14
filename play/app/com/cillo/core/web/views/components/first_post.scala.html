@@ -1,9 +1,13 @@
-@(user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board], boardPage: Boolean = false)
+@(user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board], boardPage: Boolean = false, anon: Boolean = false)
 
 <li class="post first-post">
     <div class="posting-wrapper" style="margin-left:48px;">
         <div class="first-post-avatar-wrapper">
-            <img class="post-avatar" src="@(user.photo + "_small")" style="margin-left:-44px;width:34px;height:34px;margin-top:0px;vertical-align:baseline;">
+            @if(!anon) {
+                <img class="post-avatar" src="@(user.photo + "_small")" style="margin-left:-44px;width:34px;height:34px;margin-top:0px;vertical-align:baseline;">
+            } else {
+                <img class="post-avatar anon" src="https://static.cillo.co/image/anon_prof" style="margin-left:-44px;width:34px;height:34px;margin-top:0px;vertical-align:baseline;">
+            }
         </div>
         <input class="post-title form-control displaynone" placeholder="Title (optional)" type="text">
         <textarea data-expanded-height="50" class="post-form form-control" name="post-form" style="width:100%;height:34px;" placeholder="Write something..."></textarea>
@@ -27,6 +31,15 @@
         }
         <div class="displaynone first-post-clear"></div>
     </div>
+    @if(anon) {
+        <script type="text/javascript" charset="utf-8">
+
+            $(document).ready(function() {
+                $('.anon').tooltip({'title' : 'Your posts in this group are anonymous.'});
+            });
+
+        </script>
+    }
     @if(!boardPage) {
 
         <script type="text/javascript" charset="utf-8">

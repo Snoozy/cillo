@@ -6,6 +6,7 @@
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
 
+@anonImg = @{"https://static.cillo.co/image/anon"}
 @poster = @{
     if (posterOpt.isDefined)
         posterOpt.get
@@ -56,11 +57,17 @@
         <div class="margin-maker">
             <div class="post-header">
                 <div class="user-avatar">
-                    <a href="/user/@poster.username">
+                    @if(board.privacy == 0) {
+                        <a href="/user/@poster.username">
+                            <div class="post-avatar-wrapper">
+                                <img class="post-avatar" src="@(poster.photo + "_small")">
+                            </div>
+                        </a>
+                    } else {
                         <div class="post-avatar-wrapper">
-                            <img class="post-avatar" src="@(poster.photo + "_small")">
+                            <img class="post-avatar" src="@(anonImg + "_prof")">
                         </div>
-                    </a>
+                    }
                 </div>
                 @if(user.isDefined && (poster.user_id.get == user.get.user_id.get || user.get.admin)) {
                     <div class="post-functions dropdown displaynone">
@@ -85,9 +92,13 @@
                 }
                 <div class="user-info">
                     <label class="u-info-wrapper">
-                        <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor no-dec" style="margin-left:0px;">
-                            <strong class="hover-blue user-name-text">@poster.name</strong>
-                        </a>
+                        @if(board.privacy == 0) {
+                            <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor no-dec" style="margin-left : 0 px ;">
+                                <strong class="hover-blue user-name-text">@poster.name</strong>
+                            </a>
+                        } else {
+                            <strong class="hover-blue user-name-text anonymous-user">Anonymous</strong>
+                        }
                     </label>
                     on
                     <label class="u-info-wrapper">
@@ -134,15 +145,22 @@
                             <div class="repost-post-info">
                                 <div class="user-info">
                                     <label class="u-info-wrapper">
-                                        @defining(User.find(repost.get.user_id)) { u =>
-                                            <div class="repost-avatar-container">
-                                                <a href="/user/@u.get.username">
-                                                    <img class="repost-avatar" src="@(u.get.photo + "_small")">
+                                        @if(b.get.privacy == 0) {
+                                            @defining(User.find(repost.get.user_id)) { u =>
+                                                <div class="repost-avatar-container">
+                                                    <a href="/user/@u.get.username">
+                                                        <img class="repost-avatar" src="@(u.get.photo + "_small")">
+                                                    </a>
+                                                </div>
+                                                <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor no-dec">
+                                                    <strong class="hover-blue user-name-text">@u.get.name</strong>
                                                 </a>
+                                            }
+                                        } else {
+                                            <div class="repost-avatar-container">
+                                                <img class="repost-avatar" src="@(anonImg + "_prof")">
                                             </div>
-                                            <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor no-dec">
-                                                <strong class="hover-blue user-name-text">@u.get.name</strong>
-                                            </a>
+                                            <strong class="hover-blue user-name-text anonymous-user">Anonymous</strong>
                                         }
                                     </label>
                                     on
@@ -226,7 +244,11 @@
 
                 @if(user.isDefined) {
                     <div class="comment-form">
-                        <img class="comment-avatar" src="@(user.get.photo + "_small")">
+                        @if(board.privacy == 0) {
+                            <img class="comment-avatar" src="@(user.get.photo + "_small")">
+                        } else {
+                            <img class="comment-avatar anon" src="@(anonImg + "_small")">
+                        }
                         <form class="comment-input">
                             <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
                             <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
@@ -246,7 +268,7 @@
                 }
 
                 @for(comment <- comments.rootComments.take(5)) {
-                    @components.comment(comment, user, expanded = expanded, root = true)
+                    @components.comment(comment, user, expanded = expanded, root = true, anon = board.privacy == 1)
                     @if(comment.children.nonEmpty && !expanded) {
                         <div class="view-replies-wrapper">
                             <a href="/@board.name/posts/@post.post_id.get">

@@ -43,7 +43,7 @@
                 <div class="register-inner">
                     <div class="register-header">
                         <span class="register-text">
-                            Create a Board.
+                            Create a Board
                         </span>
                     </div>
                     @if(error != "") {
@@ -59,6 +59,23 @@
                             <input type="text" class="form-control active-ph" id="descrInput" name="description" value="@descr" required>
                             <label placeholder="Board Description" class="active-ph"></label>
                             <p class="help-block">Describe your board.</p>
+                        </div>
+                        <div class="board-type-header">
+                            <strong>Board type</strong>
+                        </div>
+                        <div class="board-type radio">
+                            <label>
+                                <input type="radio" name="board-type" value="public" checked>
+                                <p style="margin-bottom:0;"><strong>Public</strong></p>
+                                <p>Anyone can see and follow this board.</p>
+                            </label>
+                        </div>
+                        <div class="board-type radio">
+                            <label>
+                                <input type="radio" name="board-type" value="anonymous">
+                                <p style="margin-bottom:0;"><strong>Anonymous</strong></p>
+                                <p style="width:410px;">Anyone can see and follow this board, but posts are anonymous, and no reputation will be awarded.</p>
+                            </label>
                         </div>
                         <div class="register-form-button">
                             <button type="submit" class="btn btn-primary" style="width:130px;">Create Board</button>

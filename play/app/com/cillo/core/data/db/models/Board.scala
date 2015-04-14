@@ -55,7 +55,7 @@ object Board {
 
     def find(name: String): Option[Board] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM board WHERE name = {name} AND privacy = 0").on('name -> name).as(boardParser.singleOpt)
+            SQL("SELECT * FROM board WHERE name = {name}").on('name -> name).as(boardParser.singleOpt)
         }
     }
 
