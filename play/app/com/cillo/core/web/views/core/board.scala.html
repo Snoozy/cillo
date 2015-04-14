@@ -96,24 +96,11 @@
                             </div>
                         </div>
                         <div class="board-related-boards-container box-shadow-apply">
-                            <b style="margin-left:27%;font-size:16px;">Related Boards</b>
-                            <br/>
+                            <div class="small-board-header">
+                                <b style="font-size:16px;">Related Boards</b>
+                            </div>
                             @for(b <- trending) {
-                                <div class="board" style="cursor:pointer;" onclick="window.location.href = '/@b.name'">
-                                    <a href="/@b.name" style="display:inline;">
-                                        <img class="avatar" style="margin-left:-52px;margin-right:0px;" alt="Board Picture" src="@(b.photo + "_prof")">
-                                    </a>
-                                    <div class="board-desc-wrapper">
-                                        <span>
-                                            <a href="/@b.name">
-                                                <strong style="font-size:16px;" class="board-name-text">@b.name</strong>
-                                            </a>
-                                        </span>
-                                        <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
-                                        @Html(Etc.parseHTML(Etc.ellipsize(b.description, 49)))
-                                        </p>
-                                    </div>
-                                </div>
+                                @components.small_board(b)
                             }
                         </div>
                     </div>

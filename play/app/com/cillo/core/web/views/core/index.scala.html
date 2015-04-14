@@ -28,32 +28,17 @@
                             </div>
                         </div>
                         <div class="boards-container" style="display:inline-block;vertical-align:top;width:250px;background-color:#fdfdfd;">
-                            <b style="margin-left:40%;font-size:16px;margin-bottom:5px;">Boards</b>
-                            <br/>
+                            <div class="small-board-header">
+                                <b style="font-size:16px;">Boards</b>
+                            </div>
                             @if(boards.size > 0) {
                                 @for(b <- boards) {
-                                    <div class="board" style="cursor:pointer;" onclick="window.location.href = '/@b.name'">
-                                        <a href="/@b.name" style="display:inline;">
-                                            <img class="avatar" style="margin-left:-52px;margin-right:0px;" alt="Board Picture" src="@(b.photo + "_prof")">
-                                        </a>
-                                        <div class="board-desc-wrapper">
-                                            <span>
-                                                <a href="/@b.name">
-                                                    <strong style="font-size:16px;" class="board-name-text">@b.name</strong>
-                                                </a>
-                                            </span>
-                                            <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
-                                                @Etc.ellipsize(b.description, 49)
-                                            </p>
-                                        </div>
-                                    </div>
+                                    @components.small_board(b)
                                 }
                             } else {
-                                <br/>
                                 <div class="no-boards">
                                     You are not following any boards.
                                 </div>
-                                <br/>
                             }
                         </div>
                     </div>

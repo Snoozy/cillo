@@ -1,0 +1,21 @@
+@(board: Board)
+
+@import com.cillo.utils.Etc
+
+<div class="small-board-container">
+    <div class="board" style="cursor:pointer;" onclick="window.location.href = '/@board.name'">
+        <a href="/@board.name" style="display:inline;">
+            <img class="avatar" style="margin-left:-58px;margin-right:7px;height:54px;width:54px;" alt="Board Picture" src="@(board.photo + "_prof")">
+        </a>
+        <div class="board-desc-wrapper">
+            <span>
+                <a href="/@board.name">
+                    <strong style="font-size:16px;" class="board-name-text">@board.name</strong>
+                </a>
+            </span>
+            <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
+            @Html(Etc.parseHTML(Etc.ellipsize(board.description, 49)))
+            </p>
+        </div>
+    </div>
+</div>
