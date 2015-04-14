@@ -1,21 +1,13 @@
 @(board: com.cillo.core.data.db.models.Board, user: Option[com.cillo.core.data.db.models.User],
         posts: Seq[com.cillo.core.data.db.models.Post])(trending: Seq[Board] = Board.getTrendingBoards,
         postCount: Int = Board.getPostsCount(board.board_id.get),
-        following: Boolean = false
+        following: Boolean = user.exists{ u => User.userIsFollowing(u.user_id.get, board.board_id.get)}
         )
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
 @import com.cillo.core.data.db.models._
 @import com.cillo.utils.Etc
-
-@following = @{
-    if(user.isDefined) {
-        User.userIsFollowing(user.get.user_id.get, board.board_id.get)
-    } else {
-        false
-    }
-}
 
 @components.base(board.name + " | Cillo") {
 
@@ -118,6 +110,7 @@
         <script type="text/javascript" src="@RemoteURLController.jsurl("core.bundle.js")"></script>
 
         <script>
+
             $(function() {
                 $('ol.posts').neverending({
                     context: 'board',
