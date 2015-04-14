@@ -100,6 +100,12 @@ object Post {
 
     def deletePost(post_id: Int): Boolean = {
         DB.withConnection { implicit connection =>
+            val commentIds: Seq[Int] = SQL("SELECT comment_id FROM comment WHERE post_id = {post_id}").on('post_id -> post_id).as(scalar[Int].*)
+            if (commentIds.nonEmpty) {
+                SQL("DELETE FROM comment_vote WHERE comment_id IN ({ids})").on('ids -> commentIds).executeUpdate()
+            }
+            SQL("DELETE FROM comment WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
+            SQL("DELETE FROM post_vote WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
             SQL("DELETE FROM post WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
         }
     }

@@ -3791,10 +3791,14 @@ $(function() {
                     'parent': parent
                 },
                 success: function (response, textStatus, jqXHR) {
-                    if ($this.closest('.comment-form').siblings('.comment').length > 0) {
-                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertBefore($this.closest('.comment-form').siblings('.comment').eq(0));
+                    if (parent > 0) {
+                        if ($this.closest('.comment-form').siblings('.comment').length > 0) {
+                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertBefore($this.closest('.comment-form').siblings('.comment').eq(0));
+                        } else {
+                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter($this.closest('.comment-form'));
+                        }
                     } else {
-                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter($this.closest('.comment-form'));
+                        $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter($this.closest('.comment-form').siblings('.comment-start-marker'));
                     }
                 },
                 complete: function () {

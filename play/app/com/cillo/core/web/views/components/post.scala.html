@@ -230,6 +230,7 @@
                                 </a>
                             </div>
                         }
+                        <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
                             @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
                         }
@@ -256,6 +257,7 @@
                                 </form>
                             </div>
                         }
+                        <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.rootComments) {
                             @components.comment(comment, user)(expanded = expanded, root = true, anon = board.privacy == 1)
                         }
