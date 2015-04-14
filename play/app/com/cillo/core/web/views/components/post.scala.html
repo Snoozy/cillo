@@ -230,7 +230,7 @@
                                 </a>
                             </div>
                         }
-                        @for(comment <- comments.take(5)) {
+                        @for(comment <- comments.take(3)) {
                             @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
                         }
                         </div>
