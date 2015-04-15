@@ -1990,6 +1990,7 @@ strong {
 
 .view-replies-wrapper {
     margin-left: 38px;
+    margin-top: -8px;
 }
 
 .view-replies {
@@ -1998,7 +1999,7 @@ strong {
     margin-bottom: 5px;
     margin-left: 0;
     margin-right: 15px;
-    font-size: 17px;
+    font-size: 15px;
 }
 
 .comment-val {
@@ -2758,10 +2759,42 @@ a.login-link:hover {
 }
 
 .small-board-container {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #e1e8ed;
 }
 
 .small-board-header {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     text-align: center;
+}
+
+.icon-fb-share {
+    background-image: url('https://static.cillo.co/fb-icon.png');
+    margin-right: -2px;
+    height: 14px !important;
+    width: 14px !important;
+    vertical-align: middle;
+    background-size: 14px 14px;
+    margin-bottom: 4px;
+}
+
+.navbar-form {
+    padding-left: 0px;
+    float: left;
+    width: auto;
+    border: 0;
+    margin: 6px 0 4px;
+    padding-top: 0;
+    padding-bottom: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+@media (max-width: 900px) {
+    .masthead {
+        position: static;
+    }
+
+    .masthead-displacement {
+        display: none;
+    }
 }

@@ -81,6 +81,8 @@
 
     </script>
 
+    @components.fb_init()
+
     <script>
         $(function() {
 
@@ -155,28 +157,6 @@
                 $(this).parent().tooltip('destroy');
             });
 
-        });
-    </script>
-
-    <script>
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId : '911323222224791',
-                cookie : true,
-                xfbml : true,
-                version : 'v2.3'
-            });
-        };
-
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
-        $(function() {
             var rerequest_email = false;
             $('.fb-signup-button').click(function(e) {
                 e.preventDefault();

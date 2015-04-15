@@ -7,19 +7,27 @@ import play.api.mvc._
 object RemoteURLController extends Controller {
 
     private val CdnUrl = "https://static.cillo.co/"
-    private val staticPrefix = Play.current.configuration.getString("static.prefix")
+    private lazy val staticPrefix = Play.current.configuration.getString("static.prefix").get
 
-    def jsurl(file: String) = {
+    def js = {
         Play.isProd match {
-            case true => CdnUrl + "js/" + staticPrefix.get + "-" + file
-            case false => "/assets/js/" + file
+            case true => CdnUrl + "js/" + staticPrefix + "-bundle.js"
+            case false =>
+                val files = Play.getFile("public/js")
+                files.list.toList.sortWith(_ < _).map { s =>
+                    "<script type=\"text/javascript\" src=\"/assets/js/" + s + "\"></script>"
+                }.mkString("\n")
         }
     }
 
-    def cssurl(file: String) = {
+    def css = {
         Play.isProd match {
-            case true => CdnUrl + "css/" + staticPrefix.get + "-" + file
-            case false => "/assets/css/" + file
+            case true => CdnUrl + "css/" + staticPrefix + "-bundle.css"
+            case false =>
+                val files = Play.getFile("public/css")
+                files.list.map { s =>
+                    "<link rel=\"stylesheet\" href=\"/assets/css/" + s + "\">"
+                }.mkString("\n")
         }
     }
 

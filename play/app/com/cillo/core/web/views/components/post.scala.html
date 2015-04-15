@@ -196,6 +196,13 @@
                         </span>
                     </span>
                 }
+                <span class="p-action comment">
+                    <span class="bullet"> · </span>
+                    <a class="p-action-anchor action-link-share" data-share-url="https://www.cillo.co/@board.name/posts/@post.post_id.get" href="#">
+                        <i class="icon-fb-share"></i>
+                        <span class="color-blue comment-text">Share</span>
+                    </a>
+                </span>
             </div>
 
 
@@ -220,19 +227,20 @@
                                 </form>
                             </div>
                         }
-
-                        @if(comments.nonEmpty) {
-                            <div class="view-all-comments-wrapper">
-                                <a href="/@board.name/posts/@post.post_id.get">
-                                    <div class="view-all-comments">
-                                        <span class="view-all-comments-text">View all comments</span>
-                                    </div>
-                                </a>
-                            </div>
-                        }
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
                             @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
+                            @defining(CommentTree.getCommentNumChildren(comment.comment_id.get)) { n =>
+                                <div class="view-replies-wrapper">
+                                    <a href="/@board.name/posts/@post.post_id.get">
+                                        <div class="view-replies">
+                                            <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
+                                            <span class="view-replies-text">
+                                                View @n repl@if(n != 1) {ies} else {y}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
                         }
                         </div>
                     }

@@ -1,5 +1,6 @@
 package com.cillo.core.data.db.models
 
+import anorm.SqlParser._
 import anorm._
 import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.utils.EncodeDecode
@@ -28,6 +29,17 @@ object CommentTree {
     def getTopRootComments(post_id: Int): Seq[Comment] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM comment WHERE post_id = {id} AND path = \"\"").on('id -> post_id).as(commentParser *)
+        }
+    }
+
+    def getCommentNumChildren(comment_id: Int): Int = {
+        DB.withConnection { implicit connection =>
+            val comment = Comment.find(comment_id)
+            if (comment.isDefined) {
+                val path = comment.get.path + "/" + EncodeDecode.encodeNum(comment.get.comment_id.get)
+                SQL("SELECT COUNT(*) FROM comment WHERE path = {path}").on('path -> path).as(scalar[Long].single).toInt
+            } else
+                0
         }
     }
 
