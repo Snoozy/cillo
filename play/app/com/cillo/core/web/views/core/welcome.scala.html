@@ -86,30 +86,6 @@
     <script>
         $(function() {
 
-            $('.active-ph').each(function() {
-                if ($(this).val()) {
-                    $(this).addClass('filled');
-                } else if (!$(this).val()) {
-                    $(this).removeClass('filled');
-                }
-            });
-
-            $('.active-ph').blur(function() {
-                if ($(this).val()) {
-                    $(this).addClass('filled');
-                } else if (!$(this).val()) {
-                    $(this).removeClass('filled');
-                }
-            });
-
-            $('.active-ph').each(function() {
-                if ($(this).val()) {
-                    $(this).addClass('filled');
-                } else if (!$(this).val()) {
-                    $(this).removeClass('filled');
-                }
-            });
-
             $('.welcome_signup').submit(function() {
                 var email = $('.input-email').val();
                 var submit_form = false;
@@ -225,16 +201,13 @@
                         <div class="signup-form-wrapper">
                             <form role="form" method="post" action="/signup" class="welcome_signup" style="float: left;width: 255px;">
                                 <div class="form-group name-form">
-                                    <input type="text" class="form-control active-ph input-name" name="name">
-                                    <label placeholder="Full Name" class="active-ph"></label>
+                                    <input type="text" class="form-control input-name" name="name" placeholder=" Full Name">
                                 </div>
                                 <div class="form-group email-form">
-                                    <input type="email" class="form-control active-ph input-email" name="email">
-                                    <label placeholder="Email" class="active-ph"></label>
+                                    <input type="email" class="form-control input-email" name="email" placeholder="Email">
                                 </div>
                                 <div class="form-group password-form">
-                                    <input type="password" class="form-control active-ph input-password" name="password">
-                                    <label placeholder="Password" class="active-ph"></label>
+                                    <input type="password" class="form-control input-password" name="password" placeholder="Password">
                                 </div>
                                 <button type="submit" class="btn btn-primary signup-submit" name="submit" style="margin-top:5px;">Sign Up for Cillo</button>
                             </form>

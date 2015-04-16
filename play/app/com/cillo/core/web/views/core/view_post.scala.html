@@ -36,6 +36,11 @@
         }
         <meta property="og:description" content="@Etc.ellipsize(repost.get.data, 300)">
     }
+    @if(media.nonEmpty) {
+        <meta property="og:image" content="@media.head.get.media_url" />
+    } else {
+        <meta property="og:image" content="@poster.get.photo" />
+    }
 
 } {
     <body class="single-post main-background@if(!user.isDefined){ logged-out}">

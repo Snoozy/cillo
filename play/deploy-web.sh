@@ -18,9 +18,13 @@ echo 'Starting deployment...'
 
 if [ -e "$package_path" ]; then
     prefix=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-    ../scripts/upload_static ../play/public/js/core.bundle.js -js ${prefix}
-    ../scripts/upload_static ../play/public/css/master.css -css ${prefix}
     tmp=$(mktemp -dt "$0")
+    cat ../play/public/js/*.js > ${tmp}/bundle.js
+    cat ../play/public/css/*.css > ${tmp}/bundle.css
+    yuicompressor ${tmp}/bundle.css > ${tmp}/bundle.min.css
+    yuicompressor ${tmp}/bundle.js > ${tmp}/bundle.min.js
+    ../scripts/upload_static  ${tmp}/bundle.min.js -js "${prefix}-bundle.js"
+    ../scripts/upload_static ${tmp}/bundle.min.css -css "${prefix}-bundle.css"
     cp $HOME/.cillo/prod_web.conf ${tmp}
     echo "static.prefix=\"${prefix}\"" >> ${tmp}/prod_web.conf
     for server in "$server_ips"

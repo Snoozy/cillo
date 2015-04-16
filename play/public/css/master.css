@@ -2798,3 +2798,51 @@ a.login-link:hover {
         display: none;
     }
 }
+
+.form-group {
+    margin-bottom: 7px;
+}
+
+.board-avatar {
+    position: relative;
+}
+
+.profile-pic-selector {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 148px;
+}
+
+.board-avatar:hover .profile-pic-selector {
+    background: rgba(0, 0, 0, .6);
+}
+
+.profile-pic-camera {
+    font-size:25px;
+    color: #D3D3D3;
+    position:absolute;
+    text-shadow: 1px 1px #000000;
+    margin-top: 8px;
+    left: 10px;
+}
+
+.profile-pic-change-text {
+    color: #fdfdfd;
+    padding-left: 43px;
+    visibility: hidden;
+    line-height: 17px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+}
+
+.board-avatar:hover .profile-pic-change-text {
+    visibility: visible;
+}
+
+.profile-pic-selector:hover {
+    background: rgba(0, 0, 0, .9) !important;
+}

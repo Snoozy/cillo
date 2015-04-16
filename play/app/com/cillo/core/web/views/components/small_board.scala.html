@@ -3,19 +3,17 @@
 @import com.cillo.utils.Etc
 
 <div class="small-board-container">
-    <div class="board" style="cursor:pointer;" onclick="window.location.href = '/@board.name'">
-        <a href="/@board.name" style="display:inline;">
+    <a href="/@board.name" class="no-dec" style="display:inline;">
+        <div class="board" style="cursor:pointer;">
             <img class="avatar" style="margin-left:-58px;margin-right:7px;height:54px;width:54px;" alt="Board Picture" src="@(board.photo + "_prof")">
-        </a>
-        <div class="board-desc-wrapper">
-            <span>
-                <a href="/@board.name">
+            <div class="board-desc-wrapper">
+                <span>
                     <strong style="font-size:16px;" class="board-name-text">@board.name</strong>
-                </a>
-            </span>
-            <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
-            @Html(Etc.parseHTML(Etc.ellipsize(board.description, 46)))
-            </p>
+                </span>
+                <p class="description" style="word-wrap:break-word;margin-top:-2px;line-height:1.4;margin-right:7px;color:#000000;">
+                @Html(Etc.parseHTML(Etc.ellipsize(board.description, 46)))
+                </p>
+            </div>
         </div>
-    </div>
+    </a>
 </div>

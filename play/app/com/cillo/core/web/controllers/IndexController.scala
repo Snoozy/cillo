@@ -12,7 +12,7 @@ object IndexController extends Controller {
         if (Play.isDev) {
             Map[String, Seq[Int]]("adsf" -> Seq(1, 2, 1, 2, 1), "qwerty" -> Seq(1, 1, 1, 1, 1, 1, 1), "zxcv" -> Seq(1, 1, 1, 1, 1, 1))
         } else {
-            Map[String, Seq[Int]]("Cillo" -> Seq(2, 4), "Sports" -> Seq(1))
+            Map[String, Seq[Int]]("Cillo" -> Seq(2, 4), "Sports" -> Seq(1, 5, 6), "Entertainment" -> Seq(9, 7), "Art" -> Seq(8))
         }
     }
 

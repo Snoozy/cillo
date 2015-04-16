@@ -1,8 +1,8 @@
 package com.cillo.core.web
 
-import com.cillo.core.data.cache.Memcached
 import com.cillo.core.data.cache.Redis
 import com.cillo.core.web.controllers.EtcController
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor
 import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
 import play.api.Play.current
 import play.api.mvc.Results._
@@ -54,6 +54,22 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         if (fbId.isDefined && fbSecret.isDefined)
             FB.init(fbId.get, fbSecret.get)
     }
+
+}
+
+object HTMLCompressorFilter {
+
+    def apply() = new HTMLCompressorFilter({
+        val compressor = new HtmlCompressor()
+        if (Play.isDev) {
+            compressor.setPreserveLineBreaks(true)
+        }
+        compressor.setRemoveComments(true)
+        compressor.setRemoveIntertagSpaces(true)
+        compressor.setRemoveHttpProtocol(false)
+        compressor.setRemoveHttpsProtocol(false)
+        compressor
+    })
 
 }
 

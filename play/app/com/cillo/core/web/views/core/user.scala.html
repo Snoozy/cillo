@@ -10,7 +10,7 @@
 
 } {
     <body class="main-background@if(!visitor.isDefined){ logged-out}">
-        <div class="page" style="margin:0px;">
+        <div class="page" style="margin:0;">
             @components.masthead(visitor, searchBar = true)
             <div id="content">
                 <div class="container-fluid inner-container">
@@ -19,7 +19,19 @@
                             <div class="board-info">
                                 <div class="board-data-container">
                                     <div class="board-avatar">
-                                        <img src="@(user.photo + "_prof")" class="board-avatar-img">
+                                        <a class="fancybox" href="@user.photo">
+                                            <img src="@(user.photo + "_prof")" class="board-avatar-img">
+                                        </a>
+                                        @if(visitor.isDefined && user.user_id.get == visitor.get.user_id.get) {
+                                            <div class="profile-pic-selector">
+                                                <a class="profile-pic-change" href="/settings">
+                                                    <i class="glyphicon glyphicon-camera profile-pic-camera"></i>
+                                                    <div class="profile-pic-change-text">
+                                                        Update profile picture
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        }
                                     </div>
                                     <div class="board-name-container">
                                         <span class="main-board-name-text">
@@ -99,9 +111,6 @@
         } else {
             @components.logged_out()
         }
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        @Html(RemoteURLController.js)
 
         @components.fb_init()
 

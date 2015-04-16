@@ -231,15 +231,17 @@
                         @for(comment <- comments.take(3)) {
                             @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
                             @defining(CommentTree.getCommentNumChildren(comment.comment_id.get)) { n =>
-                                <div class="view-replies-wrapper">
-                                    <a href="/@board.name/posts/@post.post_id.get">
-                                        <div class="view-replies">
-                                            <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
-                                            <span class="view-replies-text">
-                                                View @n repl@if(n != 1) {ies} else {y}</span>
-                                        </div>
-                                    </a>
-                                </div>
+                                @if(n > 0) {
+                                    <div class="view-replies-wrapper">
+                                        <a href="/@board.name/posts/@post.post_id.get">
+                                            <div class="view-replies">
+                                                <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
+                                                <span class="view-replies-text">
+                                                    View @n repl@if(n != 1) {ies} else {y}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
                             }
                         }
                         </div>

@@ -16,7 +16,7 @@ object S3 {
 
     private final val bucketName = "cillo-static"
 
-    def uploadImg(img: Image, profile: Boolean = false): Option[String] = {
+    def uploadImg(img: Image, profile: Boolean = false, original: Option[Image] = None): Option[String] = {
         val aws_key = Play.current.configuration.getString("aws.key")
         val aws_secret = Play.current.configuration.getString("aws.secret")
         if (aws_key.isDefined && aws_secret.isDefined) {
@@ -27,7 +27,13 @@ object S3 {
                 val s3client = new AmazonS3Client(aws_creds)
                 val metadata = new ObjectMetadata()
                 metadata.setContentType("image/jpeg")
-                val normal = Image(img).constrain(2000, 2000).writer(Format.JPEG).toStream
+                val normal = {
+                    if (original.isDefined) {
+                        Image(original.get).constrain(2000, 2000).writer(Format.JPEG).toStream
+                    } else {
+                        Image(img).constrain(2000, 2000).writer(Format.JPEG).toStream
+                    }
+                }
                 if (!profile) {
                     val med = Image(img).constrain(550, 550).writer(Format.JPEG).toStream
                     s3client.putObject(new PutObjectRequest(bucketName, key + "_med", med, metadata))
@@ -50,21 +56,19 @@ object S3 {
 
     def upload(file: File, profile: Boolean = false, x: Option[Double] = None, y: Option[Double] = None,
                height: Option[Double] = None, width: Option[Double] = None): Option[String] = {
-        val img = {
-            if (x.isDefined && y.isDefined && width.isDefined && height.isDefined) {
-                val temp = Image(file)
-                val imgWidth = temp.width
-                val imgHeight = temp.height
-                if (x.get > imgWidth || width.get > imgWidth || y.get > imgHeight || height.get > imgHeight) {
-                    temp
-                } else {
-                    temp.trim(x.get.toInt, y.get.toInt, imgWidth - (width.get.toInt + x.get.toInt), imgHeight - (height.get.toInt + y.get.toInt))
-                }
+        if (x.isDefined && y.isDefined && width.isDefined && height.isDefined) {
+            val temp = Image(file)
+            val imgWidth = temp.width
+            val imgHeight = temp.height
+            if (x.get > imgWidth || width.get > imgWidth || y.get > imgHeight || height.get > imgHeight) {
+                uploadImg(Image(file), profile = profile)
             } else {
-                Image(file)
+                val img = temp.trim(x.get.toInt, y.get.toInt, imgWidth - (width.get.toInt + x.get.toInt), imgHeight - (height.get.toInt + y.get.toInt))
+                uploadImg(img, profile = profile, original = Some(temp))
             }
+        } else {
+            uploadImg(Image(file), profile = profile)
         }
-        uploadImg(img, profile = profile)
     }
 
     def uploadURL(url: String, profile: Boolean = false): Option[String] = {

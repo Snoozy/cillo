@@ -1,4 +1,4 @@
-(function ($) {
+$(document).ready(function() {
 
     function htmlWithBreaks(text) {
         var htmls = [];
@@ -588,8 +588,9 @@
         var url = $(this).data('share-url');
         FB.ui({
             method: 'share',
-            href: url,
+            href: url
         }, function(response){});
+        return false;
     });
 
     $(".fancybox").fancybox({
@@ -615,4 +616,4 @@
         }
     });
 
-})(jQuery);
+});

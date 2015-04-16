@@ -91,7 +91,7 @@ object Etc {
 
     def parseHTML(raw: String): String = {
         hashtagRegex.matcher(usernameRegex.matcher(linkRegex.matcher(newLineRegex.matcher(multiNewLineRegex.matcher(escapeHtml4(raw)).replaceAll("</p><p class=\"post-text\">")).replaceAll(Matcher.quoteReplacement("<br/>")))
-            .replaceAll("<a href=\"http://$1\" target=\"_blank\">$1</a>")).replaceAll("<a href=\"https://www.cillo.co/user/$1\" target=\"_blank\">@$1</a>"))
+            .replaceAll("<a href=\"http://$1\" target=\"_blank\">$1</a>").replace("http://http://", "http://")).replaceAll("<a href=\"https://www.cillo.co/user/$1\" target=\"_blank\">@$1</a>"))
             .replaceAll("<a href=\"https://www.cillo.co/$1\" target=\"_blank\">#$1</a>")
     }
 

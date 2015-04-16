@@ -12,11 +12,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-js", "--javascript", action="store_true", help="marks file as js file")
 parser.add_argument("-css", "--stylesheet", action="store_true", help="marks file as css file")
 parser.add_argument("path", help="path of file to be uploaded")
-parser.add_argument("prefix", help="prefix of all static files.")
+parser.add_argument("name", help="prefix of all static files.")
 args = parser.parse_args()
 
 path = args.path
-prefix = args.prefix
+name = args.name
 
 if not os.path.isabs(args.path):
     path = os.path.join(os.path.dirname(__file__), args.path)
@@ -33,7 +33,7 @@ def upload():
             if line.startswith("aws.secret"):
                 aws_secret = line.split("=", 1)[1].replace('"', '')
     if args.javascript:
-        optimize_js()
+        #optimize_js()
         content_type = 'application/javascript'
         headers = {'Content-Encoding' : 'gzip'}
     else:
@@ -42,16 +42,16 @@ def upload():
     conn = S3Connection(aws_key, aws_secret)
     bucket = conn.get_bucket('cillo-static')
     key = Key(bucket)
+    g = gzip.open('/tmp/' + ntpath.basename(path), 'wb', 5)
+    f = open(path, 'rb')
+    g.writelines(f)
+    g.close()
+    f.close()
     if args.javascript:
-        key.key = 'js/' + prefix + "-" + ntpath.basename(path)        
+        key.key = 'js/' + name
         key.set_contents_from_filename('/tmp/' + ntpath.basename(path), headers=headers)
     elif args.stylesheet:
-        g = gzip.open('/tmp/' + ntpath.basename(path), 'wb', 5)
-        f = open(path, 'rb')
-        g.writelines(f)
-        g.close()
-        f.close()
-        key.key = 'css/' + prefix + "-" + ntpath.basename(path)
+        key.key = 'css/' + name
         key.set_contents_from_filename('/tmp/' + ntpath.basename(path), headers=headers)
     else:
         key.key = ntpath.basename(path)
@@ -76,6 +76,8 @@ def optimize_js():
             ('output_format', 'text'),
             ('output_info', 'compiled_code'),
         ])
+
+        # Always use the following value for the Content-type header.
         headers = { "Content-type": "application/x-www-form-urlencoded" }
         conn = httplib.HTTPConnection('closure-compiler.appspot.com')
         conn.request('POST', '/compile', params, headers)
@@ -85,12 +87,6 @@ def optimize_js():
         g = gzip.open('/tmp/' + ntpath.basename(path), 'wb', 5)
         g.write(data)
         g.close()
-
-def test():
-    if args.javascript:
-        print args.path
-    if not args.javascript:
-        print "asdf"
 
 if __name__ == "__main__":
     upload()
