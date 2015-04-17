@@ -3,6 +3,7 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models._
 import com.cillo.utils.play.Auth.AuthAction
 import com.cillo.core.web.views.html.components
+import com.cillo.utils.Etc._
 import play.api.mvc._
 import play.api.libs.json.Json
 
@@ -22,7 +23,7 @@ object CommentController extends Controller {
                         if (comment_id.isDefined) {
                             val board = Board.find(post.get.board_id)
                             val ctn = CommentTreeNode(Comment.find(comment_id.get.toInt).get, Seq())
-                            Ok(Json.obj("status" -> "success", "item_html" -> Json.toJson(components.comment(ctn, user)(expanded = false, anon = board.get.privacy == 1).toString())))
+                            Ok(Json.obj("status" -> "success", "item_html" -> compressHtml(components.comment(ctn, user)(expanded = false, anon = board.get.privacy == 1).toString())))
                         } else {
                             BadRequest(Json.obj("error" -> "Request invalid."))
                         }

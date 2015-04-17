@@ -1111,6 +1111,7 @@ strong:hover {
 .post-like-count {
     font-size: 17px;
     font-weight: bold;
+    margin-right: 4px;
 }
 
 .post-link:link {
@@ -1656,6 +1657,7 @@ body {
 
 .navbar-user-avatar-wrapper {
     display: inline-block;
+    margin-right: 3px;
 }
 
 .navbar-user-avatar {
@@ -1894,8 +1896,8 @@ body {
 }
 
 .post-text-title {
-    margin-bottom: 5px;
-    margin-top: 2px;
+    margin-bottom: 7px;
+    margin-top: -2px;
 }
 
 .post-text-title-text {
@@ -2079,6 +2081,7 @@ strong {
 
 .repost-avatar-container {
     display: inline-block;
+    margin-right: 4px;
 }
 
 .repost-avatar {
@@ -2564,8 +2567,8 @@ a.login-link:hover {
     margin-bottom: 6px;
 }
 .trending-group-avatar {
-    width: 254px;
-    height: 254px;
+    width: 200px;
+    height: 200px;
     /*position: absolute;
     left: -30px;*/
 }
@@ -2579,7 +2582,7 @@ a.login-link:hover {
 .trending-group-wrapper {
     display: block;
     float: left;
-    width: 256px;
+    width: 203px;
     margin-left: 50px;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -2591,7 +2594,7 @@ a.login-link:hover {
 .trending-group-name {
     font-weight: bold;
     color: #262626;
-    font-size: 25px;
+    font-size: 22px;
 }
 
 .trending-group-content {
@@ -2613,8 +2616,8 @@ a.login-link:hover {
 }
 
 .trending-group-bottom {
-    height: 100px;
-    padding: 15px;
+    height: 105px;
+    padding: 10px 15px 15px;
     font: normal 13px Roboto,arial,sans-serif;
 }
 
@@ -2630,7 +2633,7 @@ a.login-link:hover {
 
 .fb-login-container {
     margin-bottom: 20px;
-    padding: 0px 40px;
+    padding: 0 40px;
 }
 
 .login-wrapper {
@@ -2845,4 +2848,12 @@ a.login-link:hover {
 
 .profile-pic-selector:hover {
     background: rgba(0, 0, 0, .9) !important;
+}
+
+li [class^="icon-"] {
+    width: 1.15em;
+}
+
+.post-text-container {
+    margin-top: -6px;
 }

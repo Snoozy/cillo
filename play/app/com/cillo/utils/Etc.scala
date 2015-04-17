@@ -5,10 +5,12 @@ import java.util.regex.{Matcher, Pattern}
 import org.apache.commons.lang3.StringEscapeUtils.escapeHtml4
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor
 import collection.JavaConversions._
 import scala.collection.JavaConversions.mapAsScalaMap
 
 import scala.collection.immutable.HashMap
+import scala.util.matching.Regex
 
 object Etc {
 
@@ -84,15 +86,53 @@ object Etc {
 
     private val multiNewLineRegex: Pattern = Pattern.compile("\n{2,}")
     private val newLineRegex: Pattern = Pattern.compile("\n", Pattern.LITERAL)
-    private val linkRegex: Pattern = Pattern.compile("(?i)\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))")
+    private val linkRegex = "(?i)\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))".r
     private val usernameRegex: Pattern = Pattern.compile("""(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z_]+[A-Za-z0-9_]+)""")
     private val hashtagRegex: Pattern = Pattern.compile("""(?<=^|(?<=[^a-zA-Z0-9-\.]))#([A-Za-z_]+[A-Za-z0-9_]+)""")
 
 
     def parseHTML(raw: String): String = {
-        hashtagRegex.matcher(usernameRegex.matcher(linkRegex.matcher(newLineRegex.matcher(multiNewLineRegex.matcher(escapeHtml4(raw)).replaceAll("</p><p class=\"post-text\">")).replaceAll(Matcher.quoteReplacement("<br/>")))
-            .replaceAll("<a href=\"http://$1\" target=\"_blank\">$1</a>").replace("http://http://", "http://")).replaceAll("<a href=\"https://www.cillo.co/user/$1\" target=\"_blank\">@$1</a>"))
-            .replaceAll("<a href=\"https://www.cillo.co/$1\" target=\"_blank\">#$1</a>")
+        parseSpecial(parseLinks(parseRaw(raw)))
+    }
+
+    def parseRaw(raw: String): String = {
+        newLineRegex.matcher(multiNewLineRegex.matcher(escapeHtml4(raw)).replaceAll("</p><p class=\"post-text\">")).replaceAll(Matcher.quoteReplacement("<br/>"))
+    }
+
+    def parseSpecial(raw: String): String = {
+        hashtagRegex.matcher(usernameRegex.matcher(raw).replaceAll("<a href=\"https://www.cillo.co/user/$1\" target=\"_blank\">@$1</a>")).replaceAll("<a href=\"https://www.cillo.co/$1\" target=\"_blank\">#$1</a>")
+    }
+
+    def parseLinks(raw: String): String = {
+        linkRegex.replaceAllIn(raw, m => linkParser(m))
+        /*val matcher = linkRegex.matcher(raw)
+        if (matcher.find()) {
+            val num = matcher.groupCount()
+            for ()
+            val groups = matcher.group(0)
+            val parsed = {
+                if (groups.substring(0, 7).indexOf(':') < 0) {
+                    "http://" + groups
+                } else {
+                    groups
+                }
+            }
+            "<a href=\"" + parsed + "\" target=\"_blank\">" + groups + "</a>"
+        } else {
+            raw
+        }*/
+    }
+
+    def linkParser(m: Regex.Match): String = {
+        val groups = m.group(0)
+        val parsed = {
+            if (groups.substring(0, 7).indexOf(':') < 0) {
+                "http://" + groups
+            } else {
+                groups
+            }
+        }
+        "<a href=\"" + parsed + "\" target=\"_blank\">" + groups + "</a>"
     }
 
     def serializeMap(m: Map[String, String]): String = {
@@ -104,6 +144,18 @@ object Etc {
         if (m.isDefined) {
             mapAsScalaMap(m.get).toMap
         } else Map()
+    }
+
+    val htmlCompressor = new HtmlCompressor()
+    htmlCompressor.setPreserveLineBreaks(false)
+    htmlCompressor.setRemoveComments(true)
+    htmlCompressor.setRemoveIntertagSpaces(true)
+    htmlCompressor.setRemoveHttpProtocol(false)
+    htmlCompressor.setRemoveHttpsProtocol(false)
+
+
+    def compressHtml(s: String) = {
+        htmlCompressor.compress(s)
     }
 
 }

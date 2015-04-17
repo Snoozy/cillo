@@ -61,9 +61,7 @@ object HTMLCompressorFilter {
 
     def apply() = new HTMLCompressorFilter({
         val compressor = new HtmlCompressor()
-        if (Play.isDev) {
-            compressor.setPreserveLineBreaks(true)
-        }
+        compressor.setPreserveLineBreaks(false)
         compressor.setRemoveComments(true)
         compressor.setRemoveIntertagSpaces(true)
         compressor.setRemoveHttpProtocol(false)

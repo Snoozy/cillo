@@ -1,8 +1,8 @@
 package com.cillo.core.web.controllers
 
 import com.cillo.core.data.db.models._
-import com.cillo.core.web.views.html.core
 import com.cillo.utils.play.Auth.AuthAction
+import com.cillo.utils.Etc._
 import play.api.mvc._
 import play.api.libs.json.Json
 
@@ -20,7 +20,7 @@ object PageController extends Controller {
                         User.getFeed(user.get.user_id.get)
                     }
                 }
-                Ok(Json.obj("item_html" -> Post.toHTMLWIthUser(posts, user)))
+                Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))
             } else if (context.get == "user") {
                 val afterPost = request.getQueryString("after")
                 val userId = request.getQueryString("user")
@@ -33,7 +33,7 @@ object PageController extends Controller {
                             User.getPosts(describeUser.get.user_id.get)
                         }
                     }
-                    Ok(Json.obj("item_html" -> Post.toHTMLWIthUser(posts, user)))
+                    Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))
                 } else
                     BadRequest(Json.obj("error" -> "User does not exist."))
             } else if (context.get == "board") {
@@ -48,7 +48,7 @@ object PageController extends Controller {
                             Board.getFeed(board.get.board_id.get)
                         }
                     }
-                    Ok(Json.obj("item_html" -> Post.toHTMLWIthUser(posts, user)))
+                    Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))
                 } else
                     BadRequest(Json.obj("error" -> "Board does not exist."))
 

@@ -40,7 +40,10 @@ object PostVote {
             DB.withConnection { implicit connection =>
                 if (value == 1 && (user_id != post.get.user_id)) {
                     SQL("UPDATE user SET reputation = reputation + 20 WHERE user_id = {user}")
-                        .on('user -> user_id).executeUpdate()
+                        .on('user -> post.get.user_id).executeUpdate()
+                } else if (value == -1 && (user_id != post.get.user_id)) {
+                    SQL("UPDATE user SET reputation = reputation - 20 WHERE user_id = {user}")
+                        .on('user -> post.get.user_id).executeUpdate()
                 }
                 val time = System.currentTimeMillis()
                 SQL("INSERT INTO post_vote (post_id, user_id, value, time) VALUES ({post_id}, {user_id}, {value}, {time})")
@@ -49,15 +52,15 @@ object PostVote {
                     .on('value -> value, 'post_id -> post_id).executeUpdate()
             }
             true
-        } else if (voteExists.isDefined) {
+        } else if (voteExists.isDefined && (value == -1 || value == 1) && post.isDefined) {
             if (voteExists.get.value != value) {
                 DB.withConnection { implicit connection =>
                     if (value == 1 && (user_id != post.get.user_id)) {
-                        SQL("UPDATE user SET reputation = reputation + 20 WHERE user_id = {user}")
-                            .on('user -> user_id).executeUpdate()
+                        SQL("UPDATE user SET reputation = reputation + 40 WHERE user_id = {user}")
+                            .on('user -> post.get.user_id).executeUpdate()
                     } else if (value == -1 && (user_id != post.get.user_id)) {
-                        SQL("UPDATE user SET reputation = reputation - 20 WHERE user_id = {user}")
-                            .on('user -> user_id).executeUpdate()
+                        SQL("UPDATE user SET reputation = reputation - 40 WHERE user_id = {user}")
+                            .on('user -> post.get.user_id).executeUpdate()
                     }
                     val time = System.currentTimeMillis()
                     SQL("UPDATE post_vote SET value = {value}, time = {time} WHERE post_id = {post_id} AND user_id = {user_id}")

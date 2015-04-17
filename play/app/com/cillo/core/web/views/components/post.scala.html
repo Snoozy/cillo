@@ -53,7 +53,7 @@
                 <div class="user-info">
                     <label class="u-info-wrapper">
                         @if(board.privacy == 0) {
-                            <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor no-dec" style="margin-left : 0 px ;">
+                            <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor no-dec" style="margin-left:0px;">
                                 <strong class="hover-blue user-name-text">@poster.name</strong>
                             </a>
                         } else {
@@ -166,7 +166,7 @@
                 <span class="post-like-count">@post.votes</span>
                 <span class="p-action like">
                     <a class="p-action-anchor action-link-like @if(vote.isDefined && vote.get.value == 1) {liked}" href="#" style="margin-right:0px;">
-                        <i class="icon-upvote" style="margin-right:-5px;"></i>
+                        <i class="icon-upvote" style=""></i>
                         <span class="color-blue like-text">Upvote</span>
                     </a>
                 </span>
@@ -181,7 +181,7 @@
                 <span class="p-action comment">
                     <span class="bullet"> · </span>
                     <a class="p-action-anchor action-link-comment" href="#">
-                        <i class="icon-comments-alt" style="margin-right:-5px;"></i>
+                        <i class="icon-comments-alt" style=""></i>
                         <span class="color-blue comment-text">Comment</span>
                     </a>
                 </span>
@@ -190,7 +190,7 @@
                         <span class="p-action repost">
                             <span class="bullet"> · </span>
                             <a href="#" class="p-action-anchor action-link-repost" style="margin-left: 2px;">
-                                <i class="glyphicon glyphicon-retweet@if(reposted){ color-green}"></i>
+                                <i class="glyphicon glyphicon-retweet@if(reposted){ color-green}" style="margin-right:4px;"></i>
                                 <span class="color-blue repost-text@if(reposted){ color-green}">Repost@if(reposted){ed}</span>
                             </a>
                         </span>
@@ -200,7 +200,7 @@
                     <span class="bullet"> · </span>
                     <a class="p-action-anchor action-link-share" data-share-url="https://www.cillo.co/@board.name/posts/@post.post_id.get" href="#">
                         <i class="icon-fb-share"></i>
-                        <span class="color-blue comment-text">Share</span>
+                        <span class="color-blue comment-text" style="margin-left:5px;">Share</span>
                     </a>
                 </span>
             </div>

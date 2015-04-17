@@ -15,7 +15,10 @@ object RemoteURLController extends Controller {
             case false =>
                 val files = Play.getFile("public/js")
                 files.list.toList.sortWith(_ < _).map { s =>
-                    "<script type=\"text/javascript\" src=\"/assets/js/" + s + "\"></script>"
+                    if (!s.startsWith(".")) {
+                        "<script type=\"text/javascript\" src=\"/assets/js/" + s + "\"></script>"
+                    } else
+                        ""
                 }.mkString("\n")
         }
     }
@@ -26,7 +29,10 @@ object RemoteURLController extends Controller {
             case false =>
                 val files = Play.getFile("public/css")
                 files.list.map { s =>
-                    "<link rel=\"stylesheet\" href=\"/assets/css/" + s + "\">"
+                    if (!s.startsWith(".")) {
+                        "<link rel=\"stylesheet\" href=\"/assets/css/" + s + "\">"
+                    } else
+                        ""
                 }.mkString("\n")
         }
     }

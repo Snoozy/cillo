@@ -3,6 +3,7 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html.components
 import com.cillo.core.web.views.html.core
+import com.cillo.utils.Etc._
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -53,7 +54,7 @@ object PostController extends Controller {
                             }
                             val newPost = Post.createSimplePost(user.user_id.get, None, comment.getOrElse(""), board.get.board_id.get, repost_id)
                             if (newPost.isDefined) {
-                                Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user))().toString())))
+                                Ok(Json.obj("item_html" -> compressHtml(components.post(Post.find(newPost.get.toInt).get, Some(user))().toString())))
                             } else {
                                 BadRequest("Invalid parameters.")
                             }
@@ -137,7 +138,7 @@ object PostController extends Controller {
                             }
                         }
                         if (newPost.isDefined)
-                            Ok(Json.obj("item_html" -> Json.toJson(components.post(Post.find(newPost.get.toInt).get, Some(user))().toString())))
+                            Ok(Json.obj("item_html" -> compressHtml(components.post(Post.find(newPost.get.toInt).get, Some(user))().toString())))
                         else
                             BadRequest("Invalid request.")
                     } else {

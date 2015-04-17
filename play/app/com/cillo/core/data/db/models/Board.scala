@@ -105,9 +105,9 @@ object Board {
         true
     }
 
-    def getTrendingBoards: Seq[Board] = {
+    def getTrendingBoards(limit: Int = 10): Seq[Board] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM `board` WHERE privacy = 0 ORDER BY followers DESC LIMIT 20").as(boardParser *)
+            SQL("SELECT * FROM `board` WHERE privacy = 0 ORDER BY followers DESC LIMIT {limit}").on('limit -> limit).as(boardParser *)
         }
     }
 
