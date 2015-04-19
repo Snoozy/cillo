@@ -2857,3 +2857,21 @@ li [class^="icon-"] {
 .post-text-container {
     margin-top: -6px;
 }
+
+.board-name-span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 170px;
+    display: inline-block;
+}
+
+.autocomplete-avatar {
+    height: 32px;
+    width: 32px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-right: 3px;
+    display: inline-block;
+}

@@ -28,11 +28,18 @@
 
     $(document).ready(function() {
 
-        var boards = [@if(boards.nonEmpty){"@boards.head.name"@for(g <- boards.tail){,"@g.name"}}];
+        var boards = [@if(boards.nonEmpty){{value:"@boards.head.name",image:"@boards.head.photo"}@for(b <- boards.tail){,{value:"@b.name",image:"@b.photo"}}}];
 
         $('#repost-autocomplete').autocomplete({
             minLength: 0,
-            source: boards
+            source: boards,
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                        .append('<a><img src=\"' + item.image + '\" class="autocomplete-avatar">' + item.value + '</a>')
+                        .appendTo(ul);
+                };
+            }
         });
 
         $('#repost-autocomplete').focus(function() {

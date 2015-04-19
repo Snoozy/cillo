@@ -78,7 +78,7 @@ object UserController extends Controller {
                     val password = form.get("password").map(_.head)
                     val email = form.get("email").map(_.head)
                     val bio = form.get("bio").map(_.head)
-                    if (username.isDefined && username.get.length < 15 && name.isDefined && name.get.length < 20
+                    if (username.isDefined && username.get.length < 25 && name.isDefined && name.get.length < 20
                         && password.isDefined && email.isDefined) {
                         val usernameExists = User.find(username.get)
                         if (usernameExists.isDefined) {
@@ -166,7 +166,7 @@ object UserController extends Controller {
                     val after = request.getQueryString("after")
                     val describingUser = userExists.get
                     val posts = {
-                        if (after.isDefined) {
+                        if (after.isDefined && after.get != "") {
                             User.getPostsPaged(describingUser.user_id.get, after.get.toInt)
                         } else {
                             User.getPosts(describingUser.user_id.get)

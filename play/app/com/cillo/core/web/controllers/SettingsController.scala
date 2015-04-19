@@ -47,11 +47,17 @@ object SettingsController extends Controller {
                             if (file.isDefined) {
                                 val pic = file.get.ref.file
                                 if (pic.length() < 3145728) {
-                                    val x = res.get("picture-x").map(_.head.toDouble)
-                                    val y = res.get("picture-y").map(_.head.toDouble)
-                                    val width = res.get("picture-width").map(_.head.toDouble)
-                                    val height = res.get("picture-height").map(_.head.toDouble)
-                                    val id = S3.upload(pic, profile = true, x = x, y = y, width = width, height = height)
+                                    val xForm = res.get("picture-x").map(_.head)
+                                    val yForm = res.get("picture-y").map(_.head)
+                                    val widthForm = res.get("picture-width").map(_.head)
+                                    val heightForm = res.get("picture-height").map(_.head)
+                                    val id = {
+                                        if (xForm.isDefined && yForm.isDefined && widthForm.isDefined && heightForm.isDefined) {
+                                            S3.upload(pic, profile = true, x = xForm.map(_.toDouble), y = yForm.map(_.toDouble), width = widthForm.map(_.toDouble), height = heightForm.map(_.toDouble))
+                                        } else {
+                                            S3.upload(pic, profile = true)
+                                        }
+                                    }
                                     if (id.isDefined) {
                                         val mediaID = Media.create(0, id.get)
                                         if (mediaID.isDefined) {

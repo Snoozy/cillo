@@ -29,9 +29,7 @@ if [ -e "$package_path" ]; then
             mv ${filename}/ cillo/
             chmod 755 ./cillo/bin/cillo
             rm cillo-api.zip
-        '"
-        ssh ubuntu@${server} "eval sudo kill \$(ps aux | grep [c]illo | awk '{print \$2}')"
-        ssh ubuntu@${server} bash -c "'
+            sudo kill \$(head -n 1 /home/ubuntu/cillo-backup/RUNNING_PID)
             sudo ./cillo/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_api.conf -Dhttp.port=80 &
             disown
         '"

@@ -17,10 +17,10 @@ object AuthController extends Controller {
             case None =>
                 val body: AnyContent = request.body
                 body.asFormUrlEncoded.map { form =>
-                    val username = form.get("username").map(_.head)
+                    val email = form.get("email").map(_.head)
                     val password = form.get("password").map(_.head)
-                    if (username.isDefined && password.isDefined)
-                        attemptLogin(username.get, password.get)
+                    if (email.isDefined && password.isDefined)
+                        attemptLogin(email.get, password.get)
                     else
                         BadRequest(Json.obj("error" -> "Request format invalid."))
                 }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
@@ -36,8 +36,8 @@ object AuthController extends Controller {
         }
     }
 
-    private def attemptLogin(username: String, password: String): Result = {
-        val token = logInSession(username, password)
+    private def attemptLogin(email: String, password: String): Result = {
+        val token = logInSession(email, password)
         if (!token.isDefined)
             BadRequest(Json.obj("error" -> "Invalid Credentials."))
         else {

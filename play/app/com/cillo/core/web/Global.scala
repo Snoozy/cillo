@@ -3,7 +3,7 @@ package com.cillo.core.web
 import com.cillo.core.data.cache.Redis
 import com.cillo.core.web.controllers.EtcController
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor
-import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
+import com.mohiva.play.htmlcompressor._
 import play.api.Play.current
 import play.api.mvc.Results._
 import play.api.mvc._
