@@ -616,4 +616,33 @@ $(document).ready(function() {
         }
     });
 
+    if ($('body').hasClass('context-home')) {
+        $('.context-home .posts').neverending();
+    } else if ($('body').hasClass('context-user')) {
+        $('.context-user ol.posts').neverending({
+            context: 'user',
+            entity_id: $('body').data('user-id')
+        });
+    } else if ($('body').hasClass('context-board')){
+        $('.context-board ol.posts').neverending({
+            context: 'board',
+            entity_id: $('body').data('board-id')
+        });
+    }
+
+    $('#post-autocomplete').focus(function() {
+        $(this).autocomplete("search", "");
+        $(this).css('border-bottom-left-radius', '0');
+        $(this).css('border-bottom-right-radius', '0');
+    });
+
+    $('#post-autocomplete').blur(function() {
+        $(this).css('border-bottom-left-radius', '3px');
+        $(this).css('border-bottom-right-radius', '3px');
+    });
+
+    $('#repost-autocomplete').focus(function() {
+        $(this).autocomplete("search", "");
+    });
+
 });

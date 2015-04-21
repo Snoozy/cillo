@@ -10,8 +10,8 @@
                 <span class="board-name-span">
                     <strong style="font-size:16px;" class="board-name-text">@board.name</strong>
                 </span>
-                <p class="description" style="word-wrap:break-word;margin-top:-2px;line-height:1.4;margin-right:7px;color:#000000;">
-                @Html(Etc.parseHTML(Etc.ellipsize(board.description, 46)))
+                <p class="description" style="word-wrap:break-word;margin-top:-7px;line-height:1.4;margin-right:7px;color:#000000;">
+                    @Html(Etc.parseHTML(Etc.ellipsize(board.description, 46)))
                 </p>
             </div>
         </div>

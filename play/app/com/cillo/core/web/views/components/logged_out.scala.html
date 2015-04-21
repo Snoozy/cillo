@@ -71,7 +71,7 @@
                             for (i = 0; i < r.data.length; i++) {
                                 var p = r.data[i];
                                 if (p.permission === "email" && p.status === "granted") {
-                                    window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
+                                    window.location.href = '/connect/facebook?fb_token=' + response.authResponse.accessToken
                                 } else if (p.permission === "email" && p.status === "declined") {
                                     $('.fb-signup-button').tooltip({'title' : 'Oops! We need your email! Please try again.'});
                                     $('.fb-signup-button').tooltip('show');
@@ -88,7 +88,7 @@
                             for (i = 0; i < r.data.length; i++) {
                                 var p = r.data[i];
                                 if (p.permission === "email" && p.status === "granted") {
-                                    window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
+                                    window.location.href = '/connect/facebook?fb_token=' + response.authResponse.accessToken
                                 } else if (p.permission === "email" && p.status === "declined") {
                                     $('.fb-signup-button').tooltip({'title' : 'Oops! We need your email! Please try again.'});
                                     $('.fb-signup-button').tooltip('show');

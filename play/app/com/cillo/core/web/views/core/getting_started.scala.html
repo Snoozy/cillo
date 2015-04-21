@@ -11,9 +11,8 @@
             padding: 4px 6px;
             font-size: 14px;
             font-weight: bold;
-            float:right;
-            width:80px;
-            height: 29px;
+            width: 175px;
+            height: 32px;
         }
 
         .btn-text {
@@ -31,12 +30,26 @@
             font-size: 15px;
         }
 
+        .trending-group-descr {
+            margin-top: 0;
+        }
+
+        .trending-group-bottom {
+            height: 93px;
+            padding-bottom:0;
+        }
+
         .trending-group-name {
-            font-size: 22px;
+            font-size: 18px;
+        }
+
+        .follow-container {
+            padding-bottom: 15px;
+            text-align:center;
         }
 
         .notfollowing .unfollow-text {
-            display: block;
+            display: none;
         }
     </style>
 }{
@@ -73,11 +86,6 @@
                                                                 </a>
                                                             </div>
                                                             <div class="trending-group-bottom">
-                                                                <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.board_id.get">
-                                                                    <span class="btn-text follow-text">Follow</span>
-                                                                    <span class="btn-text following-text">Following</span>
-                                                                    <span class="btn-text unfollow-text">Unfollow</span>
-                                                                </button>
                                                                 <div class="trending-group-header">
                                                                     <a href="/@b.get.name" class="">
                                                                         <span class="trending-group-name">
@@ -87,9 +95,16 @@
                                                                 </div>
                                                                 <div class="trending-group-descr">
                                                                     <span class="trending-group-descr-content">
-                                                                    @Etc.ellipsize(b.get.description, 52)
+                                                                    @Etc.ellipsize(b.get.description, 60)
                                                                     </span>
                                                                 </div>
+                                                            </div>
+                                                            <div class="follow-container">
+                                                                <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.board_id.get">
+                                                                    <span class="btn-text follow-text">Follow</span>
+                                                                    <span class="btn-text following-text">Following</span>
+                                                                    <span class="btn-text unfollow-text">Unfollow</span>
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>

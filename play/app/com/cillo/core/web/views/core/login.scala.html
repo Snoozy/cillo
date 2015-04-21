@@ -26,7 +26,7 @@
                 e.preventDefault();
                 FB.login(function(response) {
                     if (response.status === 'connected') {
-                        window.location.href = '/facebook/auth?fb_token=' + response.authResponse.accessToken
+                        window.location.href = '/connect/facebook?fb_token=' + response.authResponse.accessToken
                     }
                 }, {scope: 'email,public_profile,user_friends'});
             });

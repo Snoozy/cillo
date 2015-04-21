@@ -7,6 +7,7 @@ import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.core.data.db.models.Post.postParser
 import com.cillo.utils.Etc.makeDigest
 import play.api.Play.current
+import com.cillo.core.data.Constants
 import org.apache.commons.lang3.RandomStringUtils
 import play.api.db._
 import play.api.libs.json._
@@ -112,10 +113,10 @@ object User {
         val raw = s.replace(" ", "")
         val i = {
             val t = raw.indexOf('@')
-            if (t > 0 && t < 16) {
+            if (t > 0 && t < (Constants.MaxUsernameLength + 1)) {
                 t
             } else {
-                15
+                Constants.MaxUsernameLength
             }
         }
         val parsed = raw.substring(0, i)
@@ -123,14 +124,14 @@ object User {
             var count = 0
             val rand = "%04d".format(scala.util.Random.nextInt(1000))
             var check = parsed
-            if (check.length > 14) {
-                check = check.substring(0, 11)
+            if (check.length > (Constants.MaxUsernameLength - 1)) {
+                check = check.substring(0, Constants.MaxUsernameLength - 4)
             }
             check = check + rand
             while (!checkUsername(check)) {
                 if (count > 4)
                     return None
-                check = check.substring(0, 11) + "%04d".format(scala.util.Random.nextInt(1000))
+                check = check.substring(0, Constants.MaxUsernameLength - 4) + "%04d".format(scala.util.Random.nextInt(1000))
                 count += 1
             }
             Some(check)
@@ -284,19 +285,9 @@ object User {
         }
     }
 
-    def toJson(user: User, self: Option[User] = None, email: Boolean = false): JsValue = {
+    def toJson(user: User, self: Option[User] = None, email: Boolean = false, anon: Boolean = false): JsValue = {
         var newJson = Json.obj()
-        if (email)
-            newJson = newJson.as[JsObject] +
-                ("name" -> Json.toJson(user.name)) +
-                ("username" -> Json.toJson(user.username)) +
-                ("user_id" -> Json.toJson(user.user_id)) +
-                ("reputation" -> Json.toJson(user.reputation)) +
-                ("photo" -> Json.toJson(user.photo)) +
-                ("bio" -> Json.toJson(user.bio)) +
-                ("email" -> Json.toJson(user.email)) +
-                ("board_count" -> Json.toJson(User.getBoardIDs(user.user_id.get).size))
-        else
+        if (!anon)
             newJson = newJson.as[JsObject] +
                 ("name" -> Json.toJson(user.name)) +
                 ("username" -> Json.toJson(user.username)) +
@@ -305,6 +296,20 @@ object User {
                 ("photo" -> Json.toJson(user.photo)) +
                 ("bio" -> Json.toJson(user.bio)) +
                 ("board_count" -> Json.toJson(User.getBoardIDs(user.user_id.get).size))
+        else {
+            newJson = newJson.as[JsObject] +
+                ("name" -> Json.toJson("Anonymous")) +
+                ("username" -> Json.toJson("")) +
+                ("user_id" -> Json.toJson("")) +
+                ("reputation" -> Json.toJson("")) +
+                ("photo" -> Json.toJson("https://static.cillo.co/image/anon")) +
+                ("bio" -> Json.toJson("")) +
+                ("board_count" -> Json.toJson(0))
+
+        }
+        if (email) {
+            newJson = newJson.as[JsObject] + ("email" -> Json.toJson(user.email))
+        }
         if (self.isDefined && user.user_id.get == self.get.user_id.get)
             newJson = newJson.as[JsObject] + ("self" -> Json.toJson(true))
         else

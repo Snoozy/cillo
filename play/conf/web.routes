@@ -17,7 +17,7 @@ GET         /gettingstarted                com.cillo.core.web.controllers.Gettin
 GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
 GET         /a/neverending                 com.cillo.core.web.controllers.PageController.neverending
 GET         /a/check_email                 com.cillo.core.web.controllers.UserController.checkEmail
-GET         /facebook/auth                 com.cillo.core.web.controllers.SocialController.facebookAuth
+GET         /connect/facebook              com.cillo.core.web.controllers.SocialController.facebookAuth
 
 GET         /debug                         com.cillo.core.web.controllers.EtcController.debug
 

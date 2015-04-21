@@ -3,6 +3,7 @@ package com.cillo.core.api.controllers
 import com.cillo.core.data.db.models.{Comment, Board, Post, User}
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.{JsValue, Json}
+import com.cillo.core.data.Constants
 import play.api.mvc._
 
 /**
@@ -78,7 +79,7 @@ object UserController extends Controller {
                     val password = form.get("password").map(_.head)
                     val email = form.get("email").map(_.head)
                     val bio = form.get("bio").map(_.head)
-                    if (username.isDefined && username.get.length < 25 && name.isDefined && name.get.length < 20
+                    if (username.isDefined && username.get.length < Constants.MaxUsernameLength && name.isDefined && name.get.length < Constants.MaxNameLength
                         && password.isDefined && email.isDefined) {
                         val usernameExists = User.find(username.get)
                         if (usernameExists.isDefined) {

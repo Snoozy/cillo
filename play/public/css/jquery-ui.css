@@ -91,7 +91,7 @@
 	top: 0;
 	left: 0;
 	cursor: default;
-	max-height: 350px;
+	max-height: 300px;
 	overflow-y: auto;
 	overflow-x: hidden;
 }

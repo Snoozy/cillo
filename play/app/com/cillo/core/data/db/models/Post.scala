@@ -142,12 +142,13 @@ object Post {
                 val reposter = User.find(post.user_id)
                 val repost_board = Board.find(post.board_id)
                 if (board.isDefined && poster.isDefined && reposter.isDefined && repost_board.isDefined) {
+                    val anon = repost_board.get.privacy == 1
                     newPost = newPost.as[JsObject] +
                         ("repost" -> Post.toJsonSingle(reposted_post.get, user)) +
                         ("content" -> Json.toJson(post.data)) +
                         ("title" -> Json.toJson(post.title)) +
                         ("board" -> Board.toJson(repost_board.get)) +
-                        ("user" -> User.toJson(reposter.get, self = user)) +
+                        ("user" -> User.toJson(reposter.get, self = user, anon = anon)) +
                         ("time" -> Json.toJson(post.time)) +
                         ("votes" -> Json.toJson(post.votes)) +
                         ("comment_count" -> Json.toJson(post.comment_count))
@@ -157,11 +158,12 @@ object Post {
             val board = Board.find(post.board_id)
             val poster = User.find(post.user_id)
             if (board.isDefined && poster.isDefined) {
+                val anon = board.get.privacy == 1
                 newPost = newPost.as[JsObject] +
                     ("content" -> Json.toJson(post.data)) +
                     ("title" -> Json.toJson(post.title)) +
                     ("board" -> Board.toJson(board.get)) +
-                    ("user" -> User.toJson(poster.get, self = user)) +
+                    ("user" -> User.toJson(poster.get, self = user, anon = anon)) +
                     ("time" -> Json.toJson(post.time)) +
                     ("votes" -> Json.toJson(post.votes)) +
                     ("comment_count" -> Json.toJson(post.comment_count))

@@ -12,7 +12,7 @@
 @components.base(board.name + " | Cillo") {
 
 } {
-    <body class="main-background@if(!user.isDefined){ logged-out}">
+    <body class="main-background context-board@if(!user.isDefined){ logged-out}" data-board-id="@board.board_id.get">
         <div class="page" style="margin:0;">
             @components.masthead(user, searchBar = true)
             <div id="content">
@@ -120,14 +120,5 @@
 
         @components.fb_init()
 
-        <script>
-
-            $(function() {
-                $('ol.posts').neverending({
-                    context: 'board',
-                    entity_id: @board.board_id.get
-                });
-            });
-        </script>
     </body>
 }

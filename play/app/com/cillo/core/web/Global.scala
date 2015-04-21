@@ -3,6 +3,7 @@ package com.cillo.core.web
 import com.cillo.core.data.cache.Redis
 import com.cillo.core.web.controllers.EtcController
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor
+import com.googlecode.htmlcompressor.compressor.ClosureJavaScriptCompressor
 import com.mohiva.play.htmlcompressor._
 import play.api.Play.current
 import play.api.mvc.Results._
@@ -61,6 +62,8 @@ object HTMLCompressorFilter {
 
     def apply() = new HTMLCompressorFilter({
         val compressor = new HtmlCompressor()
+        compressor.setCompressCss(true)
+        compressor.setCompressJavaScript(true)
         compressor.setPreserveLineBreaks(false)
         compressor.setRemoveComments(true)
         compressor.setRemoveIntertagSpaces(true)

@@ -14,7 +14,7 @@ object SettingController extends Controller{
                 val body: AnyContent = request.body
                 body.asFormUrlEncoded.map { form =>
                     val name = form.get("name").map(_.head).getOrElse(user.get.name)
-                    val username = form.get("username").map(_.head).getOrElse(user.get.bio)
+                    val username = form.get("username").map(_.head).getOrElse(user.get.username)
                     val bio = form.get("bio").map(_.head).getOrElse(user.get.bio)
                     val pic = {
                         try {

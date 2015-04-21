@@ -1,14 +1,12 @@
 @(posts: Seq[com.cillo.core.data.db.models.Post], user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board])
 
-@import com.cillo.core.web.controllers.RemoteURLController
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.data.db.models._
-@import com.cillo.utils.Etc
 
 @components.base("Cillo"){
 
 }{
-    <body class="main-background">
+    <body class="main-background context-home">
         <div class="page" style="margin: 0px;">
             @components.masthead(Some(user), searchBar = true)
             <div id="content">
@@ -49,28 +47,6 @@
         @components.repost_modal(User.getBoards(user.user_id.get))
 
         @components.fb_init()
-
-        <script type="text/javascript" charset="utf-8">
-            var ie = (function(){
-
-                var undef,
-                    v = 3,
-                    div = document.createElement('div'),
-                    all = div.getElementsByTagName('i');
-
-                while (
-                    div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
-                    all[0]
-                );
-
-                return v > 4 ? v : undef;
-
-            }());
-
-            $(function() {
-                $('.posts').neverending();
-            });
-        </script>
 
     </body>
 }

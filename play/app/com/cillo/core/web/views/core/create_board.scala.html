@@ -4,35 +4,18 @@
 
 @components.base("Create a board | Cillo") {
     <script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
+        $(document).ready(function(){
 
-    $('.btn.btn-success').click(function(event) {
-    event.preventDefault();
-    if ($(this).hasClass('disabled'))
-    return false;
-    if ($('.name-input').val() === "")
-    return false;
-    $('form').submit();
-    });
+            $('.btn.create-board').click(function(event) {
+                event.preventDefault();
+                if ($(this).hasClass('disabled'))
+                    return false;
+                if ($('.name-input').val() === "")
+                    return false;
+                $('form').submit();
+            });
 
-    $('.active-ph').blur(function() {
-    if ($(this).val()) {
-    $(this).addClass('filled');
-    } else if (!$(this).val()) {
-    $(this).removeClass('filled');
-    }
-    });
-
-    $('.active-ph').each(function() {
-    if ($(this).val()) {
-    $(this).addClass('filled');
-    } else if (!$(this).val()) {
-    $(this).removeClass('filled');
-    }
-    });
-
-    });
-
+        });
     </script>
 
 } {
@@ -76,7 +59,7 @@
                             </label>
                         </div>
                         <div class="register-form-button">
-                            <button type="submit" class="btn btn-primary" style="width:130px;">Create Board</button>
+                            <button type="submit" class="btn btn-primary create-board" style="width:130px;">Create Board</button>
                         </div>
                     </form>
                 </div>

@@ -9,7 +9,7 @@
 @components.base(user.name + " | Cillo") {
 
 } {
-    <body class="main-background@if(!visitor.isDefined){ logged-out}">
+    <body class="main-background context-user@if(!visitor.isDefined){ logged-out}" data-user-id="@user.user_id.get">
         <div class="page" style="margin:0;">
             @components.masthead(visitor, searchBar = true)
             <div id="content">
@@ -116,10 +116,7 @@
 
         <script>
             $(function() {
-                $('ol.posts').neverending({
-                    context: 'user',
-                    entity_id: @user.user_id.get
-                });
+
             });
         </script>
     </body>

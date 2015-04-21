@@ -5,6 +5,7 @@ import java.util.UUID
 import com.cillo.core.data.aws.S3
 import com.cillo.core.data.db.models.Media
 import com.cillo.utils.play.Auth.AuthAction
+import com.cillo.core.data.Constants
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -28,7 +29,7 @@ object MediaController extends Controller {
                 if (multiBody.isDefined) {
                     multiBody.get.file("media").map { media =>
                         val mediaFile = media.ref.file
-                        if (mediaFile.length() > 3145728)
+                        if (mediaFile.length() > Constants.MaxMediaSize)
                             BadRequest(Json.obj("error" -> "Media upload too large. Code: 101"))
                         else {
                             val id = S3.upload(mediaFile)

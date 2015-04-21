@@ -3,13 +3,10 @@ package com.cillo.utils
 import java.util.regex.{Matcher, Pattern}
 
 import org.apache.commons.lang3.StringEscapeUtils.escapeHtml4
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor
 import collection.JavaConversions._
 import scala.collection.JavaConversions.mapAsScalaMap
 
-import scala.collection.immutable.HashMap
 import scala.util.matching.Regex
 
 object Etc {
