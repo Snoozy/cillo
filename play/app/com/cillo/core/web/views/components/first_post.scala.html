@@ -18,10 +18,15 @@
             <span class="glyphicon glyphicon-camera"></span>
             <input type="file" name="picture upload" id="picture_file_upload" class="file-input" tabindex="-1" accept="image/x-png, image/gif, image/jpeg" multiple>
         </div>
-        <button class="btn btn-primary post-submit displaynone" style="margin-left:13%;margin-top:8px;">Post</button>
+        <button class="btn btn-primary post-submit displaynone" style="margin-top:14px;">Post</button>
         <div class="post-board-wrapper displaynone">
-            <input class="post-board form-control" id="post-autocomplete" placeholder="Board" type="text" autocomplete="off" @if(boardPage){value="@boards.head.name" disabled}>
             <span class="post-board-text displaynone">on Board:</span>
+            <select class="chosen-select post-board form-control" id="post-board-select" data-placeholder="Select a Board" style="width:300px;margin-top:6px;">
+                <option></option>
+                @for(b <- boards) {
+                    <option value="@(b.photo + "_prof")">@b.name</option>
+                }
+            </select>
         </div>
         @if(user.admin) {
         <div class="post-board-as-user-container displaynone">
@@ -45,7 +50,8 @@
         <script type="text/javascript" charset="utf-8">
 
             $(document).ready(function() {
-
+                $('#post-board-select').chosen();
+/*
                 var boards = [@if(boards.nonEmpty){{value:"@boards.head.name",image:"@boards.head.photo"}@for(b <- boards.tail){,{value:"@b.name",image:"@b.photo"}}}];
 
                 $('#post-autocomplete').autocomplete({
@@ -64,7 +70,7 @@
                         };
                     }
                 });
-
+*/
             });
         </script>
     }

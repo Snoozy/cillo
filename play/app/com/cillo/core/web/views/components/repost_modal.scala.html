@@ -16,7 +16,12 @@
             <div class="modal-footer">
                 <div class="modal-post-board-wrapper">
                     <span class="modal-post-board-text" style="float:left;">on Board:</span>
-                    <input class="post-board form-control" id="repost-autocomplete" placeholder="Board" type="text" style="float:left;">
+                    <select class="chosen-select post-board form-control" id="repost-board-select" data-placeholder="Select a Board" style="float:none;">
+                        <option></option>
+                        @for(b <- boards) {
+                            <option value="@(b.photo + "_prof")">@b.name</option>
+                        }
+                    </select>
                 </div>
                 <button type="button" class="btn btn-primary repost-submit-button">Repost</button>
             </div>
@@ -27,7 +32,8 @@
 <script type="text/javascript" charset="utf-8">
 
     $(document).ready(function() {
-
+        $('#repost-board-select').chosen();
+/*
         var boards = [@if(boards.nonEmpty){{value:"@boards.head.name",image:"@boards.head.photo"}@for(b <- boards.tail){,{value:"@b.name",image:"@b.photo"}}}];
 
         $('#repost-autocomplete').autocomplete({
@@ -41,6 +47,6 @@
                 };
             }
         });
-
+*/
     });
 </script>

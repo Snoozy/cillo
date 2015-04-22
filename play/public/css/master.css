@@ -1461,10 +1461,8 @@ a:hover {
 .picture_upload {
     position: relative;
     overflow: hidden;
-    margin: 10px;
-    margin-left: 0px;
+    margin: 15px 10px 0 0;
     float: left;
-
 }
 
 .file-input {
@@ -1515,8 +1513,8 @@ a:hover {
 .post-board-text, .modal-post-board-text {
     font-weight: bold;
     font-size: 16px;
-    float: right;
-    margin-top: 5px;
+    float: left;
+    margin-top: 8px;
     margin-right: 5px;
 }
 
@@ -1645,6 +1643,7 @@ body {
 
 .timestamp-wrapper {
     margin-top: -4px;
+    margin-left: 3px;
     display: inline-block;
 }
 
@@ -2199,7 +2198,7 @@ a.no-dec:hover, a.no-dec:focus, a.no-dec:active, a.no-dec {
 }
 
 .error-border {
-    border-color: red;
+    border-color: red !important;
 }
 
 .ui-state-focus {
@@ -2729,7 +2728,7 @@ a.login-link:hover {
 }
 
 .post-board-as-user-container {
-    margin-top: 55px;
+    margin-top: 15px;
     margin-right: 126px;
 }
 
@@ -2874,4 +2873,16 @@ li [class^="icon-"] {
     border-radius: 3px;
     margin-right: 3px;
     display: inline-block;
+}
+
+.chosen-avatar {
+    height: 32px;
+    width: 32px;
+    margin-right: 6px;
+    border-radius: 3px;
+}
+
+.modal-post-board-wrapper {
+    text-align: left;
+    float: left;
 }
