@@ -148,9 +148,13 @@
                                     </div>
                                 }
                             }
-                            <p class="post-text">
-                                @Html(Etc.parseHTML(repost.get.data))
-                            </p>
+                            @if(!repost.isDefined && post.data != "") {
+                                <div class="post-text-container">
+                                    <p class="post-text">
+                                        @Html(Etc.parseHTML(repost.get.data))
+                                    </p>
+                                </div>
+                            }
                             <div class="repost-dialog">
                                 <a href="/@b.get.name/posts/@repost.get.post_id.get" class="repost-post-anchor">
                                     <i class="glyphicon glyphicon-share-alt" style="margin-right: -1px;"></i>

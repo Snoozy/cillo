@@ -26,6 +26,7 @@ POST        /v1/users/register               com.cillo.core.api.controllers.User
 POST        /v1/boards/create                com.cillo.core.api.controllers.BoardController.create
 
 POST        /v1/me/settings                  com.cillo.core.api.controllers.SettingController.updateSelf
+POST        /v1/me/settings/password         com.cillo.core.api.controllers.SettingController.updatePassword
 POST        /v1/board/:id/settings           com.cillo.core.api.controllers.SettingController.updateBoard(id: Int)
 
 POST        /v1/auth/login                   com.cillo.core.api.controllers.AuthController.login

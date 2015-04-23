@@ -51,7 +51,7 @@ object Post {
         }
     }
 
-    def createSimplePost(user_id: Int, title: Option[String], data: String, board_id: Int, repost_id: Option[Int] = None): Option[Long] = {
+    def createSimplePost(user_id: Int, title: Option[String], data: String, board_id: Int, repost_id: Option[Int] = None, time: Long = System.currentTimeMillis()): Option[Long] = {
         // checking that data is a number if post is a repost
         if (repost_id.isDefined) {
             val repostExists = Post.find(repost_id.get)
@@ -67,8 +67,6 @@ object Post {
             }
         }
 
-        val time = System.currentTimeMillis()
-
         DB.withConnection { implicit connection =>
             SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
                 " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> titleParsed, 'data -> data,
@@ -76,8 +74,7 @@ object Post {
         }
     }
 
-    def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Seq[Int]): Option[Long] = {
-        val time = System.currentTimeMillis()
+    def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Seq[Int], time: Long = System.currentTimeMillis()): Option[Long] = {
 
         media_ids.foreach(id => if (!Media.find(id).isDefined) return None)
 

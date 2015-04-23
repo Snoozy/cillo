@@ -43,7 +43,6 @@ object AuthController extends Controller {
                     if (currentPass.isDefined && newPass.isDefined) {
                         val check = Etc.checkPass(currentPass.get, user.get.password)
                         if (check && Etc.checkPasswordValidity(newPass.get)) {
-                            Logger.debug(newPass.get + "___" + check)
                             User.updatePassword(user.get.user_id.get, newPass.get)
                             Ok(Json.obj("success" -> "Success"))
                         } else {

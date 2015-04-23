@@ -63,8 +63,7 @@ $(document).ready(function() {
         $('.repost-submit-button').click(function () {
             var post_id = $(this).closest('.modal-dialog').data('post-id');
             var comment = $(this).closest('.modal-content').find('.repost-comment-input').val();
-            console.log(comment);
-            var board = $(this).siblings('.modal-post-board-wrapper').find('.post-board').val();
+            var board = $('#repost-board-select option:selected').text();
             $.ajax({
                 url: '/a/repost',
                 type: 'POST',
@@ -476,6 +475,12 @@ $(document).ready(function() {
     $(document).on('click', '.chosen-single', function() {
         $(this).removeClass('error-border');
     });
+
+    $('#repost-board-select').chosen();
+
+    $('#post-board-select').chosen();
+
+    $('.anon').tooltip({'title' : 'Your posts in this group are anonymous.'});
 
     $(".post-submit").click(function () {
         $(this).addClass('disabled');

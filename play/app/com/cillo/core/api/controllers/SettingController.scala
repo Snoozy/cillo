@@ -4,6 +4,7 @@ import com.cillo.core.data.db.models._
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
 import play.api.mvc._
+import com.cillo.utils.Etc
 
 object SettingController extends Controller{
 
@@ -29,6 +30,32 @@ object SettingController extends Controller{
                         BadRequest(Json.obj("error" -> "Error updating user information."))
                     }
                 }.getOrElse(BadRequest(Json.obj("error" -> "Request content type invalid.")))
+        }
+    }
+
+    def updatePassword = AuthAction { implicit user => implicit request =>
+        user match {
+            case None => BadRequest(Json.obj("error" -> "User must be authenticated."))
+            case Some(_) =>
+                val body: AnyContent = request.body
+                body.asFormUrlEncoded.map { form =>
+                    val currPassword = form.get("current").map(_.head)
+                    val newPassword = form.get("new").map(_.head)
+                    if (currPassword.isDefined && newPassword.isDefined) {
+                        if (Etc.checkPass(currPassword.get, user.get.password)) {
+                            if (Etc.checkPasswordValidity(newPassword.get)) {
+                                User.updatePassword(user.get.user_id.get, newPassword.get)
+                                Ok(Json.obj("success" -> "Password successfully changed."))
+                            } else {
+                                BadRequest(Json.obj("error" -> "Password format is not valid."))
+                            }
+                        } else {
+                            BadRequest(Json.obj("error" -> "Current password incorrect."))
+                        }
+                    } else {
+                        BadRequest(Json.obj("error" -> "Current and new password need to be supplied."))
+                    }
+                }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
         }
     }
 

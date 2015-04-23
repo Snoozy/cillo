@@ -36,42 +36,4 @@
         }
         <div class="displaynone first-post-clear"></div>
     </div>
-    @if(anon) {
-        <script type="text/javascript" charset="utf-8">
-
-            $(document).ready(function() {
-                $('.anon').tooltip({'title' : 'Your posts in this group are anonymous.'});
-            });
-
-        </script>
-    }
-    @if(!boardPage) {
-
-        <script type="text/javascript" charset="utf-8">
-
-            $(document).ready(function() {
-                $('#post-board-select').chosen();
-/*
-                var boards = [@if(boards.nonEmpty){{value:"@boards.head.name",image:"@boards.head.photo"}@for(b <- boards.tail){,{value:"@b.name",image:"@b.photo"}}}];
-
-                $('#post-autocomplete').autocomplete({
-                    minLength: 0,
-                    source: boards,
-                    close: function(e, ui) {
-                        $('#post-autocomplete').css('border-bottom-left-radius', '3px');
-                        $('#post-autocomplete').css('border-bottom-right-radius', '3px');
-                        $('#post-autocomplete').blur();
-                    },
-                    create: function () {
-                        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                            return $('<li>')
-                                .append('<a><img src=\"' + item.image + '\" class="autocomplete-avatar">' + item.value + '</a>')
-                                .appendTo(ul);
-                        };
-                    }
-                });
-*/
-            });
-        </script>
-    }
 </li>
