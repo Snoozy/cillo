@@ -11,6 +11,6 @@ object Reddit {
     val subms: Submissions = new Submissions(rest)
 
     def getSubredditPosts(sub: String, count: Int = 10) = {
-        subms.ofSubreddit(sub, SubmissionSort.HOT, -1, count, null, null, true).asScala.toList.filter(s => !s.isStickied)
+        subms.ofSubreddit(sub, SubmissionSort.HOT, -1, count, null, null, true).asScala.toList.filter(s => !s.isStickied && !s.isSelf)
     }
 }

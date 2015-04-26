@@ -72,8 +72,13 @@ object S3 {
     }
 
     def uploadURL(url: String, profile: Boolean = false): Option[String] = {
-        val image = Image(ImageIO.read(new URL(url)))
-        uploadImg(image, profile = profile)
+        val raw = Option(ImageIO.read(new URL(url)))
+        if (raw.isDefined) {
+            val image = Image(raw.get)
+            uploadImg(image, profile = profile)
+        } else {
+            None
+        }
     }
 
 }

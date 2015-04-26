@@ -173,14 +173,14 @@ object User {
 
     def getPosts(user_id: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post WHERE user_id = {id} ORDER BY post_id DESC LIMIT {limit}")
+            SQL("SELECT * FROM post WHERE user_id = {id} ORDER BY time DESC LIMIT {limit}")
                 .on('id -> user_id, 'limit -> limit).as(postParser *)
         }
     }
 
     def getPostsPaged(user_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            val posts = SQL("SELECT * FROM post WHERE post_id < {after} AND user_id = {id} ORDER BY post_id DESC LIMIT {limit}")
+            val posts = SQL("SELECT * FROM post WHERE post_id < {after} AND user_id = {id} ORDER BY time DESC LIMIT {limit}")
                 .on('id -> user_id, 'after -> after, 'limit -> limit).as(postParser *)
             if (posts.length < limit)
                 posts
@@ -195,7 +195,7 @@ object User {
             if (board_ids.isEmpty)
                 Seq()
             else {
-                val posts = SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY post_id DESC LIMIT {limit}")
+                val posts = SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
                     .on('board_ids -> board_ids, 'limit -> limit).as(postParser *)
                 posts
             }

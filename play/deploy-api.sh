@@ -30,7 +30,7 @@ if [ -e "$package_path" ]; then
             chmod 755 ./cillo/bin/cillo
             rm cillo-api.zip
             sudo kill \$(head -n 1 /home/ubuntu/cillo-backup/RUNNING_PID)
-            sudo ./cillo/bin/cillo -J-Xms128M -J-Xmx512m -J-server -Dconfig.file=/home/ubuntu/prod_api.conf -Dhttp.port=80 &
+            sudo ./cillo/bin/cillo -J-Xms128M -J-Xmx750M -J-server -Dconfig.file=/home/ubuntu/prod_api.conf -Dhttp.port=80 &
             disown
         '"
     done

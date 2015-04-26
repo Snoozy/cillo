@@ -20,6 +20,7 @@ GET         /a/check_email                 com.cillo.core.web.controllers.UserCo
 GET         /connect/facebook              com.cillo.core.web.controllers.SocialController.facebookAuth
 
 GET         /debug                         com.cillo.core.web.controllers.EtcController.debug
+GET         /a/thedayisnow                 com.cillo.core.web.controllers.EtcController.reddit
 
 #POST
 POST        /signup                        com.cillo.core.web.controllers.RegisterController.attemptRegister
