@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 object ExploreController extends Controller {
 
     def explore = AuthAction { implicit user => implicit request =>
-        val boards = Board.getTrendingBoards()
+        val boards = Board.getTrendingBoards(limit = 50)
         Ok(com.cillo.core.web.views.html.core.explore(user, boards))
     }
 

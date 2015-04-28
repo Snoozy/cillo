@@ -13,13 +13,13 @@
             </a>
         </div>
         @if(searchBar) {
-            <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:6px;padding-left:0px;">
+            <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:8px;padding-left:0px;">
                 <div class="form-group input-group">
                     <form class="navbar-search">
-                        <input type="text" class="form-control search-query" placeholder="Search" style="height:35px;padding:6px 10px;width:200px;" value="@searchQuery">
+                        <input type="search" class="form-control search-query" placeholder="Search" style="width:230px;padding-right:30px;" value="@searchQuery">
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-default" style="line-height:inherit; border-radius:0 3px 3px 0;">
-                                <span class="glyphicon glyphicon-search"></span>
+                            <button type="submit" class="search-submit">
+                                <span class="glyphicon glyphicon-search" style="font-size: 13px;"></span>
                             </button>
                         </span>
                     </form>
@@ -29,7 +29,7 @@
         @if(user.isDefined) {
             <div class="navbar-settings-wrapper dropdown">
                 <a href="#" class="dropdown-toggle" id="settings-dropdown" data-toggle="dropdown" aria-expanded="true" style="color:#000000;">
-                    <span class="glyphicon glyphicon-cog" style="font-size:19px;"></span>
+                    <span class="glyphicon glyphicon-cog blue-cog" style="font-size:19px;"></span>
                 </a>
                 <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="settings-dropdown">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings"><span class="glyphicon glyphicon-wrench" style="font-size:15px;"></span> Settings</a></li>

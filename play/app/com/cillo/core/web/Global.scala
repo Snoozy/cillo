@@ -50,6 +50,7 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         Memcached.setAddr(addr)
         Memcached.get("init")
         */
+
         val fbId: Option[String] = Play.current.configuration.getString("facebook.client_id")
         val fbSecret: Option[String] = Play.current.configuration.getString("facebook.client_secret")
         if (fbId.isDefined && fbSecret.isDefined)

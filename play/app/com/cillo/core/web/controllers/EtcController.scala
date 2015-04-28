@@ -10,7 +10,9 @@ import scala.util.Random
 
 object EtcController extends Controller {
 
-    val subreddits = Map[String, List[String]]("worldnews" -> List("worldnews", "news"), "earthpics" -> List("earthporn"), "nba" -> List("nba"), "programming" -> List("programming"), "soccer" -> List("soccer"))
+    val subreddits = Map[String, List[String]]("worldnews" -> List("worldnews", "news"), //"earthpics" -> List("earthporn"),
+        "nba" -> List("nba"), "programming" -> List("programming"), "soccer" -> List("soccer"), "politics" -> List("politics"),
+        "tech" -> List("technology"))
     val users = Vector(1, 2, 3, 4, 8, 13, 14, 12, 10)
 
     def healthCheck = Action {
@@ -27,10 +29,10 @@ object EtcController extends Controller {
                 value.foreach { s =>
                     val board = Board.find(key)
                     if (s == "earthporn") {
-                        val subms = Reddit.getSubredditPosts(s, count = 1)
+                        val subms = Reddit.getSubredditPosts(s)
                         subms.foreach { p =>
                             val user_id = users(Random.nextInt(users.size))
-                            val time = System.currentTimeMillis() - (Random.nextInt(13) * 1800000)
+                            val time = System.currentTimeMillis() - (Random.nextInt(48) * 1800000)
                             if (p.getTitle.length < 100 && p.getURL.indexOf("imgur") > 0) {
                                 val url = {
                                     if (p.getDomain == "imgur.com") {
@@ -48,7 +50,7 @@ object EtcController extends Controller {
                             }
                         }
                     } else {
-                        val subms = Reddit.getSubredditPosts(s, count = 3)
+                        val subms = Reddit.getSubredditPosts(s)
                         subms.foreach { p =>
                             val user_id = users(Random.nextInt(users.size))
                             val time = System.currentTimeMillis() - (Random.nextInt(13) * 1800000)

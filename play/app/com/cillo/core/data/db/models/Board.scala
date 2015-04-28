@@ -3,6 +3,7 @@ package com.cillo.core.data.db.models
 import anorm.SqlParser._
 import anorm._
 import com.cillo.core.data.db.models.Post.postParser
+import play.api.Play
 import play.api.Play.current
 import play.api.db._
 import play.api.libs.json._
@@ -105,9 +106,23 @@ object Board {
         true
     }
 
+    val artificialTrending: Seq[Int] = {
+        if (Play.isProd) {
+            Vector[Int](37, 6, 27, 31)
+        } else {
+            Seq(13)
+        }
+    }
+
     def getTrendingBoards(limit: Int = 10): Seq[Board] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM `board` WHERE privacy = 0 ORDER BY followers DESC LIMIT {limit}").on('limit -> limit).as(boardParser *)
+            val res = SQL("SELECT * FROM `board` WHERE privacy = 0 ORDER BY followers DESC LIMIT {limit}").on('limit -> limit).as(boardParser *)
+            if (artificialTrending.nonEmpty) {
+                val art: Seq[Board] = artificialTrending.map(b => Board.find(b).get)
+                art ++ res
+            } else {
+                res
+            }
         }
     }
 
@@ -119,12 +134,17 @@ object Board {
 
     def getFeedPaged(board_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            val posts = SQL("SELECT * FROM post WHERE post_id < {after} AND board_id = {board_id} ORDER BY time DESC LIMIT {limit}")
-                .on('board_id -> board_id, 'after -> after, 'limit -> limit).as(postParser *)
-            if (posts.length < limit)
-                posts
-            else
-                posts.takeRight(limit)
+            val afterPost = Post.find(after)
+            if (afterPost.isDefined) {
+                val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id = {board_id} ORDER BY time DESC LIMIT {limit}")
+                    .on('board_id -> board_id, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                if (posts.length < limit)
+                    posts
+                else
+                    posts.takeRight(limit)
+            } else {
+                Seq()
+            }
         }
     }
 

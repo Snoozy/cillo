@@ -39,15 +39,31 @@ object Etc {
         val time = curr - millis
         time match {
             case x if 0L <= x && x < 59999L =>
-                "1m"
+                "1 min"
             case x if 60000L <= x && x < 3599999L =>
-                (time / 60000L) + "m"
+                val res = time / 60000L
+                if (res == 1)
+                    res + " min"
+                else
+                    res + " mins"
             case x if 3600000L <= x && x < 86399999L =>
-                (time / 3600000L) + "h"
+                val res = time / 3600000L
+                if (res == 1)
+                    res + " hour"
+                else
+                    res + " hours"
             case x if x >= 86400000L && x < 31535999999L =>
-                (time / 86400000L) + "d"
+                val res = time / 86400000L
+                if (res == 1)
+                    res + " day"
+                else
+                    res + " days"
             case x if x >= 31536000000L && x < Long.MaxValue =>
-                (time / 31536000000L) + "y"
+                val res = time / 31536000000L
+                if (res == 1)
+                    res + " year"
+                else
+                    res + " years"
         }
     }
 

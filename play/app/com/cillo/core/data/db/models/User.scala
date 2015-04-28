@@ -180,12 +180,17 @@ object User {
 
     def getPostsPaged(user_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            val posts = SQL("SELECT * FROM post WHERE post_id < {after} AND user_id = {id} ORDER BY time DESC LIMIT {limit}")
-                .on('id -> user_id, 'after -> after, 'limit -> limit).as(postParser *)
-            if (posts.length < limit)
-                posts
-            else
-                posts.takeRight(limit)
+            val afterPost = Post.find(after)
+            if (afterPost.isDefined) {
+                val posts = SQL("SELECT * FROM post WHERE time < {time} AND user_id = {id} ORDER BY time DESC LIMIT {limit}")
+                    .on('id -> user_id, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                if (posts.length < limit)
+                    posts
+                else
+                    posts.takeRight(limit)
+            } else {
+                Seq()
+            }
         }
     }
 
@@ -208,12 +213,17 @@ object User {
             if (board_ids.isEmpty)
                 Seq()
             else {
-                val posts = SQL("SELECT * FROM post WHERE post_id < {after} AND board_id IN ({board_ids}) ORDER BY post_id DESC LIMIT {limit}")
-                    .on('board_ids -> board_ids, 'after -> after, 'limit -> limit).as(postParser *)
-                if (posts.length < limit)
-                    posts
-                else
-                    posts.takeRight(limit)
+                val afterPost = Post.find(after)
+                if (afterPost.isDefined) {
+                    val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id IN ({board_ids}) ORDER BY post_id DESC LIMIT {limit}")
+                        .on('board_ids -> board_ids, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                    if (posts.length < limit)
+                        posts
+                    else
+                        posts.takeRight(limit)
+                } else {
+                    Seq()
+                }
             }
         }
     }
@@ -226,12 +236,17 @@ object User {
 
     def getCommentsPaged(user_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Comment] = {
         DB.withConnection { implicit connection =>
-            val comments = SQL("SELECT * FROM comment WHERE comment_id < {after} AND user_id = {id} ORDER BY comment_id DESC LIMIT {limit}")
-                .on('id -> user_id, 'after -> after, 'limit -> limit).as(commentParser *)
-            if (comments.length < limit)
-                comments
-            else
-                comments.takeRight(limit)
+            val afterCom = Comment.find(after)
+            if (afterCom.isDefined) {
+                val comments = SQL("SELECT * FROM comment WHERE time < {time} AND user_id = {id} ORDER BY comment_id DESC LIMIT {limit}")
+                    .on('id -> user_id, 'time -> afterCom.get.time, 'limit -> limit).as(commentParser *)
+                if (comments.length < limit)
+                    comments
+                else
+                    comments.takeRight(limit)
+            } else {
+                Seq()
+            }
         }
     }
 

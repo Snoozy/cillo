@@ -10,7 +10,7 @@ object Reddit {
     val rest: RestClient = new HttpRestClient()
     val subms: Submissions = new Submissions(rest)
 
-    def getSubredditPosts(sub: String, count: Int = 10) = {
-        subms.ofSubreddit(sub, SubmissionSort.HOT, -1, count, null, null, true).asScala.toList.filter(s => !s.isStickied && !s.isSelf)
+    def getSubredditPosts(sub: String, count: Int = 15) = {
+        subms.ofSubreddit(sub, SubmissionSort.TOP, -1, count, null, null, true).asScala.toList.filter(s => !s.isStickied && !s.isSelf)
     }
 }

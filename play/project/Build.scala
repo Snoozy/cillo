@@ -29,10 +29,9 @@ object Build extends Build {
             "com.github.jreddit" % "jreddit" % "1.0.2",
             "com.sksamuel.scrimage" %% "scrimage-canvas" % "1.4.2"
         ),
+        doc in Compile <<= target.map(_ / "none"),
         TwirlKeys.templateImports += "com.cillo.core.data.db.models._",
         unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
     ).enablePlugins(PlayScala)
-
-    doc in Compile <<= target.map(_ / "none")
 
 }
