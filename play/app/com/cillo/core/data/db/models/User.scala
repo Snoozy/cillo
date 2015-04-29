@@ -16,13 +16,8 @@ case class User(
     user_id: Option[Int],
     username: String,
     name: String,
-    password: String,
-    email: String,
-    time: Long,
-    reputation: Int,
     photo: String,
     photo_id: Int,
-    bio: String,
     token: Option[String] = None,
     session: Option[Session] = None
 ) {
@@ -32,6 +27,15 @@ case class User(
         } else
             false
     }
+
+    lazy val userInfo = UserInfo.find(user_id.get).get
+
+    val password = userInfo.password
+    val email = userInfo.email
+    val time = userInfo.time
+    val reputation = userInfo.reputation
+    val bio = userInfo.bio
+
 }
 
 object User {
@@ -43,21 +47,13 @@ object User {
         get[Option[Int]]("user_id") ~
             get[String]("username") ~
             get[String]("name") ~
-            get[String]("password") ~
-            get[String]("email") ~
-            get[Long]("time") ~
-            get[Option[Int]]("reputation") ~
             get[Option[Int]]("photo") ~
-            get[String]("bio") map{
-            case user_id ~ username ~ name ~ password ~ email ~ time ~ reputation ~ photo ~ bio =>
-                if (photo.isDefined) {
-                    val p = Media.find(photo.get)
-                    if (p.isDefined)
-                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + p.get.media_name, photo.get, bio)
-                    else
-                        User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio)
+            get[Option[String]]("photo_name")map {
+            case user_id ~ username ~ name ~ photo ~ photoName =>
+                if (photo.isDefined && photoName.isDefined) {
+                    User(user_id, username, name, ImageURLBase + photoName.get, photo.get)
                 } else {
-                    User(user_id, username, name, password, email, time, reputation.getOrElse(0), ImageURLBase + DefaultPhotoString, 0, bio)
+                    User(user_id, username, name, ImageURLBase + DefaultPhotoString, 0)
                 }
         }
     }
@@ -65,6 +61,12 @@ object User {
     def find(id: Int): Option[User] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM user WHERE user_id = {id}").on('id -> id).as(userParser.singleOpt)
+        }
+    }
+
+    def getAll: Seq[User] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM user").as(userParser *)
         }
     }
 
@@ -139,19 +141,20 @@ object User {
     }
 
     def create(username: String, name: String, password: String, email: String, bio: Option[String] = None, pic: Option[Int] = None): Option[Long] = {
-        val time = System.currentTimeMillis()
-
-        val pass = {
-            if (password != "")
-                makeDigest(password)
-            else password
-        }
 
         if (checkEmail(email)) {
             DB.withConnection { implicit connection =>
-                SQL("INSERT INTO user (username, name, password, email, bio, time, reputation, photo) VALUES ({username}, {name}," +
-                    " {password}, {email}, {bio}, {time}, 0, {pic})").on('username -> username, 'name -> name,
-                        'password -> pass, 'email -> email, 'bio -> bio.getOrElse(""), 'time -> time, 'pic -> pic).executeInsert()
+                val picName: Option[String] = {
+                    if (pic.isDefined)
+                        Some(Media.find(pic.get).get.media_name)
+                    else
+                        None
+                }
+                val user: Option[Long] = SQL("INSERT INTO user (username, name, password, photo, photo_name) VALUES ({username}, {name}," +
+                        " {password}, {email}, {bio}, {time}, 0, {pic}, {picName})").on('username -> username, 'name -> name,
+                        'pic -> pic, 'picName -> picName).executeInsert()
+                UserInfo.create(user.get.toInt, password, email, bio)
+                user
             }
         } else
             None
@@ -159,15 +162,17 @@ object User {
 
     def update(user_id: Int, name: String, username: String, bio: String, pic: Int) = {
         DB.withConnection { implicit connection =>
-            SQL("UPDATE user SET name = {name}, username = {username}, bio = {bio}, photo = {photo} WHERE user_id = {user}")
-                .on('name -> name, 'photo -> pic, 'user -> user_id, 'bio -> bio, 'username -> username).executeUpdate()
+            val media = Media.find(pic)
+            SQL("UPDATE user SET name = {name}, username = {username}, photo = {photo}, photo_name = {photoName} WHERE user_id = {user}")
+                .on('name -> name, 'photo -> pic, 'user -> user_id, 'username -> username, 'photoName -> media.get.media_name).executeUpdate()
+            SQL("UPDATE user_info SET bio = {bio} WHERE user_id = {user}").on('bio -> bio, 'user -> user_id).executeUpdate()
         }
     }
 
     def updatePassword(user_id: Int, password: String) = {
         DB.withConnection { implicit connection =>
             val pass = makeDigest(password)
-            SQL("UPDATE user SET password = {pass} WHERE user_id = {user}").on('pass -> pass, 'user -> user_id).executeUpdate()
+            SQL("UPDATE user_info SET password = {pass} WHERE user_id = {user}").on('pass -> pass, 'user -> user_id).executeUpdate()
         }
     }
 
@@ -194,15 +199,19 @@ object User {
         }
     }
 
-    def getFeed(user_id: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getFeed(user_id: Int, limit: Int = Post.DefaultPageSize, board_ids: Option[Seq[Int]] = None): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            val board_ids = User.getBoardIDs(user_id)
-            if (board_ids.isEmpty)
-                Seq()
-            else {
-                val posts = SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
-                    .on('board_ids -> board_ids, 'limit -> limit).as(postParser *)
-                posts
+            val boards = {
+                if (board_ids.isDefined)
+                    board_ids.get
+                else
+                    User.getBoardIDs(user_id)
+            }
+            if (boards.nonEmpty) {
+                SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
+                    .on('board_ids -> board_ids.get, 'limit -> limit).as(postParser *)
+            } else {
+                Seq[Post]()
             }
         }
     }
@@ -286,7 +295,7 @@ object User {
             if (boardIDs.isEmpty)
                 return List()
             else
-                SQL("SELECT * FROM `board` WHERE board_id IN ({board_ids})").on('board_ids -> boardIDs).as(Board.boardParser *)
+                SQL("SELECT * FROM board WHERE board_id IN ({board_ids})").on('board_ids -> boardIDs).as(Board.boardParser *)
         }
     }
 

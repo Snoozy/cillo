@@ -39,10 +39,10 @@ object CommentVote {
         if (comment.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
             DB.withConnection { implicit connection =>
                 if (value == 1 && (user_id != comment.get.user_id)) {
-                    SQL("UPDATE user SET reputation = reputation + 10 WHERE user_id = {user}")
+                    SQL("UPDATE user_info SET reputation = reputation + 10 WHERE user_id = {user}")
                         .on('user -> comment.get.user_id).executeUpdate()
                 } else if (value == -1 && (user_id != comment.get.user_id)) {
-                    SQL("UPDATE user SET reputation = reputation - 10 WHERE user_id = {user}")
+                    SQL("UPDATE user_info SET reputation = reputation - 10 WHERE user_id = {user}")
                         .on('user -> comment.get.user_id).executeUpdate()
                 }
                 val time = System.currentTimeMillis()
@@ -56,10 +56,10 @@ object CommentVote {
             if (voteExists.get.value != value) {
                 DB.withConnection { implicit connection =>
                     if (value == 1 && (user_id != comment.get.user_id)) {
-                        SQL("UPDATE user SET reputation = reputation + 20 WHERE user_id = {user}")
+                        SQL("UPDATE user_info SET reputation = reputation + 20 WHERE user_id = {user}")
                             .on('user -> comment.get.user_id).executeUpdate()
                     } else if (value == -1 && (user_id != comment.get.user_id)) {
-                        SQL("UPDATE user SET reputation = reputation - 20 WHERE user_id = {user}")
+                        SQL("UPDATE user_info SET reputation = reputation - 20 WHERE user_id = {user}")
                             .on('user -> comment.get.user_id).executeUpdate()
                     }
                     val time = System.currentTimeMillis()

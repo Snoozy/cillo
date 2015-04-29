@@ -18,7 +18,13 @@
                                         @components.first_post(user, boards)
 
                                         @for(post <- posts) {
-                                            @components.post(post, Some(user))()
+                                            @defining(boards.find(b => b.board_id.get == post.board_id)) { b =>
+                                                @if(!b.isDefined) {
+                                                    @components.post(post, Some(user))()
+                                                } else {
+                                                    @components.post(post, Some(user))(board = b.get)
+                                                }
+                                            }
                                         }
 
                                 </ol>
@@ -44,7 +50,7 @@
             </div>
         </div>
 
-        @components.repost_modal(User.getBoards(user.user_id.get))
+        @components.repost_modal(boards)
 
         @components.fb_init()
 

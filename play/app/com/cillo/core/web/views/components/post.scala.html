@@ -92,7 +92,7 @@
                         </div>
                     }
                 }
-                @if(!repost.isDefined && post.data != "") {
+                @if(post.data != "") {
                     <div class="post-text-container">
                         <p class="post-text">
                         @Html(Etc.parseHTML(post.data))
@@ -148,7 +148,7 @@
                                     </div>
                                 }
                             }
-                            @if(!repost.isDefined && post.data != "") {
+                            @if(repost.isDefined && post.data != "") {
                                 <div class="post-text-container">
                                     <p class="post-text">
                                         @Html(Etc.parseHTML(repost.get.data))

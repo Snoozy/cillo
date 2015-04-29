@@ -23,8 +23,8 @@ object IndexController extends Controller {
                 if (user.get.session.isDefined && user.get.session.get.get("getting_started").isDefined) {
                     cachedGettingStartedHtml
                 } else {
-                    val posts = User.getFeed(user.get.user_id.get)
                     val boards = User.getBoards(user.get.user_id.get)
+                    val posts = User.getFeed(user.get.user_id.get, board_ids = Some(boards.map(_.board_id.get)))
                     Ok(com.cillo.core.web.views.html.core.index(posts, user.get, boards))
                 }
             case None =>

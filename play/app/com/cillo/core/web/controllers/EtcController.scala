@@ -20,6 +20,10 @@ object EtcController extends Controller {
     }
 
     def debug = Action {
+        val users = User.getAll
+        users.foreach { u =>
+            UserInfo.setPhoto(u.user_id.get)
+        }
         Ok("asdf")
     }
 

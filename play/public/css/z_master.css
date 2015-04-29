@@ -846,7 +846,7 @@ strong {
 }
 
 .post-text {
-    font-size:110%;
+    font-size:115%;
     word-wrap:break-word;
     width:100%;
     margin-top: 5px;
@@ -1904,8 +1904,8 @@ body {
 }
 
 .post-text-title {
-    margin-bottom: 7px;
-    margin-top: 3px;
+    margin-bottom: 10px;
+    margin-top: 2px;
 }
 
 .post-text-title-text {
@@ -2918,4 +2918,8 @@ li [class^="icon-"] {
 
 button.search-submit:focus {
     outline: 0;
+}
+
+.repost-post-info {
+    margin-bottom: 7px;
 }
