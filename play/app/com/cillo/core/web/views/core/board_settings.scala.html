@@ -121,12 +121,14 @@
                 @if(user.admin) {
                     $('.delete-board').click(function(e) {
                         e.preventDefault();
-                        $.ajax({
-                            url: '/a/board/' + '@board.name' + '/delete',
-                            complete: function() {
-                                window.location.replace('/');
-                            }
-                        });
+                        if (confirm("Are you sure you want to delete this board?")) {
+                            $.ajax({
+                                url: '/a/board/' + '@board.name' + '/delete',
+                                complete: function() {
+                                    window.location.replace('/');
+                                }
+                            });
+                        }
                     });
                 }
 

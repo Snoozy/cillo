@@ -1,3 +1,31 @@
+function collapseFirstPost() {
+    $('.post-form').css('min-height', '34px');
+    $('.post-form').css('height', '34px');
+    $('.first-post-clear').addClass('displaynone');
+    $('.picture_upload').addClass('displaynone');
+    $('.post-title').addClass('displaynone');
+    $('.post-board-wrapper').addClass('displaynone');
+    $('.post-board-text').addClass('displaynone');
+    $('.post-board-as-user-container').addClass('displaynone');
+    $('.post-form').removeClass('post-form-expanded');
+    $('.post-submit').hide();
+}
+
+function expandFirstPost() {
+    $('.post-form').css('min-height', '70px');
+    $('.post-form').css('height', 'auto');
+    $('.post-form').trigger('autosize.resize');
+    $('.first-post-clear').removeClass('displaynone');
+    $('.picture_upload').removeClass('displaynone');
+    $('.post-title').removeClass('displaynone');
+    $('.post-board-wrapper').removeClass('displaynone');
+    $('.post-board-text').removeClass('displaynone');
+    $('.post-board-as-user-container').removeClass('displaynone');
+    $('.post-form').addClass('post-form-expanded');
+    $('.post-form').removeClass('error-border');
+    $(".post-submit").show();
+}
+
 $(document).ready(function() {
 
     function htmlWithBreaks(text) {
@@ -169,36 +197,12 @@ $(document).ready(function() {
 
 
     $('.post-form').focus(function () {
-        $(this).css('min-height', '70px');
-        $(this).css('height', 'auto');
-        $(this).trigger('autosize.resize');
-        $('.first-post-clear').removeClass('displaynone');
-        $('.picture_upload').removeClass('displaynone');
-        $('.post-title').removeClass('displaynone');
-        $('.post-board-wrapper').removeClass('displaynone');
-        $('.post-board-text').removeClass('displaynone');
-        $('.post-board-as-user-container').removeClass('displaynone');
-        $(this).addClass('post-form-expanded');
-        $(this).removeClass('error-border');
-        $(".post-submit").show();
+        expandFirstPost();
     });
 
     $('.post-board').focus(function() {
         $(this).removeClass('error-border');
     });
-
-    function collapseFirstPost() {
-        $('.post-form').css('min-height', '34px');
-        $('.post-form').css('height', '34px');
-        $('.first-post-clear').addClass('displaynone');
-        $('.picture_upload').addClass('displaynone');
-        $('.post-title').addClass('displaynone');
-        $('.post-board-wrapper').addClass('displaynone');
-        $('.post-board-text').addClass('displaynone');
-        $('.post-board-as-user-container').addClass('displaynone');
-        $('.post-form').removeClass('post-form-expanded');
-        $('.post-submit').hide();
-    }
 
     $(document).on('focus', '.comment-val', function() {
         $(this).css('min-height', '84px');

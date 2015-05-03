@@ -131,7 +131,7 @@ object Board {
 
     val artificialTrending: Seq[Int] = {
         if (Play.isProd) {
-            Vector[Int](37, 6, 27, 31, 38, 9)
+            Vector[Int](37, 6, 27, 31, 9)
         } else {
             Seq(13)
         }
@@ -142,7 +142,7 @@ object Board {
             val res = SQL("SELECT * FROM board WHERE privacy = 0 ORDER BY followers DESC LIMIT {limit}").on('limit -> limit).as(boardParser *)
             if (artificialTrending.nonEmpty) {
                 val art: Seq[Board] = artificialTrending.map(b => Board.find(b).get)
-                art ++ res.take(limit)
+                (art ++ res.take(limit)).distinct
             } else {
                 res.take(limit)
             }

@@ -14,8 +14,10 @@ object GettingStartedController extends Controller {
             case Some(_) =>
                 if (user.get.session.isDefined) {
                     user.get.session.get.remove("getting_started")
+                    Found("/?intro=1")
+                } else {
+                    Found("/")
                 }
-                Found("/")
         }
     }
 

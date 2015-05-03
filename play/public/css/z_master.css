@@ -7,6 +7,19 @@
     margin: 30px auto;
 }
 
+.popover-footer {
+    margin: 0;
+    padding: 6px 8px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #EBEBEB;
+    border-radius: 5px 5px 0 0;
+    border-top: 1px solid #ebebeb;
+    text-align: right;
+}
+
 .form-control {
     border-radius: 3px;
 }
@@ -871,14 +884,18 @@ form.form-search {
     top: 0;
 }
 
+.noscroll {
+    overflow-y: hidden;
+    width: 100%;
+}
+
 .masthead {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.22);
     min-width: 900px;
     position:fixed;
-    top: 0px;
-    left:0px;
-    right:0px;
-    margin-bottom:-5px;
+    top: 0;
+    left:0;
+    right:0;
     z-index: 9;
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#222222',GradientType=0);
     margin-top:-1px;
