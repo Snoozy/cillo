@@ -1,4 +1,4 @@
-@(user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board], boardPage: Boolean = false, anon: Boolean = false)
+@(user: User, boards: Seq[Board], boardPage: Boolean = false, anon: Boolean = false)
 
 <li class="post first-post">
     <div class="posting-wrapper" style="margin-left:48px;">
@@ -22,7 +22,9 @@
         <div class="post-board-wrapper displaynone">
             <span class="post-board-text displaynone">on Board:</span>
             <select class="chosen-select post-board form-control" id="post-board-select" data-placeholder="Select a Board" style="width:300px;margin-top:6px;">
-                <option></option>
+                @if(!boardPage) {
+                    <option></option>
+                }
                 @for(b <- boards) {
                     <option value="@(b.photo + "_prof")">@b.name</option>
                 }

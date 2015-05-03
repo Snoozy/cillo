@@ -16,12 +16,11 @@ object S3 {
 
     private final val bucketName = "cillo-static"
 
-    def uploadImg(img: Image, profile: Boolean = false, original: Option[Image] = None): Option[String] = {
+    def uploadImg(img: Image, profile: Boolean = false, original: Option[Image] = None, uuid: String = UUID.randomUUID().toString): Option[String] = {
         val aws_key = Play.current.configuration.getString("aws.key")
         val aws_secret = Play.current.configuration.getString("aws.secret")
         if (aws_key.isDefined && aws_secret.isDefined) {
             try {
-                val uuid = UUID.randomUUID()
                 val key = "image/" + uuid
                 val aws_creds = new BasicAWSCredentials(aws_key.get, aws_secret.get)
                 val s3client = new AmazonS3Client(aws_creds)
@@ -39,7 +38,7 @@ object S3 {
                     s3client.putObject(new PutObjectRequest(bucketName, key + "_med", med, metadata))
                 } else {
                     val thumb: InputStream = Image(img).cover(50, 50).writer(Format.JPEG).toStream
-                    val prof = Image(img).cover(150, 150).writer(Format.JPEG).toStream
+                    val prof = Image(img).cover(200, 200).writer(Format.JPEG).toStream
                     s3client.putObject(new PutObjectRequest(bucketName, key + "_small", thumb, metadata))
                     s3client.putObject(new PutObjectRequest(bucketName, key + "_prof", prof, metadata))
                 }

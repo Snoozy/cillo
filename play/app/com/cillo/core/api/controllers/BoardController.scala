@@ -54,7 +54,7 @@ object BoardController extends Controller {
                         board_id = Board.create(name.get, descr, user.get.user_id.get, photo = photo)
                         if (board_id.isDefined) {
                             Board.addFollower(user.get.user_id.get, board_id.get.toInt)
-                            Ok(Board.toJson(Board.find(board_id.get.toInt).get, true))
+                            Ok(Board.toJson(Board.find(board_id.get.toInt).get, following = true))
                         } else {
                             BadRequest(Json.obj("error" -> "Board creation failed."))
                         }

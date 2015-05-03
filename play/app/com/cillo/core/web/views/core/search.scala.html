@@ -1,7 +1,8 @@
-@(user: Option[com.cillo.core.data.db.models.User], boards: Seq[com.cillo.core.data.db.models.Board], query: String)
+@(user: Option[User], boards: Seq[Board], users: Seq[User], query: String)
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
+@import com.cillo.utils.Etc
 
 @components.base(query + " - Search Cillo"){
 
@@ -10,35 +11,33 @@
         <div class="page" style="margin:0px;">
             @components.masthead(user, searchBar = true, searchQuery = query)
             <div id="content">
-                <div class="container-fluid inner-container" style="width:650px;">
-                    <div class="main-row" style="">
+                <div class="container-fluid inner-container" style="width:870px;">
+                    <div class="main-row search-row" style="margin-right: 13px;">
                         <div class="big-container">
                             <h2 class="search-header">
-                                Results for <span class="search-query-text">@query</span>
+                                Board results for <span class="search-query-text">@query</span>
                             </h2>
                             <div class="search-content">
                                 <ol class="search-boards-container">
                                     @if(boards.length > 0) {
                                         @for(b <- boards) {
                                             <div class="board-wrapper">
-                                                <div class="board" style="margin-left:69px;margin-right:30px;">
-                                                    <a href="/@b.name" style="display:inline;">
-                                                        <img class="avatar" style="margin-left:-56px;margin-right:0px;" alt="Board Picture" src="@b.photo">
-                                                    </a>
-                                                    <div class="board-desc-wrapper">
-                                                        <span class="follower-count">
-                                                            @b.followers Follower@if(b.followers != 1){s}
-                                                        </span>
-                                                        <span>
-                                                            <a href="/@b.name">
+                                                <a href="/@b.name" class="no-dec" style="display:inline;color:#000000;">
+                                                    <div class="board search-entity" style="cursor:pointer;margin-left:69px;margin-right:30px;">
+                                                        <img class="avatar search" style="margin-left:-63px;margin-right:0px;" alt="Board Picture" src="@b.photo">
+                                                        <div class="board-desc-wrapper">
+                                                            <span class="follower-count">
+                                                                @b.followers Follower@if(b.followers != 1){s}
+                                                            </span>
+                                                            <span class="entity-name">
                                                                 <strong style="font-size:16px;" class="search-board-name-text">@b.name</strong>
-                                                            </a>
-                                                        </span>
-                                                        <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
-                                                            @b.description
-                                                        </p>
+                                                            </span>
+                                                            <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
+                                                                @Etc.ellipsize(b.description, 80)
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </a>
                                             </div>
                                         }
                                     } else {
@@ -50,13 +49,52 @@
                             </div>
                         </div>
                     </div>
+                    <div class="main-row search-row" style="">
+                        <div class="big-container">
+                            <h2 class="search-header">
+                                User results for <span class="search-query-text">@query</span>
+                            </h2>
+                            <div class="search-content">
+                                <ol class="search-boards-container">
+                                @if(users.length > 0) {
+                                    @for(u <- users) {
+                                        <div class="board-wrapper">
+                                            <a href="/user/@u.username" class="no-dec" style="display:inline;color:#000000">
+                                                <div class="board search-entity" style="cursor:pointer;margin-left:69px;margin-right:30px;">
+                                                    <img class="avatar search" style="margin-left:-63px;margin-right:0px;" alt="Board Picture" src="@u.photo">
+                                                    <div class="board-desc-wrapper">
+                                                        <span class="follower-count">
+                                                            @u.reputation Reputation
+                                                        </span>
+                                                        <span class="entity-text">
+                                                            <strong style="font-size:16px;" class="search-board-name-text">@u.name</strong>
+                                                        </span>
+                                                        <span class="username-text">
+                                                            @@@u.username
+                                                        </span>
+                                                        <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
+                                                            @if(u.bio.length > 0) {
+                                                                @Etc.ellipsize(u.bio, 80)
+                                                            } else {
+                                                                @u.name does not have a bio.
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                } else {
+                                    <div class="no-results-search">
+                                        No user results for <span class="search-query-text">@query</span>
+                                    </div>
+                                }
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
-        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
-        @Html(RemoteURLController.js)
     </body>
 }

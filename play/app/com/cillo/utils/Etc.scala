@@ -102,7 +102,8 @@ object Etc {
     private val linkRegex = "(?i)\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))".r
     private val usernameRegex: Pattern = Pattern.compile("""(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z_]+[A-Za-z0-9_]+)""")
     private val hashtagRegex: Pattern = Pattern.compile("""(?<=^|(?<=[^a-zA-Z0-9-\.]))#([A-Za-z_]+[A-Za-z0-9_]+)""")
-
+    private val ytCheckRegex = Pattern.compile("youtube|youtu.be")
+    private val youtubeIdRegex = Pattern.compile(".*(?:youtu.be\\/|v\\/|u\\/\\w\\/|embed\\/|watch\\?v=)([^#\\&\\?]*).*")
 
     def parseHTML(raw: String): String = {
         parseSpecial(parseLinks(parseRaw(raw)))
@@ -118,34 +119,36 @@ object Etc {
 
     def parseLinks(raw: String): String = {
         linkRegex.replaceAllIn(raw, m => linkParser(m))
-        /*val matcher = linkRegex.matcher(raw)
-        if (matcher.find()) {
-            val num = matcher.groupCount()
-            for ()
-            val groups = matcher.group(0)
-            val parsed = {
-                if (groups.substring(0, 7).indexOf(':') < 0) {
-                    "http://" + groups
-                } else {
-                    groups
-                }
-            }
-            "<a href=\"" + parsed + "\" target=\"_blank\">" + groups + "</a>"
-        } else {
-            raw
-        }*/
     }
 
     def linkParser(m: Regex.Match): String = {
-        val groups = m.group(0)
-        val parsed = {
-            if (groups.substring(0, 7).indexOf(':') < 0) {
-                "http://" + groups
+        val raw = m.group(0)
+        if (ytCheckRegex.matcher(raw).find()) {
+            val ytMatcher = youtubeIdRegex.matcher(raw)
+            if (ytMatcher.find()) {
+                val ytId = ytMatcher.group(1)
+                "<iframe class=\"yt-embed\" width=\"500\" height=\"281\" src=\"https://www.youtube.com/embed/" + ytId + "\" allowfullscreen></iframe>"
             } else {
-                groups
+                val parsed = {
+                    if (raw.substring(0, 7).indexOf(':') < 0) {
+                        "http://" + raw
+                    } else {
+                        raw
+                    }
+                }
+                "<a href=\"" + parsed + "\" target=\"_blank\">" + raw + "</a>"
+
             }
+        } else {
+            val parsed = {
+                if (raw.substring(0, 7).indexOf(':') < 0) {
+                    "http://" + raw
+                } else {
+                    raw
+                }
+            }
+            "<a href=\"" + parsed + "\" target=\"_blank\">" + raw + "</a>"
         }
-        "<a href=\"" + parsed + "\" target=\"_blank\">" + groups + "</a>"
     }
 
     def serializeMap(m: Map[String, String]): String = {

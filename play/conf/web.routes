@@ -15,11 +15,15 @@ GET         /boards/explore                com.cillo.core.web.controllers.Explor
 GET         /settings                      com.cillo.core.web.controllers.SettingsController.userSettingsPage
 GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
 GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
+
 GET         /a/neverending                 com.cillo.core.web.controllers.PageController.neverending
 GET         /a/check_email                 com.cillo.core.web.controllers.UserController.checkEmail
+GET         /a/board/:name/delete          com.cillo.core.web.controllers.BoardController.deleteBoard(name: String)
+
 GET         /connect/facebook              com.cillo.core.web.controllers.SocialController.facebookAuth
 
 GET         /debug                         com.cillo.core.web.controllers.EtcController.debug
+
 GET         /a/thedayisnow                 com.cillo.core.web.controllers.EtcController.reddit
 
 #POST

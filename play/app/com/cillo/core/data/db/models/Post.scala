@@ -74,6 +74,12 @@ object Post {
         }
     }
 
+    def getAll: Seq[Post] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM post").as(postParser *)
+        }
+    }
+
     def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Seq[Int], time: Long = System.currentTimeMillis()): Option[Long] = {
 
         media_ids.foreach(id => if (!Media.find(id).isDefined) return None)

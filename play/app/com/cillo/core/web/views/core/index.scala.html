@@ -1,10 +1,32 @@
-@(posts: Seq[com.cillo.core.data.db.models.Post], user: com.cillo.core.data.db.models.User, boards: Seq[com.cillo.core.data.db.models.Board])
+@(posts: Seq[Post], user: User, boards: Seq[Board])
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.data.db.models._
 
 @components.base("Cillo"){
+    <style>
+        canvas.highlight {
+            position: absolute;
+            z-index: 10;
+            display: block;
+            top: 0;
+            left: 0;
+            opacity: 0.5;
+            -webkit-transition: opacity 250ms ease;
+            transition: opacity 250ms ease;
+            -webkit-animation: canvasFade 250ms ease;
+            animation: canvasFade 250ms ease;
+        }
+        @@-webkit-keyframes canvasFade {
+            from { opacity: 0; }
+            to { opacity: 0.5; }
+        }
 
+        @@keyframes canvasFade {
+            from { opacity: 0; }
+            to { opacity: 0.5; }
+        }
+    </style>
 }{
     <body class="main-background context-home">
         <div class="page" style="margin: 0px;">
@@ -53,6 +75,38 @@
         @components.repost_modal(boards)
 
         @components.fb_init()
+
+        <script>
+
+            var padding = 0;  //Space around canvas
+            var animDelay = 250;  //Delay used in CSS animation and transition for canvas.highlight
+
+            var divs = document.getElementsByTagName("div");
+
+            function openOverlay(elem) {
+              var loc = elem.getBoundingClientRect();
+              var canvas = document.createElement("canvas");
+              canvas.className = "highlight";
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+              var ctx = canvas.getContext("2d");
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.clearRect(loc.left - padding, loc.top - padding, loc.width + padding * 2, loc.height + padding * 2);
+              document.body.appendChild(canvas);
+              window.overlayCanvas = canvas;
+              //canvas.onclick = closeOverlay;
+            }
+
+            function closeOverlay() {
+              delete window.overlayCanvas;
+              this.style.opacity = 0;
+              var self = this;
+              setTimeout(function() {
+                self.parentNode.removeChild(self);
+              }, animDelay);
+            }
+
+        </script>
 
     </body>
 }

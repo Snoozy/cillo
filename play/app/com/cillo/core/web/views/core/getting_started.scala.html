@@ -81,13 +81,13 @@
                                                     <div class="trending-group-wrapper" style="margin-left:15px;margin-right:15px;">
                                                         <div class="trending-group-content">
                                                             <div class="trending-group-avatar">
-                                                                <a href="/@b.get.name">
+                                                                <a href="/@b.get.name" target="_blank">
                                                                     <img class="trending-group-avatar" src="@b.get.photo">
                                                                 </a>
                                                             </div>
                                                             <div class="trending-group-bottom">
                                                                 <div class="trending-group-header">
-                                                                    <a href="/@b.get.name" class="">
+                                                                    <a href="/@b.get.name" target="_blank">
                                                                         <span class="trending-group-name">
                                                                             @b.get.name
                                                                         </span>
@@ -166,9 +166,15 @@
                 $(document).on('click', '.notfollowing', function(e) {
                     var group_id = $(this).data('group-id');
                     var $this = $(this);
-                    follow.push(group_id);
-                    $this.addClass('following');
-                    $this.removeClass('notfollowing');
+                    $.ajax({
+                        url: '/a/group/' + group_id + '/follow',
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function() {
+                            $this.addClass('following');
+                            $this.removeClass('notfollowing');
+                        }
+                    });
 
                     return false;
                 });
@@ -176,18 +182,21 @@
                 $(document).on('click', '.following', function() {
                     var group_id = $(this).data('group-id');
                     var $this = $(this);
-                    $this.addClass('notfollowing');
-                    $this.removeClass('following');
-                    var i = follow.indexOf(group_id);
-                    if (i > -1) {
-                        follow.splice(i, 1);
-                    }
+                    $.ajax({
+                        url: '/a/group/' + group_id + '/unfollow',
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function() {
+                            $this.addClass('notfollowing');
+                            $this.removeClass('following');
+                        }
+                    });
                     return false;
                 });
 
                 $('.cont-btn').click(function(e) {
                     e.preventDefault();
-                    window.location.href = "/gettingstarted?follow=" + follow.toString();
+                    window.location.href = "/gettingstarted";
                 });
 
             });

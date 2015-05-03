@@ -38,4 +38,10 @@ object Media {
         }
     }
 
+    def getAll: Seq[Media] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM media").as(mediaParser *)
+        }
+    }
+
 }

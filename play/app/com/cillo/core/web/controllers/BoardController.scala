@@ -124,4 +124,22 @@ object BoardController extends Controller {
         }
     }
 
+    def deleteBoard(boardName: String) = AuthAction { implicit user => implicit request =>
+        user match {
+            case None => BadRequest(Json.obj("error" -> "User must be authenticated."))
+            case Some(_) =>
+                if (user.get.admin) {
+                    val board = Board.find(boardName)
+                    if (board.isDefined) {
+                        Board.delete(board.get.board_id.get)
+                        Ok(Json.obj("success" -> "Success"))
+                    } else {
+                        BadRequest(Json.obj("error" -> "Board does not exist."))
+                    }
+                } else {
+                    BadRequest(Json.obj("error" -> "User is not authorized for this action."))
+                }
+        }
+    }
+
 }

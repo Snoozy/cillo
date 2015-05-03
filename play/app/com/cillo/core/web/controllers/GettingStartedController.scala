@@ -12,19 +12,8 @@ object GettingStartedController extends Controller {
         user match {
             case None => Found("/")
             case Some(_) =>
-                val follow = request.getQueryString("follow")
-                if (follow.isDefined) {
-                    try {
-                        val group_ids = follow.get.split(",").map(_.toInt)
-                        group_ids.foreach { id =>
-                            Board.addFollower(user.get.user_id.get, id)
-                        }
-                    } catch {
-                        case e: java.lang.NumberFormatException =>
-                    }
-                    if (user.get.session.isDefined) {
-                        user.get.session.get.remove("getting_started")
-                    }
+                if (user.get.session.isDefined) {
+                    user.get.session.get.remove("getting_started")
                 }
                 Found("/")
         }

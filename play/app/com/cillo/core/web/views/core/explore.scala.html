@@ -1,4 +1,4 @@
-@(user: Option[com.cillo.core.data.db.models.User], boards: Seq[com.cillo.core.data.db.models.Board])
+@(user: Option[User], boards: Seq[Board])
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
@@ -8,8 +8,8 @@
     <script type="text/javascript" charset="utf-8">
 
         var colCount = 0;
-        var colWidth = 213;
-        var margin = 30;
+        var colWidth = 205;
+        var margin = 15;
         var spaceLeft = 0;
         var windowWidth = 0;
         var blocks = [];
@@ -24,7 +24,7 @@
             blocks = [];
 
             // Calculate the margin so the blocks are evenly spaced within the window
-            colCount = Math.floor(windowWidth/(colWidth+margin*2));
+            colCount = Math.floor((windowWidth*.85)/(colWidth+margin*2));
             spaceLeft = (windowWidth - ((colWidth*colCount)+(margin*(colCount-1)))) / 2;
 
             for(var i=0;i<colCount;i++){

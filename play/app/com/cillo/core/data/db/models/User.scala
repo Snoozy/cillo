@@ -43,7 +43,7 @@ object User {
     private val DefaultPhotoString = "default"
     private val ImageURLBase = "https://static.cillo.co/image/"
 
-    private[models] val userParser: RowParser[User] = {
+    private[data] val userParser: RowParser[User] = {
         get[Option[Int]]("user_id") ~
             get[String]("username") ~
             get[String]("name") ~
@@ -78,7 +78,12 @@ object User {
 
     def findByEmail(email: String): Option[User] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM user WHERE email = {email}").on('email -> email).as(userParser.singleOpt)
+            val user = SQL("SELECT user_id FROM user_info WHERE email = {email}").on('email -> email).as(scalar[Long].singleOpt)
+            if (user.isDefined) {
+                User.find(user.get.toInt)
+            } else {
+                None
+            }
         }
     }
 
@@ -150,8 +155,7 @@ object User {
                     else
                         None
                 }
-                val user: Option[Long] = SQL("INSERT INTO user (username, name, password, photo, photo_name) VALUES ({username}, {name}," +
-                        " {password}, {email}, {bio}, {time}, 0, {pic}, {picName})").on('username -> username, 'name -> name,
+                val user: Option[Long] = SQL("INSERT INTO user (username, name, photo, photo_name) VALUES ({username}, {name}, {pic}, {picName})").on('username -> username, 'name -> name,
                         'pic -> pic, 'picName -> picName).executeInsert()
                 UserInfo.create(user.get.toInt, password, email, bio)
                 user
@@ -163,8 +167,15 @@ object User {
     def update(user_id: Int, name: String, username: String, bio: String, pic: Int) = {
         DB.withConnection { implicit connection =>
             val media = Media.find(pic)
+            val mediaName: Option[String] = {
+                if (media.isDefined) {
+                    Some(media.get.media_name)
+                } else {
+                    None
+                }
+            }
             SQL("UPDATE user SET name = {name}, username = {username}, photo = {photo}, photo_name = {photoName} WHERE user_id = {user}")
-                .on('name -> name, 'photo -> pic, 'user -> user_id, 'username -> username, 'photoName -> media.get.media_name).executeUpdate()
+                .on('name -> name, 'photo -> pic, 'user -> user_id, 'username -> username, 'photoName -> mediaName).executeUpdate()
             SQL("UPDATE user_info SET bio = {bio} WHERE user_id = {user}").on('bio -> bio, 'user -> user_id).executeUpdate()
         }
     }
@@ -224,7 +235,7 @@ object User {
             else {
                 val afterPost = Post.find(after)
                 if (afterPost.isDefined) {
-                    val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id IN ({board_ids}) ORDER BY post_id DESC LIMIT {limit}")
+                    val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
                         .on('board_ids -> board_ids, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
                     if (posts.length < limit)
                         posts
@@ -239,7 +250,7 @@ object User {
 
     def getComments(user_id: Int, limit: Int = Post.DefaultPageSize): Seq[Comment] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM comment WHERE user_id = {user_id} ORDER BY comment_id DESC LIMIT {limit}").on('user_id -> user_id, 'limit -> limit).as(commentParser *)
+            SQL("SELECT * FROM comment WHERE user_id = {user_id} ORDER BY time DESC LIMIT {limit}").on('user_id -> user_id, 'limit -> limit).as(commentParser *)
         }
     }
 
@@ -247,7 +258,7 @@ object User {
         DB.withConnection { implicit connection =>
             val afterCom = Comment.find(after)
             if (afterCom.isDefined) {
-                val comments = SQL("SELECT * FROM comment WHERE time < {time} AND user_id = {id} ORDER BY comment_id DESC LIMIT {limit}")
+                val comments = SQL("SELECT * FROM comment WHERE time < {time} AND user_id = {id} ORDER BY time DESC LIMIT {limit}")
                     .on('id -> user_id, 'time -> afterCom.get.time, 'limit -> limit).as(commentParser *)
                 if (comments.length < limit)
                     comments

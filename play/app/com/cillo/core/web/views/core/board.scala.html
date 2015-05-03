@@ -1,5 +1,5 @@
-@(board: com.cillo.core.data.db.models.Board, user: Option[com.cillo.core.data.db.models.User],
-        posts: Seq[com.cillo.core.data.db.models.Post])(trending: Seq[Board] = Board.getTrendingBoards(limit = 7),
+@(board: Board, user: Option[User],
+        posts: Seq[Post])(trending: Seq[Board] = Board.getTrendingBoards(limit = 7),
         postCount: Int = Board.getPostsCount(board.board_id.get),
         following: Boolean = user.exists{ u => User.userIsFollowing(u.user_id.get, board.board_id.get)}
         )
@@ -55,7 +55,7 @@
                                             @board.name
                                         </span>
                                     </div>
-                                    <div class="board-descr-container">
+                                    <div class="board-descr-container" style="max-width: 560px;">
                                         <span class="board-descr-text">
                                         @board.description
                                         </span>

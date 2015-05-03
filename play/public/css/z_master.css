@@ -667,6 +667,7 @@ textarea {
 
 .description {
     margin-bottom:10px;
+    overflow: hidden;
 }
 
 .profile-container {
@@ -1622,6 +1623,7 @@ input.active-ph {
 }
 html {
     height: 100%;
+    overflow-y: scroll;
 }
 body {
     display: -webkit-flex;
@@ -1707,7 +1709,8 @@ body {
 }
 
 .navbar-button-div {
-    padding: 11px 10px;
+    padding: 11px 10px 10px;
+    margin-top: 2px;
 }
 
 .navbar-button-text {
@@ -1725,7 +1728,7 @@ body {
 
 .navbar-button-separator-wrapper {
     float: right;
-    margin-top: 10px;
+    margin-top: 13px;
     color: grey;
 }
 
@@ -1768,6 +1771,12 @@ body {
     padding-top: 13px;
 }
 
+.search-row {
+    width: 428px;
+    display: inline-block;
+    vertical-align: top;
+}
+
 .big-container {
     background-color: #fdfdfd;
     padding: 15px;
@@ -1806,6 +1815,8 @@ body {
 .board-descr-container {
     display: inline-block;
     max-width: 620px;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .board-descr-text {
@@ -2258,7 +2269,7 @@ ol.posts {
 }
 
 .post-text {
-    width: 90%;
+    width: 500px;
 }
 
 #dialog {
@@ -2603,7 +2614,7 @@ a.login-link:hover {
 .trending-group-name {
     font-weight: bold;
     color: #262626;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .trending-group-content {
@@ -2611,6 +2622,9 @@ a.login-link:hover {
 }
 
 .trending-group-header {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-align: left;
 }
 
@@ -2637,6 +2651,8 @@ a.login-link:hover {
 }
 
 .trending-group-descr-content {
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
     font-size: 16px;
 }
 
@@ -2922,4 +2938,27 @@ button.search-submit:focus {
 
 .repost-post-info {
     margin-bottom: 7px;
+}
+
+.like-text {
+    font-size: 14px;
+}
+
+.username-text {
+    color: #66757f;
+    font-size: 13px;
+}
+
+.search-entity:hover strong {
+    color: #3876b4;
+}
+
+.avatar.search {
+    height: 54px;
+    width: 54px;
+}
+
+.yt-embed {
+    border: none;
+    margin-top: 5px;
 }

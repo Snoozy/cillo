@@ -6,7 +6,9 @@ CREATE TABLE user (
     name VARCHAR(25) NOT NULL,
     photo INT DEFAULT NULL,
     photo_name VARCHAR(40) DEFAULT NULL,
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (user_id),
+    FULLTEXT(name),
+    FULLTEXT(username)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 CREATE TABLE user_info (

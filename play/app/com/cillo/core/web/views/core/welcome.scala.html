@@ -1,4 +1,4 @@
-@(boards: Seq[com.cillo.core.data.db.models.Board])
+@(boards: Seq[Board])
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
@@ -218,7 +218,7 @@
                                         <div class="fb-register-fill">
                                             <img alt="Facebook Signup" src="https://static.cillo.co/facebookLogo.png" style="margin: 10px 5px;margin-left:10px;margin-bottom:15px;">
                                             <div class="fb-register-text">
-                                                <span class="register-bold">Connect</span>
+                                                <span class="register-bold">Continue</span>
                                                 with
                                                 <span class="register-bold">Facebook</span>
                                             </div>
@@ -243,7 +243,7 @@
                                         <div class="trending-group-content">
                                             <div class="trending-group-avatar">
                                                 <a href="/@b.name">
-                                                    <img class="trending-group-avatar" src="@b.photo">
+                                                    <img class="trending-group-avatar" src="@(b.photo + "_prof")">
                                                 </a>
                                             </div>
                                             <div class="trending-group-bottom">

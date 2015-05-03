@@ -71,6 +71,29 @@ object Board {
         }
     }
 
+    def delete(board_id: Int) = {
+        DB.withConnection { implicit connection =>
+            val postIds = Board.getAllPostIds(board_id).map(_.toInt)
+            postIds.foreach { p =>
+                Post.deletePost(p)
+            }
+            SQL("DELETE FROM user_to_board WHERE board_id = {board}").on('board -> board_id).executeUpdate()
+            SQL("DELETE FROM board WHERE board_id = {board}").on('board -> board_id).executeUpdate()
+        }
+    }
+
+    def getAllPostIds(board_id: Int): Seq[Long] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT post_id FROM post WHERE board_id = {board}").on('board -> board_id).as(scalar[Long] *)
+        }
+    }
+
+    def getAll: Seq[Board] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM board").as(boardParser *)
+        }
+    }
+
     def update(board_id: Int, desc: String, pic: Int) = {
         DB.withConnection { implicit connection =>
             SQL("UPDATE `board` SET description = {desc}, photo = {pic} WHERE board_id = {board}")
@@ -108,7 +131,7 @@ object Board {
 
     val artificialTrending: Seq[Int] = {
         if (Play.isProd) {
-            Vector[Int](37, 6, 27, 31)
+            Vector[Int](37, 6, 27, 31, 38, 9)
         } else {
             Seq(13)
         }
@@ -116,12 +139,12 @@ object Board {
 
     def getTrendingBoards(limit: Int = 10): Seq[Board] = {
         DB.withConnection { implicit connection =>
-            val res = SQL("SELECT * FROM `board` WHERE privacy = 0 ORDER BY followers DESC LIMIT {limit}").on('limit -> limit).as(boardParser *)
+            val res = SQL("SELECT * FROM board WHERE privacy = 0 ORDER BY followers DESC LIMIT {limit}").on('limit -> limit).as(boardParser *)
             if (artificialTrending.nonEmpty) {
                 val art: Seq[Board] = artificialTrending.map(b => Board.find(b).get)
-                art ++ res
+                art ++ res.take(limit)
             } else {
-                res
+                res.take(limit)
             }
         }
     }

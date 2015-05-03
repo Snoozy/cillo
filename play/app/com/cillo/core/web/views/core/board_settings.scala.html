@@ -1,4 +1,4 @@
-@(user: com.cillo.core.data.db.models.User, board: com.cillo.core.data.db.models.Board)
+@(user: User, board: Board)
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
@@ -24,7 +24,7 @@
                                     Description
                                 </h4>
                                 <div class="setting-input">
-                                    <textarea type="text" class="form-control setting-textarea" name="desc" style="height:85px;">@board.description</textarea>
+                                    <textarea class="form-control setting-textarea" name="desc" style="height:85px;">@board.description</textarea>
                                 </div>
                             </li>
                             <li class="setting-li">
@@ -45,6 +45,16 @@
                                     </div>
                                 </div>
                             </li>
+                            @if(user.admin) {
+                                <li class="setting-li">
+                                    <h4 class="setting-type">
+                                        Delete
+                                    </h4>
+                                    <div class="setting-input">
+                                        <button type="button" class="btn btn-danger delete-board">Delete Board</button>
+                                    </div>
+                                </li>
+                            }
                         </ul>
                         <div class="register-form-button">
                             <button type="button" class="btn btn-default" style="width: 80px;margin-right:15px;" onclick="window.location.href='/@board.name'">Cancel</button>
@@ -106,6 +116,18 @@
 
                         reader.readAsDataURL(input.files[0]);
                     }
+                }
+
+                @if(user.admin) {
+                    $('.delete-board').click(function(e) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: '/a/board/' + '@board.name' + '/delete',
+                            complete: function() {
+                                window.location.replace('/');
+                            }
+                        });
+                    });
                 }
 
                 $(document).on('change', '#picture-change-upload', function() {

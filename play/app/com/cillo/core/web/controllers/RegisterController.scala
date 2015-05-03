@@ -6,6 +6,7 @@ import com.cillo.core.email._
 import com.cillo.utils.Etc
 import com.cillo.utils.play.Auth
 import com.cillo.utils.play.Auth.AuthAction
+import play.Play
 import play.api.mvc._
 import com.cillo.core.social.FB
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,7 +41,9 @@ object RegisterController extends Controller {
                     val sess = new cache.Session(token)
                     sess.set("getting_started", "true")
                     val firstName = Etc.parseFirstName(name.get)
-                    sendWelcomeEmail(firstName, email.get)
+                    if (Play.isProd) {
+                        sendWelcomeEmail(firstName, email.get)
+                    }
                     Found("/").withCookies(Auth.newSessionCookies(token))
                 }
                 else

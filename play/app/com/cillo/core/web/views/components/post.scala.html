@@ -86,7 +86,7 @@
                 @if(media.nonEmpty) {
                     @if(media.head.isDefined) {
                         <div class="post-picture-container">
-                            <a class="fancybox" href="@media.head.get.media_url"@if(post.title.isDefined){ title="@post.title.get"}>
+                            <a class="fancybox" href="@media.head.get.media_url">
                                 <img src="@(media.head.get.media_url + "_med")" class="post-picture">
                             </a>
                         </div>
@@ -142,7 +142,7 @@
                             @if(repost.get.media.nonEmpty) {
                                 @defining(Media.find(repost.get.media.head)) { m =>
                                     <div class="post-picture-container">
-                                        <a class="fancybox" href="@m.get.media_url"@if(repost.get.title.isDefined){ title="@repost.get.title.get"}>
+                                        <a class="fancybox" href="@m.get.media_url">
                                             <img src="@(m.get.media_url + "_med")" class="post-picture">
                                         </a>
                                     </div>
