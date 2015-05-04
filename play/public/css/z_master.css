@@ -1226,8 +1226,7 @@ a:hover {
 }
 
 .trending-topics-text {
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 40px;
 }
 
 .post-liked {
@@ -1294,7 +1293,7 @@ a:hover {
 }
 
 .displaynone {
-    display: none;
+    display: none !important;
 }
 
 .follow-unfollow-buttons.following .btn.following-btn {
@@ -2604,15 +2603,14 @@ a.login-link:hover {
     margin-bottom: 6px;
 }
 .trending-group-avatar {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     /*position: absolute;
     left: -30px;*/
 }
 
 .trending-topics-wrapper {
-    padding: 15px;
-    padding-left: 30px;
+    padding: 0 15px 15px 30px;
     overflow: auto;
 }
 
@@ -2623,6 +2621,9 @@ a.login-link:hover {
     margin-left: 50px;
     margin-top: 20px;
     margin-bottom: 30px;
+    box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
+    -moz-box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
+    -webkit-box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
 }
 
 .trending-topics-header {
@@ -2656,15 +2657,15 @@ a.login-link:hover {
 }
 
 .trending-group-bottom {
-    height: 105px;
-    padding: 10px 15px 15px;
+    height: 100px;
+    padding: 0 10px 10px;
     font: normal 13px Roboto,arial,sans-serif;
 }
 
 .trending-topics-text {
     color: #fff;
     font-weight: bold;
-    text-shadow: 0 2px 3px rgba(0,0,0,0.46);
+    text-shadow: 3px 6px 3px rgba(0,0,0,0.46);
 }
 
 .trending-group-descr-content {
@@ -2978,4 +2979,8 @@ button.search-submit:focus {
 .yt-embed {
     border: none;
     margin-top: 5px;
+}
+
+.trending-group-avatar-wrapper {
+    padding: 10px;
 }

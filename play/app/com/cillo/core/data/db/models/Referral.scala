@@ -2,12 +2,9 @@ package com.cillo.core.data.db.models
 
 import anorm.SqlParser._
 import anorm._
-import com.cillo.core.data.cache.Session
-import com.cillo.utils.Etc.makeDigest
 import com.cillo.utils.Hash
 import play.api.Play.current
 import com.cillo.core.data.Constants
-import org.apache.commons.lang3.RandomStringUtils
 import play.api.db._
 import com.cillo.core.data.Constants
 import play.api.libs.json._

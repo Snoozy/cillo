@@ -23,6 +23,14 @@
         }())
     </script>
 
+    <style>
+        .container {
+            box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
+            -moz-box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
+            -webkit-box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
+        }
+    </style>
+
     <script type="text/javascript">
         $(window).load(function() {
 
@@ -78,6 +86,10 @@
         Array.min = function(array) {
             return Math.min.apply(Math, array);
         };
+
+        function showBlocks() {
+            $('.block').css("opacity", "1");
+        }
 
     </script>
 
@@ -177,7 +189,7 @@
 
 } {
 
-    <body class="main-background" style="margin:0" onload="setupBlocks();">
+    <body class="main-background" style="margin:0" onload="setupBlocks();showBlocks();">
         <!----Page Start---->
         <div class="page" style="">
             <div class="login-link-outer">
@@ -209,7 +221,7 @@
                                 <div class="form-group password-form">
                                     <input type="password" class="form-control input-password" name="password" placeholder="Password">
                                 </div>
-                                <button type="submit" class="btn btn-primary signup-submit" name="submit" style="margin-top:5px;">Sign Up for Cillo</button>
+                                <button type="submit" class="btn btn-primary signup-submit" name="submit" style="margin-top:5px;">Sign Up</button>
                             </form>
                             <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
                                 <div class="or">OR</div>
@@ -239,9 +251,9 @@
                         <div class="trending-topics-content">
                             <div class="trending-topics-centering">
                                 @for(b <- boards) {
-                                    <div class="trending-group-wrapper block" onclick="window.location.href='/@b.name'">
+                                    <div class="trending-group-wrapper block" onclick="window.location.href='/@b.name'" style="opacity: 0;">
                                         <div class="trending-group-content">
-                                            <div class="trending-group-avatar">
+                                            <div class="trending-group-avatar-wrapper">
                                                 <a href="/@b.name">
                                                     <img class="trending-group-avatar" src="@(b.photo + "_prof")">
                                                 </a>

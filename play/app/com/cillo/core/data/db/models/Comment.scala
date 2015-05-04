@@ -14,7 +14,8 @@ case class Comment (
     data: String,
     time: Long,
     path: String,
-    votes: Int
+    votes: Int,
+    status: Int
 )
 
 object Comment {
@@ -26,15 +27,23 @@ object Comment {
             get[String]("data") ~
             get[Long]("time") ~
             get[String]("path") ~
-            get[Int]("votes") map {
-            case comment_id ~ post_id ~ user_id ~ data ~ time ~ path ~ votes =>
-                Comment(comment_id, post_id, user_id ,data, time, path, votes)
+            get[Int]("votes") ~
+            get[Int]("status") map {
+            case comment_id ~ post_id ~ user_id ~ data ~ time ~ path ~ votes ~ status =>
+                Comment(comment_id, post_id, user_id ,data, time, path, votes, status)
         }
     }
 
     def find(id: Int): Option[Comment] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM comment WHERE comment_id = {id}").on('id -> id).as(commentParser.singleOpt)
+        }
+    }
+
+    def delete(id: Int): Boolean = {
+        DB.withConnection { implicit connection =>
+            val res = SQL("UPDATE comment SET status = 1 WHERE comment_id = {id}").on('id -> id).executeUpdate()
+            res > 0
         }
     }
 
@@ -62,9 +71,10 @@ object Comment {
         Json.obj(
             "comment_id" -> comment.comment_id.get,
             "user" -> User.toJsonByUserID(comment.user_id, self = user),
-            "content" -> Json.toJson(comment.data),
+            "content" -> (if(comment.status != 1) Json.toJson(comment.data) else Json.toJson("")),
             "time" -> Json.toJson(comment.time),
-            "votes" -> Json.toJson(comment.votes)
+            "votes" -> Json.toJson(comment.votes),
+            "deleted" -> Json.toJson(comment.status == 1)
         )
     }
 
