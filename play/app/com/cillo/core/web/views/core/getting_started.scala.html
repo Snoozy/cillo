@@ -1,4 +1,4 @@
-@(boards: Map[String, Seq[Int]])
+@(boards: Map[String, Seq[Int]], featured: Seq[Int])
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.web.controllers.RemoteURLController
@@ -66,6 +66,59 @@
                         Join some boards you are interested in:
                     </div>
 
+                    <div class="group-category" style="position: relative;">
+                        <div class="category-header">
+                        Featured
+                        </div>
+
+                        <div id="carousel@carouselId" class="carousel">
+                            <ul>
+                            @for(g <- featured) {
+                                @defining(Board.find(g)) { b =>
+                                    @if(b.isDefined) {
+                                        <li>
+                                            <div class="trending-group-wrapper" style="margin-left:15px;margin-right:15px;">
+                                                <div class="trending-group-content">
+                                                    <div class="trending-group-avatar">
+                                                        <a href="/@b.get.name" target="_blank">
+                                                            <img class="trending-group-avatar" src="@b.get.photo">
+                                                        </a>
+                                                    </div>
+                                                    <div class="trending-group-bottom">
+                                                        <div class="trending-group-header">
+                                                            <a href="/@b.get.name" target="_blank">
+                                                                <span class="trending-group-name">
+                                                                @b.get.name
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="trending-group-descr">
+                                                            <span class="trending-group-descr-content">
+                                                            @Etc.ellipsize(b.get.description, 60)
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="follow-container">
+                                                        <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.board_id.get">
+                                                            <span class="btn-text follow-text">Follow</span>
+                                                            <span class="btn-text following-text">Following</span>
+                                                            <span class="btn-text unfollow-text">Unfollow</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            }
+                            </ul>
+                        </div>
+
+                        <a href="#" id="carousel@carouselId-control-prev" class="carousel-control-prev">&lsaquo;</a>
+                        <a href="#" id="carousel@carouselId-control-next" class="carousel-control-next">&rsaquo;</a>
+                    </div>
+                    @(carouselId = carouselId + 1)
+
                     @for((key, value) <- boards) {
                         <div class="group-category" style="position: relative;">
                             <div class="category-header">
@@ -127,13 +180,6 @@
                 </div>
             </div>
         </div>
-
-
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/bpopup.js"></script>
-        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://static.cillo.co/jquery.placeholder.min.js"></script>
-        @Html(RemoteURLController.js)
 
         <script>
             $(function() {

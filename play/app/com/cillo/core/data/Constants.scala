@@ -8,5 +8,6 @@ object Constants {
     val MaxMediaSize = 3145728
     val BannedNames = List("admin", "cillo")
     val BannedBoards = List("admin", "settings", "boards", "logout", "login", "user", "signup", "search", "gettingstarted", "connect", "debug", "a")
+    val HashSalt = "K06mylBiXH"
 
 }

@@ -48,7 +48,7 @@ object User {
             get[String]("username") ~
             get[String]("name") ~
             get[Option[Int]]("photo") ~
-            get[Option[String]]("photo_name")map {
+            get[Option[String]]("photo_name") map {
             case user_id ~ username ~ name ~ photo ~ photoName =>
                 if (photo.isDefined && photoName.isDefined) {
                     User(user_id, username, name, ImageURLBase + photoName.get, photo.get)
@@ -61,6 +61,13 @@ object User {
     def find(id: Int): Option[User] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM user WHERE user_id = {id}").on('id -> id).as(userParser.singleOpt)
+        }
+    }
+
+    def isUserAdmin(user_id: Int): Boolean = {
+        DB.withConnection { implicit connection =>
+            val admin = SQL("SELECT * FROM admin WHERE user_id = {user}").on('user -> user_id).as(scalar[Long].singleOpt)
+            admin.isDefined
         }
     }
 

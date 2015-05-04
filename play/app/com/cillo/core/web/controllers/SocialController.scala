@@ -30,7 +30,7 @@ object SocialController extends Controller {
         val user_id = SocialUser.findFbUserId(fbId)
         if (user_id.isDefined) {
             val user = User.find(user_id.get)
-            val admin = Admin.isUserAdmin(user.get.user_id.get)
+            val admin = User.isUserAdmin(user.get.user_id.get)
             val token = Auth.getNewUserSessionId(user.get.user_id.get)
             if (admin) {
                 val sess = new Session(token)
@@ -46,7 +46,7 @@ object SocialController extends Controller {
                     if (!social.isDefined) {
                         SocialUser.createFBUser(fbId, user.get.user_id.get)
                     }
-                    val admin = Admin.isUserAdmin(user.get.user_id.get)
+                    val admin = User.isUserAdmin(user.get.user_id.get)
                     if (admin) {
                         user.get.session.get.set("admin", "true")
                     }
