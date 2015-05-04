@@ -899,7 +899,7 @@ form.form-search {
     z-index: 9;
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#222222',GradientType=0);
     margin-top:-1px;
-    background: #fdfdfd;
+    background: #02518a;
     border-color: #e7e7e7;
 }
 
@@ -1333,7 +1333,7 @@ a:hover {
 
 .main-background {
     margin: 0px;
-    background-color: #02518A;
+    background-color: #f2f2f2;
 }
 
 .comment-marker {
@@ -1702,7 +1702,7 @@ body {
 .navbar-user-info-text {
     font-weight: 500;
     font-size: 16px;
-    color: #2f2f2f;
+    color: #fdfdfd;
 }
 
 .navbar-user-wrapper:hover {
@@ -1732,7 +1732,7 @@ body {
 
 .navbar-button-text {
     font-weight: 600;
-    color: #2f2f2f;
+    color: #fdfdfd;
 }
 
 .navbar-button-div:hover .navbar-button-text {
@@ -1826,7 +1826,7 @@ body {
 }
 
 .navbar-default {
-    background-color: #fdfdfd;
+    background-color: inherit;
 }
 
 .board-descr-container {
@@ -2558,7 +2558,7 @@ a.login-link:hover {
 
 .trending-board-name {
     font-weight: bold;
-    font-color: black;
+    color: black;
     font-size: 15px;
 }
 
@@ -2597,7 +2597,7 @@ a.login-link:hover {
     padding: 8px 12px;
     font-size: 16px;
     font-weight: bold;
-    line-height: 0px;
+    line-height: 0;
 }
 
 .form-board {
