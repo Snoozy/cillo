@@ -860,7 +860,7 @@ strong {
 }
 
 .post-text {
-    font-size:115%;
+    font-size:113%;
     word-wrap:break-word;
     width:100%;
     margin-top: 5px;
@@ -874,9 +874,6 @@ form.form-search {
 
 .user-button {
     margin-right:10px;
-}
-
-.masthead-search {
 }
 
 .fixed {
@@ -1163,8 +1160,12 @@ strong:hover {
     background: #fdfdfd;
     margin-bottom: 13px;
     border-radius: 4px;
-    box-shadow: 0 1px 5px rgba(0,0,0,.46);
-    margin-left: 0px;
+    box-shadow: 4px 4px 6px rgba(0,0,0,.46);
+    margin-left: 0;
+}
+
+.def-box-shadow {
+    box-shadow: 4px 4px 6px rgba(0,0,0,.46);
 }
 
 .user-avatar {
@@ -1293,7 +1294,7 @@ a:hover {
 }
 
 .displaynone {
-    display: none !important;
+    display: none;
 }
 
 .follow-unfollow-buttons.following .btn.following-btn {
