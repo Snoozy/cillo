@@ -104,7 +104,7 @@ CREATE TABLE comment_vote (
     value TINYINT NOT NULL,
     PRIMARY KEY (comment_vote_id),
     CONSTRAINT `comment__comment_vote_fk` FOREIGN KEY (`comment_id`) REFERENCES comment(`comment_id`),
-    CONSTRAINT `user__comment_vote_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+    CONSTRAINT `user__comment_vote_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),
     INDEX `comment_vote__comment_id_user_id_idx` (`comment_id`, `user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
@@ -115,7 +115,7 @@ CREATE TABLE user_to_board (
     time BIGINT NOT NULL,
     CONSTRAINT `user__user_to_board_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),
     CONSTRAINT `board__user_to_board_fk` FOREIGN KEY (`board_id`) REFERENCES board(`board_id`),
-    INDEX `user_to_board__user_id_board_id_idx` (`user_id`, `board_id`)
+    INDEX `user_to_board__user_id_board_id_idx` (`user_id`, `board_id`),
     PRIMARY KEY (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 

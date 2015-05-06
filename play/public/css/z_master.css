@@ -897,9 +897,8 @@ form.form-search {
     left:0;
     right:0;
     z-index: 9;
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#222222',GradientType=0);
     margin-top:-1px;
-    background: #02518a;
+    background: rgba(58,58,58,0.9);
     border-color: #e7e7e7;
 }
 
@@ -974,7 +973,7 @@ hr {
 }
 
 .boards-container {
-    border:1px solid #ccc;
+    border: 1px solid rgba(233,233,233,1);
     border-radius: 4px;
     padding-top:5px;
 }
@@ -994,13 +993,11 @@ a.action-link {
 }
 
 .icon-drop-arrow {
-    background-image: url(//static.cillo.co/dropdown-arrow.png);
-    background-repeat: no-repeat;
     cursor: pointer;
     height: 12px;
     margin-right: 3px;
     margin-top: 1px;
-    background-position: center;
+    background: url(//static.cillo.co/dropdown-arrow.png) no-repeat center;
 }
 
 a.whitespace:hover {
@@ -1162,8 +1159,8 @@ strong:hover {
 .post {
     background: #fdfdfd;
     margin-bottom: 13px;
-    border-radius: 4px;
-    box-shadow: 0 1px 5px rgba(0,0,0,.46);
+    border-radius: 3px;
+    border: 1px solid rgba(233,233,233,1);
     margin-left: 0px;
 }
 
@@ -1826,7 +1823,7 @@ body {
 }
 
 .navbar-default {
-    background-color: inherit;
+    background: none;
 }
 
 .board-descr-container {
@@ -1928,7 +1925,7 @@ body {
 }
 
 .box-shadow-apply {
-    box-shadow: 0 1px 3px rgba(0,0,0,.46);
+    box-shadow: 2px 2px 9px rgba(0,0,0,0.2)
 }
 
 .post-text-title {
