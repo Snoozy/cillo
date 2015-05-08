@@ -227,7 +227,7 @@ object User {
             }
             if (boards.nonEmpty) {
                 SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
-                    .on('board_ids -> board_ids.get, 'limit -> limit).as(postParser *)
+                    .on('board_ids -> boards, 'limit -> limit).as(postParser *)
             } else {
                 Seq[Post]()
             }

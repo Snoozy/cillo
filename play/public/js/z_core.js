@@ -536,7 +536,7 @@ $(document).ready(function() {
                             "user": user
                         },
                         success: function (response, textStatus, jqXHR) {
-                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
+                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post').find('a.fluidbox').fluidbox({closeTrigger: [{ selector: 'window', event: 'scroll'}],immediateOpen: false,debounceResize: true});
                             $('textarea.post-form').val('');
                             $('.post-title').val('');
                             $('.post-board').val('');
@@ -606,27 +606,10 @@ $(document).ready(function() {
         return false;
     });
 
-    $(".fancybox").fancybox({
-        helpers : {
-            title : {
-                type : 'over'
-            },
-            overlay: {
-                locked: true
-            }
-        },
-        margin: 25,
-        openSpeed: 100,
-        closeSpeed: 50,
-        scrolling: 'yes',
-        padding: 5,
-        type : "image",
-        beforeShow: function() {
-
-        },
-        afterClose: function() {
-
-        }
+    $('.fluidbox').fluidbox({
+        closeTrigger: [{ selector: 'window', event: 'scroll' }],
+        immediateOpen: false,
+        debounceResize: true
     });
 
     if ($('body').hasClass('context-home')) {

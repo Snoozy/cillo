@@ -9,11 +9,11 @@
     <nav class="navbar navbar-default" style="min-height:45px;width:873px;margin:auto;border:none;">
         <div class="navbar-header">
             <a class="navbar-brand navbar-logo" style="position:absolute;left:50%;margin-left:-54px;" href="/">
-                <img src="//static.cillo.co/cillo_white.png" height="34px">
+                <img src="//static.cillo.co/cillo_white.png" height="34px" class="masthead-avatar">
             </a>
         </div>
         @if(searchBar) {
-            <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:8px;padding-left:0px;">
+            <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:7px;padding-left:0;">
                 <div class="form-group input-group">
                     <form class="navbar-search">
                         <input type="search" class="form-control search-query" placeholder="Search" style="width:230px;padding-right:30px;" value="@searchQuery">
@@ -29,7 +29,7 @@
         @if(user.isDefined) {
             <div class="navbar-settings-wrapper dropdown">
                 <a href="#" class="dropdown-toggle" id="settings-dropdown" data-toggle="dropdown" aria-expanded="true" style="color:#000000;">
-                    <span class="glyphicon glyphicon-cog blue-cog" style="font-size:19px;color:#fdfdfd"></span>
+                    <span class="glyphicon glyphicon-cog masthead-cog" style="font-size:19px;color:#fdfdfd"></span>
                 </a>
                 <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="settings-dropdown">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings"><span class="glyphicon glyphicon-wrench" style="font-size:15px;"></span> Settings</a></li>

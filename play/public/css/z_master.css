@@ -381,9 +381,12 @@ a.repost-user-link:hover {
 
 .post-picture {
     border-radius:2px;
-    margin-top:0px;
+    margin-top:0;
     margin-bottom: 5px;
     max-width: 100%;
+}
+
+.fluidbox-ghost {
 }
 
 .post-picture-container {
@@ -521,10 +524,6 @@ a.repost-user-link:hover {
 .board-following-description {
     word-wrap:break-word;
     margin-left:23%;
-}
-
-.masthead-avatar {
-    border-radius:3px;
 }
 
 textarea {
@@ -896,10 +895,15 @@ form.form-search {
     top: 0;
     left:0;
     right:0;
-    z-index: 9;
+    z-index: 999;
+    -webkit-font-smoothing: antialiased;
     margin-top:-1px;
-    background: rgba(58,58,58,0.9);
+    background: rgba(75,75,75,0.95);
     border-color: #e7e7e7;
+}
+
+.search-submit:hover {
+    opacity: 0.5;
 }
 
 .main-nav {
@@ -912,6 +916,27 @@ form.form-search {
 .masthead-container {
     padding-top:4px;
 }
+/*
+.fluidbox-ghost {
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    backface-visibility: hidden;
+    perspective: 1000;
+}
+
+.fluidbox-loader {
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    backface-visibility: hidden;
+    perspective: 1000;
+}
+
+.fluidbox-wrap {
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    backface-visibility: hidden;
+    perspective: 1000;
+}*/
 
 .link-divider {
     color:#ccc;
@@ -998,6 +1023,24 @@ a.action-link {
     margin-right: 3px;
     margin-top: 1px;
     background: url(//static.cillo.co/dropdown-arrow.png) no-repeat center;
+}
+
+.fluidbox-closed .fluidbox-wrap {
+    cursor: zoom-in;
+    cursor: -webkit-zoom-in;
+    cursor: -moz-zoom-in;
+}
+
+a.fluidbox {
+    cursor: zoom-out;
+    cursor: -webkit-zoom-out;
+    cursor: -moz-zoom-out;
+}
+
+.fluidbox-open .fluidbox-wrap {
+    cursor: zoom-out;
+    cursor: -webkit-zoom-out;
+    cursor: -moz-zoom-out;
 }
 
 a.whitespace:hover {
@@ -1286,7 +1329,7 @@ a:hover {
 #neverending_spinner {
     height: 32px;
     width: 32px;
-    background: url(//static.cillo.co/loading2.gif);
+    background: url(//static.cillo.co/loading.gif);
     margin: -20px auto 10px;
 }
 
@@ -1464,7 +1507,16 @@ a:hover {
 }
 
 .navbar-logo {
-    padding: 6px 10px 5px;
+    padding: 6px 10px 0;
+    height: 45px;
+}
+
+.glyphicon-cog {
+    color: black;
+}
+
+.navbar-logo:hover {
+    opacity: 0.5;
 }
 
 *[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
@@ -1707,7 +1759,7 @@ body {
 }
 
 .navbar-user-wrapper:hover .navbar-user-info-text, .navbar-user-wrapper:focus .navbar-user-info-text {
-    color: #3876b4;
+    color: rgb(58,58,58);
 }
 
 .navbar-user-anchor:focus {
@@ -1733,7 +1785,7 @@ body {
 }
 
 .navbar-button-div:hover .navbar-button-text {
-    color: #3876b4;
+    opacity: 0.5;
 }
 
 .board:hover .board-name-text {
@@ -2107,6 +2159,10 @@ strong {
 
 .repost-post-anchor {
     color: #999;
+}
+
+.masthead-cog:hover {
+    opacity: 0.5;
 }
 
 .color-green {
@@ -2773,11 +2829,9 @@ a.login-link:hover {
 }
 
 .post-picture-container {
-    overflow: hidden;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    cursor: pointer;
 }
 
 .change-password {
@@ -2940,10 +2994,6 @@ li [class^="icon-"] {
 
 .blue-cog:hover {
     color: #3876b4;
-}
-
-.glyphicon-cog {
-    color: black;
 }
 
 button.search-submit:focus {
