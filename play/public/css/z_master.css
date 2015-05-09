@@ -896,11 +896,10 @@ form.form-search {
     top: 0;
     left:0;
     right:0;
-    z-index: 9;
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#222222',GradientType=0);
+    z-index: 999;
+    -webkit-font-smoothing: antialiased;
     margin-top:-1px;
-    background: #fdfdfd;
-    border-color: #e7e7e7;
+    background: rgba(75,75,75,0.95);
 }
 
 .main-nav {
@@ -974,8 +973,8 @@ hr {
 }
 
 .boards-container {
-    border:1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid rgba(233,233,233,1);
+    border-radius: 3px;
     padding-top:5px;
 }
 
@@ -1162,9 +1161,9 @@ strong:hover {
 .post {
     background: #fdfdfd;
     margin-bottom: 13px;
-    border-radius: 4px;
-    box-shadow: 0 1px 5px rgba(0,0,0,.46);
-    margin-left: 0px;
+    border: 1px solid rgba(233,233,233,1);
+    border-radius: 3px;
+    margin-left: 0;
 }
 
 .user-avatar {
@@ -1333,7 +1332,7 @@ a:hover {
 
 .main-background {
     margin: 0px;
-    background-color: #02518A;
+    background-color: #f2f2f2;
 }
 
 .comment-marker {
@@ -1702,7 +1701,7 @@ body {
 .navbar-user-info-text {
     font-weight: 500;
     font-size: 16px;
-    color: #2f2f2f;
+    color: #fff;
 }
 
 .navbar-user-wrapper:hover {
@@ -1710,7 +1709,7 @@ body {
 }
 
 .navbar-user-wrapper:hover .navbar-user-info-text, .navbar-user-wrapper:focus .navbar-user-info-text {
-    color: #3876b4;
+    color: rgba(75,75,75,0.95);
 }
 
 .navbar-user-anchor:focus {
@@ -1732,11 +1731,11 @@ body {
 
 .navbar-button-text {
     font-weight: 600;
-    color: #2f2f2f;
+    color: #fff;
 }
 
 .navbar-button-div:hover .navbar-button-text {
-    color: #3876b4;
+    opacity: 0.55;
 }
 
 .board:hover .board-name-text {
@@ -1765,6 +1764,10 @@ body {
 
 .first-post-avatar-wrapper {
     float: left;
+}
+
+.navbar-settings-wrapper:hover {
+    opacity: 0.55;
 }
 
 .navbar-settings-wrapper {
@@ -1826,7 +1829,7 @@ body {
 }
 
 .navbar-default {
-    background-color: #fdfdfd;
+    background: none;
 }
 
 .board-descr-container {
@@ -1928,7 +1931,7 @@ body {
 }
 
 .box-shadow-apply {
-    box-shadow: 0 1px 3px rgba(0,0,0,.46);
+    box-shadow: 2px 2px 9px rgba(0,0,0,0.2);
 }
 
 .post-text-title {
@@ -2776,7 +2779,6 @@ a.login-link:hover {
 }
 
 .post-picture-container {
-    overflow: hidden;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
