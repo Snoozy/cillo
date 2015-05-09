@@ -45,9 +45,9 @@ object S3 {
                 s3client.putObject(new PutObjectRequest(bucketName, key, normal, metadata))
                 Some(uuid.toString)
             } catch {
-                case e: AmazonClientException => println("Amazon Client Exception. Error: " + e.getMessage)
+                case e: AmazonClientException => play.api.Logger.debug("Amazon Client Exception. Error: " + e.getMessage)
                     None
-                case e: AmazonServiceException => println("Amazon Service Exception. Error: " + e.getMessage)
+                case e: AmazonServiceException => play.api.Logger.debug("Amazon Service Exception. Error: " + e.getMessage)
                     None
             }
         } else None

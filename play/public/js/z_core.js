@@ -503,7 +503,6 @@ $(document).ready(function() {
             return false;
         }
 
-
         var post_content = $('.post-form').val();
         var post_title = $('.post-title').val();
         var post_board = $('#post-board-select option:selected').text();

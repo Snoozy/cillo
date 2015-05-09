@@ -32,7 +32,7 @@ object MediaController extends Controller {
                     if (resSeq.nonEmpty) {
                         val res = resSeq.map { media =>
                             val mediaFile = media.ref.file
-                            if (mediaFile.length() > 3145728)
+                            if (mediaFile.length() > 5145728)
                                 -1
                             else {
                                 val id = S3.upload(mediaFile)
