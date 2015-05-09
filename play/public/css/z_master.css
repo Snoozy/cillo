@@ -381,12 +381,9 @@ a.repost-user-link:hover {
 
 .post-picture {
     border-radius:2px;
-    margin-top:0;
+    margin-top:0px;
     margin-bottom: 5px;
     max-width: 100%;
-}
-
-.fluidbox-ghost {
 }
 
 .post-picture-container {
@@ -524,6 +521,10 @@ a.repost-user-link:hover {
 .board-following-description {
     word-wrap:break-word;
     margin-left:23%;
+}
+
+.masthead-avatar {
+    border-radius:3px;
 }
 
 textarea {
@@ -895,15 +896,11 @@ form.form-search {
     top: 0;
     left:0;
     right:0;
-    z-index: 999;
-    -webkit-font-smoothing: antialiased;
+    z-index: 9;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444',endColorstr='#222222',GradientType=0);
     margin-top:-1px;
-    background: rgba(75,75,75,0.95);
+    background: #fdfdfd;
     border-color: #e7e7e7;
-}
-
-.search-submit:hover {
-    opacity: 0.5;
 }
 
 .main-nav {
@@ -916,27 +913,6 @@ form.form-search {
 .masthead-container {
     padding-top:4px;
 }
-/*
-.fluidbox-ghost {
-    -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    backface-visibility: hidden;
-    perspective: 1000;
-}
-
-.fluidbox-loader {
-    -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    backface-visibility: hidden;
-    perspective: 1000;
-}
-
-.fluidbox-wrap {
-    -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    backface-visibility: hidden;
-    perspective: 1000;
-}*/
 
 .link-divider {
     color:#ccc;
@@ -998,7 +974,7 @@ hr {
 }
 
 .boards-container {
-    border: 1px solid rgba(233,233,233,1);
+    border:1px solid #ccc;
     border-radius: 4px;
     padding-top:5px;
 }
@@ -1018,29 +994,13 @@ a.action-link {
 }
 
 .icon-drop-arrow {
+    background-image: url(//static.cillo.co/dropdown-arrow.png);
+    background-repeat: no-repeat;
     cursor: pointer;
     height: 12px;
     margin-right: 3px;
     margin-top: 1px;
-    background: url(//static.cillo.co/dropdown-arrow.png) no-repeat center;
-}
-
-.fluidbox-closed .fluidbox-wrap {
-    cursor: zoom-in;
-    cursor: -webkit-zoom-in;
-    cursor: -moz-zoom-in;
-}
-
-a.fluidbox {
-    cursor: zoom-out;
-    cursor: -webkit-zoom-out;
-    cursor: -moz-zoom-out;
-}
-
-.fluidbox-open .fluidbox-wrap {
-    cursor: zoom-out;
-    cursor: -webkit-zoom-out;
-    cursor: -moz-zoom-out;
+    background-position: center;
 }
 
 a.whitespace:hover {
@@ -1202,8 +1162,8 @@ strong:hover {
 .post {
     background: #fdfdfd;
     margin-bottom: 13px;
-    border-radius: 3px;
-    border: 1px solid rgba(233,233,233,1);
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,.46);
     margin-left: 0px;
 }
 
@@ -1329,7 +1289,7 @@ a:hover {
 #neverending_spinner {
     height: 32px;
     width: 32px;
-    background: url(//static.cillo.co/loading.gif);
+    background: url(//static.cillo.co/loading2.gif);
     margin: -20px auto 10px;
 }
 
@@ -1373,7 +1333,7 @@ a:hover {
 
 .main-background {
     margin: 0px;
-    background-color: #f2f2f2;
+    background-color: #02518A;
 }
 
 .comment-marker {
@@ -1507,16 +1467,7 @@ a:hover {
 }
 
 .navbar-logo {
-    padding: 6px 10px 0;
-    height: 45px;
-}
-
-.glyphicon-cog {
-    color: black;
-}
-
-.navbar-logo:hover {
-    opacity: 0.5;
+    padding: 6px 10px 5px;
 }
 
 *[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
@@ -1751,7 +1702,7 @@ body {
 .navbar-user-info-text {
     font-weight: 500;
     font-size: 16px;
-    color: #fdfdfd;
+    color: #2f2f2f;
 }
 
 .navbar-user-wrapper:hover {
@@ -1759,7 +1710,7 @@ body {
 }
 
 .navbar-user-wrapper:hover .navbar-user-info-text, .navbar-user-wrapper:focus .navbar-user-info-text {
-    color: rgb(58,58,58);
+    color: #3876b4;
 }
 
 .navbar-user-anchor:focus {
@@ -1781,11 +1732,11 @@ body {
 
 .navbar-button-text {
     font-weight: 600;
-    color: #fdfdfd;
+    color: #2f2f2f;
 }
 
 .navbar-button-div:hover .navbar-button-text {
-    opacity: 0.5;
+    color: #3876b4;
 }
 
 .board:hover .board-name-text {
@@ -1875,7 +1826,7 @@ body {
 }
 
 .navbar-default {
-    background: none;
+    background-color: #fdfdfd;
 }
 
 .board-descr-container {
@@ -1977,7 +1928,7 @@ body {
 }
 
 .box-shadow-apply {
-    box-shadow: 2px 2px 9px rgba(0,0,0,0.2)
+    box-shadow: 0 1px 3px rgba(0,0,0,.46);
 }
 
 .post-text-title {
@@ -2159,10 +2110,6 @@ strong {
 
 .repost-post-anchor {
     color: #999;
-}
-
-.masthead-cog:hover {
-    opacity: 0.5;
 }
 
 .color-green {
@@ -2611,7 +2558,7 @@ a.login-link:hover {
 
 .trending-board-name {
     font-weight: bold;
-    color: black;
+    font-color: black;
     font-size: 15px;
 }
 
@@ -2650,7 +2597,7 @@ a.login-link:hover {
     padding: 8px 12px;
     font-size: 16px;
     font-weight: bold;
-    line-height: 0;
+    line-height: 0px;
 }
 
 .form-board {
@@ -2829,9 +2776,11 @@ a.login-link:hover {
 }
 
 .post-picture-container {
+    overflow: hidden;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .change-password {
@@ -2994,6 +2943,10 @@ li [class^="icon-"] {
 
 .blue-cog:hover {
     color: #3876b4;
+}
+
+.glyphicon-cog {
+    color: black;
 }
 
 button.search-submit:focus {

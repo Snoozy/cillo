@@ -20,8 +20,10 @@ object Auth {
 
     def logInSession(email: String, password: String): Option[String] = {
         val user = User.findByEmail(email)
-        Etc.checkPass(password, user.getOrElse(return None).password)
-        Some(getNewUserSessionId(user.get.user_id.get))
+        if (Etc.checkPass(password, user.getOrElse(return None).password)) {
+            Some(getNewUserSessionId(user.get.user_id.get))
+        } else
+            None
     }
 
     def logOutSession(token: String) = {
