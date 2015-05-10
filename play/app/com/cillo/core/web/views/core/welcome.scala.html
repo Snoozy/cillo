@@ -25,9 +25,15 @@
 
     <style>
         .container {
-            box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
-            -moz-box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
-            -webkit-box-shadow: 10px 10px 9px rgba(34,25,25,0.4);
+            box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
+            -moz-box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
+            -webkit-box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
+        }
+        .trending-group-descr {
+            color: black;
+        }
+        .main-welcome {
+
         }
     </style>
 
@@ -76,7 +82,7 @@
                 var leftPos = margin+(index*(colWidth+margin));
                 $(this).css({
                     'left':(leftPos+spaceLeft-90)+'px',
-                    'top': 375+min+'px'
+                    'top': 440+min+'px'
                 });
                 blocks[index] = min+$(this).outerHeight()+margin;
             });
@@ -192,20 +198,14 @@
     <body class="main-background" style="margin:0" onload="setupBlocks();showBlocks();">
         <!----Page Start---->
         <div class="page" style="">
-            <div class="login-link-outer">
-                <div class="login-link-wrapper">
-                    <div class="login-link-inner">
-                        <a href="/login" class="login-link clear-btn">Login</a>
-                    </div>
-                </div>
-            </div>
-            <div class="main-container-wrapper" style="padding-top:15px;">
-                <div class="container" style="padding-bottom:15px;margin-top:0;">
+            @components.welcome_masthead()
+            <div class="main-container-wrapper" style="padding-top:25px;">
+                <div class="container" style="border: 1px solid rgba(200,200,200,1);padding-bottom:15px;margin-top:0;">
                     <div class="main-wrapper">
                         <div class="main-header" style="text-align: center">
-                            <div class="logo" style="display:inline-block;vertical-align:text-bottom;">
-                                <img class="logo-img" src="https://static.cillo.co/cillo-logo-big.png">
-                            </div>
+                            <p class="main-welcome">
+                                Welcome to Cillo
+                            </p>
                             <p class="main-description">
                                 Join communities about topics you love.
                             </p>
@@ -221,7 +221,7 @@
                                 <div class="form-group password-form">
                                     <input type="password" class="form-control input-password" name="password" placeholder="Password">
                                 </div>
-                                <button type="submit" class="btn btn-primary signup-submit" name="submit" style="margin-top:5px;">Sign Up</button>
+                                <button type="submit" class="btn btn-primary signup-submit" name="submit" style="width:253px;margin-top:5px;">Sign Up for Cillo</button>
                             </form>
                             <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
                                 <div class="or">OR</div>
@@ -251,28 +251,26 @@
                         <div class="trending-topics-content">
                             <div class="trending-topics-centering">
                                 @for(b <- boards) {
-                                    <div class="trending-group-wrapper block" onclick="window.location.href='/@b.name'" style="opacity: 0;">
-                                        <div class="trending-group-content">
-                                            <div class="trending-group-avatar-wrapper">
-                                                <a href="/@b.name">
+                                    <div class="trending-group-wrapper block" style="opacity:0;">
+                                        <a href="/@b.name" class="no-dec">
+                                            <div class="trending-group-content">
+                                                <div class="trending-group-avatar-wrapper">
                                                     <img class="trending-group-avatar" src="@(b.photo + "_prof")">
-                                                </a>
-                                            </div>
-                                            <div class="trending-group-bottom">
-                                                <div class="trending-group-header">
-                                                    <a href="/@b.name" class="no-dec">
+                                                </div>
+                                                <div class="trending-group-bottom">
+                                                    <div class="trending-group-header">
                                                         <span class="trending-group-name">
                                                             @b.name
                                                         </span>
-                                                    </a>
-                                                </div>
-                                                <div class="trending-group-descr">
-                                                    <span class="trending-group-descr-content">
-                                                        @Etc.ellipsize(b.description, 57)
-                                                    </span>
+                                                    </div>
+                                                    <div class="trending-group-descr">
+                                                        <span class="trending-group-descr-content">
+                                                            @Etc.ellipsize(b.description, 57)
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 }
                             </div>

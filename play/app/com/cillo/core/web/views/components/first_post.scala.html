@@ -1,12 +1,12 @@
 @(user: User, boards: Seq[Board], boardPage: Boolean = false, anon: Boolean = false)
 
 <li class="post first-post box-shadow-apply">
-    <div class="posting-wrapper" style="margin-left:48px;">
+    <div class="posting-wrapper" style="margin-left:45px;">
         <div class="first-post-avatar-wrapper">
             @if(!anon) {
-                <img class="post-avatar" src="@(user.photo + "_small")" style="margin-left:-44px;width:34px;height:34px;margin-top:0px;vertical-align:baseline;">
+                <img class="post-avatar" src="@(user.photo + "_small")" style="margin-left:-41px;width:34px;height:34px;margin-top:0;vertical-align:baseline;">
             } else {
-                <img class="post-avatar anon" src="https://static.cillo.co/image/anon_prof" style="margin-left:-44px;width:34px;height:34px;margin-top:0px;vertical-align:baseline;">
+                <img class="post-avatar anon" src="https://static.cillo.co/image/anon_prof" style="margin-left:-41px;width:34px;height:34px;margin-top:0;vertical-align:baseline;">
             }
         </div>
         <input class="post-title form-control displaynone" placeholder="Title (optional)" type="text">

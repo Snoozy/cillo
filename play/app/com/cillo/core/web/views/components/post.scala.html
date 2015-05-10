@@ -94,9 +94,9 @@
                 }
                 @if(post.data != "") {
                     <div class="post-text-container">
-                        <p class="post-text">
-                        @Html(Etc.parseHTML(post.data))
-                        </p>
+                        <div class="post-text">
+                            @Html(Etc.parseHTML(post.data))
+                        </div>
                     </div>
                 }
                 @if(repost.isDefined) {
@@ -150,9 +150,9 @@
                             }
                             @if(repost.isDefined && post.data != "") {
                                 <div class="post-text-container">
-                                    <p class="post-text">
+                                    <div class="post-text">
                                         @Html(Etc.parseHTML(repost.get.data))
-                                    </p>
+                                    </div>
                                 </div>
                             }
                             <div class="repost-dialog">
@@ -208,7 +208,6 @@
                     </a>
                 </span>
             </div>
-
 
                 @if(!expanded) {
                     @defining(CommentTree.getTopRootComments(post.post_id.get)) { comments =>

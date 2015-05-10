@@ -2,8 +2,9 @@
     width: 75%;
     min-width: 900px;
     max-width: 1200px;
-    background-color: #EEEEEE;
-    border-radius: 6px;
+    background-color: #fff;
+    border: 1px solid rgba(200,200,200,1);
+    border-radius: 4px;
     margin: 30px auto;
 }
 
@@ -978,6 +979,22 @@ hr {
     padding-top:5px;
 }
 
+.fluidbox-closed .fluidbox-wrap {
+    cursor: pointer;
+}
+
+a.fluidbox {
+    cursor: zoom-out;
+    cursor: -webkit-zoom-out;
+    cursor: -moz-zoom-out;
+}
+
+.fluidbox-open .fluidbox-wrap {
+    cursor: zoom-out;
+    cursor: -webkit-zoom-out;
+    cursor: -moz-zoom-out;
+}
+
 li {
     display:inline;
 }
@@ -993,13 +1010,11 @@ a.action-link {
 }
 
 .icon-drop-arrow {
-    background-image: url(//static.cillo.co/dropdown-arrow.png);
-    background-repeat: no-repeat;
     cursor: pointer;
     height: 12px;
     margin-right: 3px;
     margin-top: 1px;
-    background-position: center;
+    background: url(//static.cillo.co/dropdown-arrow.png) no-repeat center;
 }
 
 a.whitespace:hover {
@@ -1049,7 +1064,7 @@ a.whitespace:hover {
 
 .comment-form {
     margin-top: 6px;
-    margin-right: 15px;
+    margin-right: 0;
     margin-bottom: 9px;
 }
 
@@ -1109,7 +1124,6 @@ strong:hover {
 .fileinputs .file {
     position:relative;
     text-align: right;
-    -mox-opacity:0;
     filter:alpha(opacity: 0);
     opacity:0;
     z-index:2;
@@ -1155,7 +1169,7 @@ strong:hover {
 
 .margin-maker {
     position: relative;
-    margin-left: 60px;
+    margin-left: 57px;
 }
 
 .post {
@@ -1170,16 +1184,16 @@ strong:hover {
 }
 
 .post-wrapper {
-    padding: 5px 13px;
+    padding: 5px 17px;
 }
 
 .posting-wrapper {
-    padding: 12px;
+    padding: 12px 17px 12px 12px;
     position: relative;
 }
 
 .post-caption {
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 10px;
 }
 
@@ -1288,7 +1302,7 @@ a:hover {
 #neverending_spinner {
     height: 32px;
     width: 32px;
-    background: url(//static.cillo.co/loading2.gif);
+    background: url(//static.cillo.co/loading.gif);
     margin: -20px auto 10px;
 }
 
@@ -1443,9 +1457,25 @@ a:hover {
     margin-top: 10px;
 }
 
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .board-info {
     display: inline-block;
-    width: 698px;
+    width: 697px;
 }
 
 .error-message {
@@ -1465,8 +1495,12 @@ a:hover {
 .post-header {
 }
 
+.masthhead-logo:hover {
+    opacity: 0.55;
+}
+
 .navbar-logo {
-    padding: 6px 10px 5px;
+    padding: 6px 10px 0;
 }
 
 *[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
@@ -1498,7 +1532,8 @@ a:hover {
 .register-container {
     border-radius: 6px;
     width: 600px;
-    background: #EEEEEE;
+    border: 1px solid rgba(200,200,200,1);
+    background: #fff;
     margin: 55px auto 35px;
 }
 
@@ -1766,10 +1801,6 @@ body {
     float: left;
 }
 
-.navbar-settings-wrapper:hover {
-    opacity: 0.55;
-}
-
 .navbar-settings-wrapper {
     float: right;
     display: inline-block;
@@ -1931,7 +1962,8 @@ body {
 }
 
 .box-shadow-apply {
-    box-shadow: 2px 2px 9px rgba(0,0,0,0.2);
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
 }
 
 .post-text-title {
@@ -2097,6 +2129,7 @@ strong {
 
 .repost-content {
     padding-left: 20px;
+    margin-left: 4px;
     margin-top: 10px;
     border-left: 2px solid #e6e6e6;
     margin-bottom: 5px;
@@ -2288,10 +2321,6 @@ ol.posts {
     margin: 8px 15px 8px 8px;
 }
 
-.post-text {
-    width: 500px;
-}
-
 #dialog {
     z-index: 99999
 }
@@ -2409,16 +2438,9 @@ input.span5 {
 
 .container {
     position: relative;
-    background: white;
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#ddd));
-    background:-moz-linear-gradient(top,#fff 0,#ddd 100%);
-    background: -ms-linear-gradient(top,#fff 0,#ddd 100%);
-    background: -o-linear-gradient(top,#fff 0,#ddd 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#dddddd',GradientType=0);
-    background: -webkit-linear-gradient(top,#fff 0,#ddd 100%);
+    background: #fff;
     width: 700px;
-    margin: 0 auto;
-    margin-top: 47px;
+    margin: 47px auto 0;
     border-radius: 6px;
     border-left: solid 1px #eee;
     border-right: solid 1px #eee;
@@ -2451,10 +2473,23 @@ input.span5 {
     border-bottom: 1px solid #A9A9A9;
 }
 
+.welcome-login {
+    float: right;
+}
+
+.welcome-login-form {
+    margin-top: 8px;
+}
+
+.masthead-cog:hover {
+    opacity: 0.55;
+}
+
 .main-description {
+    margin-bottom: 20px;
     line-height: 20px;
     display: inline-block;
-    font-size: 20px;
+    font-size: 25px;
     text-rendering: optimizeLegibility;
     text-shadow: 0 1px 0 rgba(255,255,255,.6);
     -webkit-font-smoothing: antialiased;
@@ -2542,8 +2577,7 @@ a.login-link:hover {
 }
 
 .trending-topics-wrapper {
-    padding: 15px;
-    padding-left: 30px;
+    padding: 15px 15px 15px 30px;
     overflow: auto;
 }
 
@@ -2556,12 +2590,17 @@ a.login-link:hover {
     margin-bottom: 10px;
 }
 
+.main-welcome {
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
 .trending-topics-header {
 }
 
 .trending-board-name {
     font-weight: bold;
-    font-color: black;
     font-size: 15px;
 }
 
@@ -2589,16 +2628,15 @@ a.login-link:hover {
 }
 
 .trending-topics-text {
-    color: #fff;
+    color: #333;
     font-weight: bold;
-    text-shadow: 0 2px 3px rgba(0,0,0,0.46);
 }
 
 .signup-submit {
     float: right;
     height: 38px;
     padding: 8px 12px;
-    font-size: 16px;
+    font-size: 19px;
     font-weight: bold;
     line-height: 0px;
 }
@@ -2607,8 +2645,8 @@ a.login-link:hover {
     margin-bottom: 6px;
 }
 .trending-group-avatar {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     /*position: absolute;
     left: -30px;*/
 }
@@ -2622,7 +2660,8 @@ a.login-link:hover {
 .trending-group-wrapper {
     display: block;
     float: left;
-    width: 203px;
+    box-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+    width: 213px;
     margin-left: 50px;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -2654,20 +2693,14 @@ a.login-link:hover {
 }
 
 .trending-group-content {
-    background: white;
-
+    padding: 15px;
+    background: #fff;
 }
 
 .trending-group-bottom {
     height: 105px;
-    padding: 10px 15px 15px;
+    padding: 10px 0 0;
     font: normal 13px Roboto,arial,sans-serif;
-}
-
-.trending-topics-text {
-    color: #fff;
-    font-weight: bold;
-    text-shadow: 0 2px 3px rgba(0,0,0,0.46);
 }
 
 .trending-group-descr-content {
@@ -2855,6 +2888,7 @@ a.login-link:hover {
 }
 
 .profile-pic-selector {
+    z-index: 2000;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -2956,7 +2990,7 @@ button.search-submit:focus {
 }
 
 .repost-post-info {
-    margin-bottom: 7px;
+    margin-bottom: 10px;
 }
 
 .like-text {
@@ -2979,5 +3013,4 @@ button.search-submit:focus {
 
 .yt-embed {
     border: none;
-    margin-top: 5px;
 }

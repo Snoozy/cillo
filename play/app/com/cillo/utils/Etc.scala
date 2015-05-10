@@ -110,7 +110,7 @@ object Etc {
     }
 
     def parseRaw(raw: String): String = {
-        newLineRegex.matcher(multiNewLineRegex.matcher(escapeHtml4(raw)).replaceAll("</p><p class=\"post-text\">")).replaceAll(Matcher.quoteReplacement("<br/>"))
+        newLineRegex.matcher(multiNewLineRegex.matcher(escapeHtml4(raw)).replaceAll("</div><div class=\"post-text\">")).replaceAll(Matcher.quoteReplacement("<br/>"))
     }
 
     def parseSpecial(raw: String): String = {
@@ -127,7 +127,7 @@ object Etc {
             val ytMatcher = youtubeIdRegex.matcher(raw)
             if (ytMatcher.find()) {
                 val ytId = ytMatcher.group(1)
-                "<iframe class=\"yt-embed\" width=\"500\" height=\"281\" src=\"https://www.youtube.com/embed/" + ytId + "\" allowfullscreen></iframe>"
+                "<div class=\"videoWrapper\"><iframe class=\"yt-embed\" width=\"500\" height=\"281\" src=\"https://www.youtube.com/embed/" + ytId + "\" allowfullscreen></iframe></div>"
             } else {
                 val parsed = {
                     if (raw.substring(0, 7).indexOf(':') < 0) {

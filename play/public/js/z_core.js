@@ -103,6 +103,8 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     $('#repost-modal').modal('hide');
+                    $('#repost-modal').find('.repost-post-container').empty();
+                    $('#repost-board-select').val([]);
                     $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
                 }
             });
@@ -624,20 +626,5 @@ $(document).ready(function() {
             entity_id: $('body').data('board-id')
         });
     }
-
-    $('#post-autocomplete').focus(function() {
-        $(this).autocomplete("search", "");
-        $(this).css('border-bottom-left-radius', '0');
-        $(this).css('border-bottom-right-radius', '0');
-    });
-
-    $('#post-autocomplete').blur(function() {
-        $(this).css('border-bottom-left-radius', '3px');
-        $(this).css('border-bottom-right-radius', '3px');
-    });
-
-    $('#repost-autocomplete').focus(function() {
-        $(this).autocomplete("search", "");
-    });
 
 });
