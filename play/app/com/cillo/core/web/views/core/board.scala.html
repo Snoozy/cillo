@@ -36,7 +36,7 @@
                             <div class="board-info">
                                 <div class="board-data-container">
                                     <div class="board-avatar">
-                                        <a class="fancybox" href="@board.photo">
+                                        <a class="fluidbox" href="@board.photo">
                                             <img src="@(board.photo + "_prof")" class="board-avatar-img">
                                         </a>
                                         @if(user.isDefined && board.creator_id == user.get.user_id.get) {

@@ -1,4 +1,4 @@
-@(error: Boolean = false)
+@(error: Boolean = false, email: String = "")
 @import com.cillo.core.web.views.html.components
 
 
@@ -36,7 +36,7 @@
 
     <body class="main-background">
         @com.cillo.core.web.views.html.components.masthead(None, buttons = false)
-        <div class="login-wrapper gradient-background" style="min-height:0px;">
+        <div class="login-wrapper" style="min-height:0px;">
             <div class="login-header-wrapper">
                 Login to Cillo
             </div>
@@ -53,7 +53,7 @@
                 </a>
             </div>
             <form action="/login" method="POST" class="user-login-form">
-                <input class="form-control" type="email" name="email" value="" placeholder="Email" style="height:40px;">
+                <input class="form-control" type="email" name="email" value="@email" placeholder="Email" style="height:40px;">
                 <input class="form-control" type="password" name="password" style="margin-top: 8px;height:40px;" value="" placeholder="Password">
                 @if(error) {
                     <div class="login-error">Hmm, wrong email or password. Try again!</div>

@@ -84,7 +84,7 @@ object AuthController extends Controller {
             if (email.isDefined && password.isDefined) {
                 val token = logInSession(email.get, password.get)
                 if (!token.isDefined)
-                    Ok(html.core.login(error = true))
+                    Ok(html.core.login(error = true, email = email.get))
                 else {
                     val admin = User.isUserAdmin(User.findByEmail(email.get).get.user_id.get)
                     if (admin) {
