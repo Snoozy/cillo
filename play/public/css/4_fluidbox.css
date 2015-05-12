@@ -1,12 +1,12 @@
 @-webkit-keyframes fluidboxLoading {
-  0% {
+  0.00% {
     -webkit-transform: translate(-50%, -50%) rotateX(0) rotateY(0); }
   50% {
     -webkit-transform: translate(-50%, -50%) rotateX(-180deg) rotateY(0); }
   100% {
     -webkit-transform: translate(-50%, -50%) rotateX(-180deg) rotateY(-180deg); } }
 @keyframes fluidboxLoading {
-  0% {
+  0.00% {
     transform: translate(-50%, -50%) rotateX(0) rotateY(0); }
   50% {
     transform: translate(-50%, -50%) rotateX(-180deg) rotateY(0); }

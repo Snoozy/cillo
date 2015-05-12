@@ -1,11 +1,10 @@
 package com.cillo.core.web.controllers
 
-import java.util.UUID
-
 import com.cillo.core.data.aws.S3
 import com.cillo.core.data.db.models.Media
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
+import com.cillo.core.data.Constants
 import play.api.mvc._
 
 /**
@@ -32,7 +31,7 @@ object MediaController extends Controller {
                     if (resSeq.nonEmpty) {
                         val res = resSeq.map { media =>
                             val mediaFile = media.ref.file
-                            if (mediaFile.length() > 5145728)
+                            if (mediaFile.length() > Constants.MaxMediaSize)
                                 -1
                             else {
                                 val id = S3.upload(mediaFile)
