@@ -1,3 +1,5 @@
+@(login: Boolean = true)
+
 <div class="masthead" style="position:relative;">
     <nav class="navbar navbar-default" style="height:80px;width:1000px;margin:auto;border:none;">
         <div class="navbar-header">
@@ -5,18 +7,20 @@
                 <img src="//static.cillo.co/cillo-logo-white-big.png" height="45px" class="masthead-avatar">
             </a>
         </div>
-        <div class="welcome-login">
-            <form action="/login" method="POST" class="welcome-login-form form-inline">
-                <div class="form-group">
-                    <label for="welcome-login-email-input" style="display:block;color:#fff;">Email</label>
-                    <input class="form-control" id="welcome-login-email-input" type="email" name="email" value="" placeholder="Email" style="margin-right:10px;height:30px;padding: 5px 5px 5px 10px;border-radius:2px;">
-                </div>
-                <div class="form-group">
-                    <label for="welcome-login-pass-input" style="display:block;color:#fff;">Password</label>
-                    <input class="form-control" id="welcome-login-pass-input" type="password" name="password" style="height:30px;padding: 5px 5px 5px 10px;border-radius:2px;" value="" placeholder="Password">
-                </div>
-                <button type="submit" class="btn clear-btn" style="margin-top:25px;height:30px;padding:3px 5px;margin-left:10px;">Login</button>
-            </form>
-        </div>
+        @if(login) {
+            <div class="welcome-login">
+                <form action="/login" method="POST" class="welcome-login-form form-inline">
+                    <div class="form-group">
+                        <label for="welcome-login-email-input" style="display:block;color:#fff;">Email</label>
+                        <input class="form-control" id="welcome-login-email-input" type="email" name="email" value="" placeholder="Email" style="margin-right:10px;height:30px;padding: 5px 5px 5px 10px;border-radius:2px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="welcome-login-pass-input" style="display:block;color:#fff;">Password</label>
+                        <input class="form-control" id="welcome-login-pass-input" type="password" name="password" style="height:30px;padding: 5px 5px 5px 10px;border-radius:2px;" value="" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn clear-btn" style="margin-top:25px;height:30px;padding:3px 5px;margin-left:10px;">Login</button>
+                </form>
+            </div>
+        }
     </nav>
 </div>

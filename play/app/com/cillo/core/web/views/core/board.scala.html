@@ -17,13 +17,16 @@
             @components.masthead(user, searchBar = true)
             <div id="content">
                 <div class="container-fluid inner-background" style="border-radius:10px;margin-left:auto;margin-right:auto;width:870px;border-top-left-radius:0px;border-top-right-radius:0px;padding-left:0px;padding-right:0px;">
+                    @if(!user.isDefined) {
+                        @components.convince_signup(board)
+                    }
                     <div class="main-row" style="">
                         <div class="big-container box-shadow-apply">
                             <div class="board-follow-btn-container @if(following){following}else{notfollowing}" data-board-id="@board.board_id.get">
-                                <button class="btn btn-default board-follow-btn" style="font-size:16px;background-image:none;width:99px;">
-                                    <span class="btn-text follow-text">Follow</span>
-                                    <span class="btn-text following-text">Following</span>
-                                    <span class="btn-text unfollow-text">Unfollow</span>
+                                <button class="btn btn-default board-follow-btn" style="font-size:16px;background-image:none;width:89px;">
+                                    <span class="btn-text follow-text">Join</span>
+                                    <span class="btn-text following-text">Joined</span>
+                                    <span class="btn-text unfollow-text">Leave</span>
                                 </button>
                             </div>
                             @if(user.isDefined && (board.creator_id == user.get.user_id.get || user.get.admin)) {

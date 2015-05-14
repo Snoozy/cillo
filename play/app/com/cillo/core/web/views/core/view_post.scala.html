@@ -39,7 +39,7 @@
     @if(media.nonEmpty) {
         <meta property="og:image" content="@media.head.get.media_url" />
     } else {
-        <meta property="og:image" content="@poster.get.photo" />
+        <meta property="og:image" content="@board.get.photo" />
     }
 
 } {
@@ -48,7 +48,10 @@
             @components.masthead(user, searchBar = true)
             <div id="content">
                 <div class="container-fluid inner-background" style="width: 900px;">
-                    <div class="main-row" style="padding: 20px;">
+                    @if(!user.isDefined) {
+                        @components.convince_signup(board.get)
+                    }
+                    <div class="main-row">
                         @components.post(post, user)(expanded = true, board = board.get, poster = poster.get, repost = repost)
                     </div>
                 </div>

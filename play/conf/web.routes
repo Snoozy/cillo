@@ -14,6 +14,7 @@ GET         /logout                        com.cillo.core.web.controllers.AuthCo
 GET         /boards/explore                com.cillo.core.web.controllers.ExploreController.explore
 GET         /settings                      com.cillo.core.web.controllers.SettingsController.userSettingsPage
 GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
+GET         /singup                        com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
 GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
 
 GET         /a/neverending                 com.cillo.core.web.controllers.PageController.neverending

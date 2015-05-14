@@ -5,3 +5,5 @@ CREATE TABLE referral (
     user_id INT NOT NULL,
     CONSTRAINT `user__referral_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
 )
+
+alter table post add index `post__time_board_idx` (`board_id`, `time`);

@@ -131,7 +131,7 @@ object Board {
 
     val artificialTrending: Seq[Int] = {
         if (Play.isProd) {
-            Vector[Int](37, 6, 27, 31, 9)
+            Vector[Int](9, 23, 37, 6, 27, 31)
         } else {
             Seq(13)
         }
@@ -168,6 +168,12 @@ object Board {
             } else {
                 Seq()
             }
+        }
+    }
+
+    def getTopPosts(board_id: Int, limit: Int = 10): Seq[Post] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY votes DESC LIMIT {limit}").on('board_id -> board_id, 'limit -> limit).as(postParser *)
         }
     }
 

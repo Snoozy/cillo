@@ -1,4 +1,4 @@
-@(boards: Seq[Board])
+@(boards: Seq[Board], posts: Seq[Post] = Post.getTrendingPosts)
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
@@ -255,32 +255,12 @@
                 <div class="trending-topics-wrapper">
                     <div class="trending-topics-inner">
                         <div class="trending-topics-header">
-                            <span class="trending-topics-text">Trending Boards</span>
+                            <span class="trending-topics-text">Trending Posts</span>
                         </div>
                         <div class="trending-topics-content">
                             <div class="trending-topics-centering">
-                                @for(b <- boards) {
-                                    <div class="trending-group-wrapper block" style="opacity:0;">
-                                        <a href="/@b.name" class="no-dec">
-                                            <div class="trending-group-content">
-                                                <div class="trending-group-avatar-wrapper">
-                                                    <img class="trending-group-avatar" src="@(b.photo + "_prof")">
-                                                </div>
-                                                <div class="trending-group-bottom">
-                                                    <div class="trending-group-header">
-                                                        <span class="trending-group-name">
-                                                            @b.name
-                                                        </span>
-                                                    </div>
-                                                    <div class="trending-group-descr">
-                                                        <span class="trending-group-descr-content">
-                                                            @Etc.ellipsize(b.description, 57)
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
+                                @for(post <- posts) {
+                                    @components.post(post, None)()
                                 }
                             </div>
                         </div>

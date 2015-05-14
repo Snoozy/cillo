@@ -198,7 +198,12 @@ $(document).ready(function() {
     });
 
 
-    $('.post-form').focus(function () {
+    $('.post-form').focus(function (e) {
+        e.preventDefault();
+        if ($('body').hasClass('logged-out')) {
+            $('#signup-modal').modal();
+            return false;
+        }
         expandFirstPost();
     });
 

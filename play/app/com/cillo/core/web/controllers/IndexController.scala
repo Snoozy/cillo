@@ -3,26 +3,11 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models.{Board, Post, User}
 import com.cillo.utils.play.Auth.AuthAction
 import play.Play
+import com.cillo.core.data.Constants
 import play.api.mvc._
 import com.cillo.core.data.cache.Redis
 
 object IndexController extends Controller {
-
-    private val gettingStartedBoards = {
-        if (Play.isDev) {
-            Map[String, Seq[Int]]("adsf" -> Seq(1, 2, 1, 2, 1), "qwerty" -> Seq(1, 1, 1, 1, 1, 1, 1), "zxcv" -> Seq(1, 1, 1, 1, 1, 1))
-        } else {
-            Map[String, Seq[Int]]("Entertainment" -> Seq(9, 7, 15, 16, 17, 8), "Sports" -> Seq(1, 5, 6, 31, 32, 33),
-                "Science" -> Seq(13, 29, 26, 27, 30), "News and Politics" -> Seq(14, 23, 25), "Educational" -> Seq(18, 19, 20, 21, 22))
-        }
-    }
-    private val featuredBoards = {
-        if (Play.isDev) {
-            Seq[Int](1,1,1,1)
-        } else {
-            Seq[Int](37, 6, 27, 31, 38, 9)
-        }
-    }
 
     def homePage = AuthAction { implicit user => implicit request =>
         user match {
@@ -45,7 +30,7 @@ object IndexController extends Controller {
         if (cached.isDefined) {
             Ok(cached.get).as(HTML)
         } else {
-            val comp = com.cillo.core.web.views.html.core.getting_started(gettingStartedBoards, featuredBoards)
+            val comp = com.cillo.core.web.views.html.core.getting_started(Constants.GettingStartedBoards, Constants.FeaturedBoards)
             Redis.setex("gettingStarted_cache", comp.toString(), expire = 3600)
             Ok(comp)
         }

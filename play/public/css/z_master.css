@@ -482,6 +482,11 @@ a.repost-user-link:hover {
     background-color:#EEEEEE;
 }
 
+.trending-topics-content {
+    width: 800px;
+    margin: auto;
+}
+
 .message-content {
     display:inline-block;
     width:80%;
@@ -690,7 +695,7 @@ textarea {
 
 .comments-container {
     font-size:13px;
-    margin-top:0px;
+    margin-top: 9px;
     margin-left:12px;
     word-wrap:break-word;
 }
@@ -1046,7 +1051,7 @@ a.whitespace:hover {
 }
 
 .comment-form {
-    margin-top: 6px;
+    margin-top: -4px;
     margin-right: 0;
     margin-bottom: 9px;
 }
@@ -1157,7 +1162,7 @@ strong:hover {
 
 .post {
     background: #fdfdfd;
-    margin-bottom: 13px;
+    margin-bottom: 10px;
     border: 1px solid rgba(233,233,233,1);
     border-radius: 3px;
     margin-left: 0;
@@ -1213,11 +1218,10 @@ a:hover {
 }
 
 .trending-topics-wrapper {
-    /*border-top: 1px solid #A9A9A9;*/
+    padding-top: 15px;
 }
 
 .trending-topics-container {
-    text-align: center;
     margin-top: 10px;
 }
 
@@ -1519,7 +1523,7 @@ a:hover {
 
 .register-container {
     border-radius: 6px;
-    width: 600px;
+    width: 500px;
     border: 1px solid rgba(200,200,200,1);
     background: #fff;
     margin: 55px auto 35px;
@@ -1815,8 +1819,18 @@ body {
     clear: both;
 }
 
+.signup-buttons {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.convince-signup {
+    text-align: center;
+    font-size: 17px;
+}
+
 .main-row {
-    padding-top: 13px;
+    padding-top: 10px;
 }
 
 .search-row {
@@ -1944,13 +1958,13 @@ body {
 }
 
 .board-posts-container {
-    margin-top: 15px;
+    margin-top: 10px;
     display: inline-block;
 }
 
 .board-related-boards-container {
     display: inline-block;
-    margin-top: 15px;
+    margin-top: 10px;
     vertical-align: top;
     width: 254px;
     border-radius: 4px;
@@ -2436,7 +2450,7 @@ input.span5 {
 .container {
     position: relative;
     background: #fff;
-    width: 700px;
+    width: 800px;
     margin: 47px auto 0;
     border-radius: 6px;
     border-left: solid 1px #eee;
@@ -2579,7 +2593,6 @@ a.login-link:hover {
 }
 
 .trending-topics-wrapper {
-    padding: 15px 15px 15px 30px;
     overflow: auto;
 }
 
@@ -2599,6 +2612,8 @@ a.login-link:hover {
 }
 
 .trending-topics-header {
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 .trending-board-name {
@@ -2651,12 +2666,6 @@ a.login-link:hover {
     height: 180px;
     /*position: absolute;
     left: -30px;*/
-}
-
-.trending-topics-wrapper {
-    padding: 15px;
-    padding-left: 30px;
-    overflow: auto;
 }
 
 .trending-group-wrapper {

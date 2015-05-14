@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object RegisterController extends Controller {
 
     def cleanRegisterPage = AuthAction { implicit user => implicit request =>
-        Redirect("/")
+        Ok(com.cillo.core.web.views.html.core.register())
     }
 
     def attemptRegister = AuthAction { implicit user => implicit request =>

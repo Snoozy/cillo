@@ -5,9 +5,12 @@ import anorm._
 import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.utils.Etc.{bool2int, int2bool}
 import com.cillo.core.web.views.html.components
+import com.cillo.core.data.Constants
 import play.api.Play.current
 import play.api.db._
 import play.api.libs.json._
+
+import scala.util.Random
 
 case class Post (
     post_id: Option[Int],
@@ -109,7 +112,7 @@ object Post {
             }
             SQL("DELETE FROM comment WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
             SQL("DELETE FROM post_vote WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
-            SQL("DELETE FROM post WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
+            SQL("DELETE FROM post WHERE post_id = {post_id} OR repost_id = {post_id}").on('post_id -> post_id).executeUpdate()
         }
     }
 
@@ -186,6 +189,17 @@ object Post {
             newPost = newPost.as[JsObject] + ("media" -> mediaArr)
         }
         newPost
+    }
+
+    def getTrendingPosts: Seq[Post] = {
+        Random.shuffle(Constants.FrontBoards.map{ b =>
+            val board = Board.find(b)
+            if (board.isDefined) {
+                Board.getTopPosts(board.get.board_id.get)
+            } else {
+                Seq()
+            }
+        }.flatten)
     }
 
     def toJsonWithUser(posts: Seq[Post], user: Option[User]): JsValue = {

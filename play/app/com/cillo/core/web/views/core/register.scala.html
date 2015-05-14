@@ -3,32 +3,61 @@
 @com.cillo.core.web.views.html.components.base("Sign Up for Cillo") {
     <script>
         $(function() {
-            $('.active-ph').blur(function() {
-                if ($(this).val()) {
-                    $(this).addClass('filled');
-                } else if (!$(this).val()) {
-                    $(this).removeClass('filled');
+            $('.welcome_signup').submit(function() {
+                var email = $('.input-email').val();
+                var submit_form = false;
+                if ($.trim(email).length) {
+                    $.ajax({
+                        url: '/a/check_email?email=' + email,
+                        dataType: 'json',
+                        async: false,
+                        success: function() {
+                            submit_form = true;
+                        },
+                        error: function() {
+                            $('.email-form').addClass('has-error');
+                            $('.email-form').tooltip({'title': 'Email already taken.', 'placement': 'right', 'trigger': 'manual'});
+                            $('.email-form').tooltip('show');
+                            submit_form = false;
+                        }
+                    });
                 }
-            });
-
-            $('.active-ph').each(function() {
-                if ($(this).val()) {
-                    $(this).addClass('filled');
-                } else if (!$(this).val()) {
-                    $(this).removeClass('filled');
+                if (submit_form && !$.trim($('.input-email').val()).length && !$.trim($('.input-name').val()).length && !$.trim($('.input-password').val()).length) {
+                    submit_form = true;
                 }
+                if (!submit_form) {
+                    if (!$.trim($('.input-email').val()).length) {
+                        $('.email-form').addClass('has-error');
+                        $('.email-form').tooltip({'title': 'Email required.', 'placement': 'right', 'trigger': 'manual'});
+                        $('.email-form').tooltip('show');
+                    }
+                    if (!$.trim($('.input-name').val()).length) {
+                        $('.name-form').addClass('has-error');
+                        $('.name-form').tooltip({'title': 'Name required.', 'placement': 'right', 'trigger': 'manual'});
+                        $('.name-form').tooltip('show');
+                    }
+                    if (!$.trim($('.input-password').val()).length) {
+                        $('.password-form').addClass('has-error');
+                        $('.password-form').tooltip({'title': 'Password required.', 'placement': 'right', 'trigger': 'manual'});
+                        $('.password-form').tooltip('show');
+                    }
+                }
+                return submit_form;
             });
         });
     </script>
 
     <style>
-        .form-board {
-            margin-bottom: 28px;
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .register-form-button {
+            text-align: center;
         }
     </style>
 }{
     <body class="main-background">
-        @com.cillo.core.web.views.html.components.masthead(None, buttons = false)
+        @com.cillo.core.web.views.html.components.welcome_masthead(login = false)
         <div class="page-container">
             <div class="register-container">
                 <div class="register-inner">
@@ -37,26 +66,17 @@
                             Join Cillo today.
                         </span>
                     </div>
-                    <form role="form" method="post" action="/signup">
-                        <div class="form-board">
-                            <input type="text" class="form-control active-ph" id="nameInput" name="name" value="@name">
-                            <label placeholder="Full Name" class="active-ph"></label>
+                    <form role="form" method="post" action="/signup" class="welcome_signup" style="text-align: center;">
+                        <div class="form-group name-form">
+                            <input type="text" class="form-control input-name" name="name" placeholder=" Full Name">
                         </div>
-                        <div class="form-board">
-                            <input type="email" class="form-control active-ph" id="emailInput" name="email" value="@email">
-                            <label placeholder="Email Address" class="active-ph"></label>
+                        <div class="form-group email-form">
+                            <input type="email" class="form-control input-email" name="email" placeholder="Email">
                         </div>
-                        <div class="form-board">
-                            <input type="password" class="form-control active-ph" id="passwordInput" name="password" value="@password">
-                            <label placeholder="Password" class="active-ph"></label>
+                        <div class="form-group password-form">
+                            <input type="password" class="form-control input-password" name="password" placeholder="Password">
                         </div>
-                        <div class="form-board">
-                            <input type="text" class="form-control active-ph" id="usernameInput" name="username" value="@username">
-                            <label placeholder="Username" class="active-ph"></label>
-                        </div>
-                        <div class="register-form-button">
-                            <button type="submit" class="btn btn-primary" style="font-weight:bold;font-size:18px;width: 200px ;">Sign Up</button>
-                        </div>
+                        <button type="submit" class="btn btn-primary signup-submit" name="submit" style="float:none;width:253px;margin-top:5px;">Sign Up for Cillo</button>
                     </form>
                 </div>
             </div>

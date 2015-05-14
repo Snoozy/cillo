@@ -8,7 +8,7 @@
 <div class="masthead" style="@if(!fixed || small){position:relative;}">
     <nav class="navbar navbar-default" style="min-height:45px;width:873px;margin:auto;border:none;">
         <div class="navbar-header">
-            <a class="navbar-brand navbar-logo masthead-logo" style="position:absolute;left:50%;margin-left:-54px;height:45px;" href="/">
+            <a class="navbar-brand navbar-logo masthead-logo" style="position:absolute;left:50%;margin-left:-44px;height:45px;" href="/">
                 @if(small) {
                     <img src="//static.cillo.co/cillo-logo-white.png" height="34px" class="masthead-avatar">
                 } else {
@@ -58,7 +58,7 @@
             @if(buttons) {
                 <div class="navbar-button-wrapper navbar-explore">
                     <a href="/boards/explore" class="no-dec navbar-button-anchor">
-                        <div class="navbar-button-div">
+                        <div class="navbar-button-div" style="padding-right:3px;">
                             <span class="navbar-button-text">
                                 Explore
                             </span>
@@ -68,15 +68,27 @@
                 <div class="navbar-button-separator-wrapper">
                     <span class="navbar-button-separator">|</span>
                 </div>
-                <div class="navbar-button-wrapper">
-                    <a href="/boards/create" class="no-dec navbar-button-anchor">
-                        <div class="navbar-button-div">
-                            <span class="navbar-button-text">
-                                Create
-                            </span>
-                        </div>
-                    </a>
-                </div>
+                @if(user.isDefined) {
+                    <div class="navbar-button-wrapper">
+                        <a href="/boards/create" class="no-dec navbar-button-anchor">
+                            <div class="navbar-button-div">
+                                <span class="navbar-button-text">
+                                    Create
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                } else {
+                    <div class="navbar-button-wrapper navbar-signup">
+                        <a href="/signup" class="no-dec navbar-button-anchor">
+                            <div class="navbar-button-div">
+                                <span class="navbar-button-text">
+                                    Sign Up
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                }
             }
         }
     </nav>
