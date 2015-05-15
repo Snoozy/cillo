@@ -38,12 +38,7 @@ object MediaController extends Controller {
                                 if (!id.isDefined)
                                     -1
                                 else {
-                                    val DBMedia = Media.create(0, id.get)
-                                    if (!DBMedia.isDefined)
-                                        -1
-                                    else {
-                                        DBMedia.get.toInt
-                                    }
+                                    id.get
                                 }
                             }
                         }

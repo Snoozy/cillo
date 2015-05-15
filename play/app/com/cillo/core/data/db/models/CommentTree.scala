@@ -9,34 +9,34 @@ import com.cillo.core.web.views.html.components
 import play.api.db._
 import play.api.libs.json.{JsValue, _}
 
-case class CommentTree(rootComments: Seq[CommentTreeNode], post_id: Int)
+case class CommentTree(rootComments: Seq[CommentTreeNode], postId: Int)
 
 case class CommentTreeNode(comment: Comment, children: Seq[CommentTreeNode])
 
 object CommentTree {
 
-    def getPostCommentsTop(post_id: Int): CommentTree = {
+    def getPostCommentsTop(postId: Int): CommentTree = {
         DB.withConnection { implicit connection =>
-            val comments = SQL("SELECT * FROM comment WHERE post_id = {id}").on('id -> post_id).as(commentParser *)
+            val comments = SQL("SELECT * FROM comment WHERE post_id = {id}").on('id -> postId).as(commentParser *)
             commentsByTop(comments)
         }
     }
 
     def commentTreeToJson(tree: CommentTree, user: Option[User] = None): JsValue = {
-        Json.obj("post_id" -> tree.post_id, "comments" -> commentTreeJsonRecurse(tree.rootComments, user))
+        Json.obj("post_id" -> tree.postId, "comments" -> commentTreeJsonRecurse(tree.rootComments, user))
     }
 
-    def getTopRootComments(post_id: Int): Seq[Comment] = {
+    def getTopRootComments(postId: Int): Seq[Comment] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM comment WHERE post_id = {id} AND path = \"\"").on('id -> post_id).as(commentParser *)
+            SQL("SELECT * FROM comment WHERE post_id = {id} AND path = \"\"").on('id -> postId).as(commentParser *)
         }
     }
 
-    def getCommentNumChildren(comment_id: Int): Int = {
+    def getCommentNumChildren(commentId: Int): Int = {
         DB.withConnection { implicit connection =>
-            val comment = Comment.find(comment_id)
+            val comment = Comment.find(commentId)
             if (comment.isDefined) {
-                val path = comment.get.path + "/" + EncodeDecode.encodeNum(comment.get.comment_id.get)
+                val path = comment.get.path + "/" + EncodeDecode.encodeNum(comment.get.commentId.get)
                 SQL("SELECT COUNT(*) FROM comment WHERE path = {path}").on('path -> path).as(scalar[Long].single).toInt
             } else
                 0
@@ -48,7 +48,7 @@ object CommentTree {
             CommentTree(Seq(), 0)
         } else {
             val rootComments = comments.par.filter(_.path == "").toList
-            CommentTree(sortTopRecurse(comments, rootComments), comments.head.post_id)
+            CommentTree(sortTopRecurse(comments, rootComments), comments.head.postId)
         }
     }
 
@@ -64,7 +64,7 @@ object CommentTree {
 
     private def getChildren(comment: Comment, comments: Seq[Comment]): Seq[Comment] = {
         comments.par.filter { currentComment =>
-            currentComment.path.equals(comment.path + "/" + EncodeDecode.encodeNum(comment.comment_id.get))
+            currentComment.path.equals(comment.path + "/" + EncodeDecode.encodeNum(comment.commentId.get))
         }.toList
     }
 
@@ -74,7 +74,7 @@ object CommentTree {
             val comment = node.comment
             var newComment: JsValue = Comment.toJson(comment, user = user).as[JsObject] + ("children" -> commentTreeJsonRecurse(node.children, user))
             if (user.isDefined)
-                newComment = newComment.as[JsObject] + ("vote_value" -> Json.toJson(CommentVote.getCommentVoteValue(user.get.user_id.get, comment.comment_id.get)))
+                newComment = newComment.as[JsObject] + ("vote_value" -> Json.toJson(CommentVote.getCommentVoteValue(user.get.userId.get, comment.commentId.get)))
             else
                 newComment = newComment.as[JsObject] + ("vote_value" -> Json.toJson(0))
             json = json.+:(newComment) // Adds it to json array

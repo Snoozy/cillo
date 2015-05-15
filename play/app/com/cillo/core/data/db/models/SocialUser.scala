@@ -9,9 +9,9 @@ import play.api.db._
 import play.api.libs.json._
 
 case class SocialUser(
-    social_user_id: Option[Int],
-    user_id: Int,
-    social_id: String
+    socialUserId: Option[Int],
+    userId: Int,
+    socialId: String
 )
 
 object SocialUser {

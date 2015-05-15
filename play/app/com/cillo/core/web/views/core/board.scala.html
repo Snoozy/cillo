@@ -1,7 +1,7 @@
 @(board: Board, user: Option[User],
         posts: Seq[Post])(trending: Seq[Board] = Board.getTrendingBoards(limit = 7),
-        postCount: Int = Board.getPostsCount(board.board_id.get),
-        following: Boolean = user.exists{ u => User.userIsFollowing(u.user_id.get, board.board_id.get)}
+        postCount: Int = Board.getPostsCount(board.boardId.get),
+        following: Boolean = user.exists{ u => User.userIsFollowing(u.userId.get, board.boardId.get)}
         )
 
 @import com.cillo.core.web.views.html.components
@@ -12,7 +12,7 @@
 @components.base(board.name + " | Cillo") {
 
 } {
-    <body class="main-background context-board@if(!user.isDefined){ logged-out}" data-board-id="@board.board_id.get">
+    <body class="main-background context-board@if(!user.isDefined){ logged-out}" data-board-id="@board.boardId.get">
         <div class="page" style="margin:0;">
             @components.masthead(user, searchBar = true)
             <div id="content">
@@ -22,14 +22,14 @@
                     }
                     <div class="main-row" style="">
                         <div class="big-container box-shadow-apply">
-                            <div class="board-follow-btn-container @if(following){following}else{notfollowing}" data-board-id="@board.board_id.get">
+                            <div class="board-follow-btn-container @if(following){following}else{notfollowing}" data-board-id="@board.boardId.get">
                                 <button class="btn btn-default board-follow-btn" style="font-size:16px;background-image:none;width:89px;">
                                     <span class="btn-text follow-text">Join</span>
                                     <span class="btn-text following-text">Joined</span>
                                     <span class="btn-text unfollow-text">Leave</span>
                                 </button>
                             </div>
-                            @if(user.isDefined && (board.creator_id == user.get.user_id.get || user.get.admin)) {
+                            @if(user.isDefined && (board.creatorId == user.get.userId.get || user.get.admin)) {
                                 <a href="/@board.name/settings">
                                     <div class="group-settings-btn">
                                         <span class="glyphicon glyphicon-cog blue-cog" style="font-size:19px;"></span>
@@ -42,7 +42,7 @@
                                         <a class="fluidbox" href="@board.photo">
                                             <img src="@(board.photo + "_prof")" class="board-avatar-img">
                                         </a>
-                                        @if(user.isDefined && board.creator_id == user.get.user_id.get) {
+                                        @if(user.isDefined && board.creatorId == user.get.userId.get) {
                                             <div class="profile-pic-selector">
                                                 <a class="profile-pic-change" href="/@board.name/settings">
                                                     <i class="glyphicon glyphicon-camera profile-pic-camera"></i>
@@ -116,7 +116,7 @@
         </div>
 
         @if(user.isDefined) {
-            @components.repost_modal(User.getBoards(user.get.user_id.get))
+            @components.repost_modal(User.getBoards(user.get.userId.get))
         } else {
             @components.logged_out()
         }

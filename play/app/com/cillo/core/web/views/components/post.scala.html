@@ -1,8 +1,8 @@
-@(post: Post, user: Option[User])(board: Board = Board.find(post.board_id).get,
-        poster: User = User.find(post.user_id).get,
-        vote: Option[PostVote] = user.flatMap{u => PostVote.findByPostAndUser(post.post_id.get, u.user_id.get)},
-        repost: Option[Post] = post.repost_id.flatMap(Post.find),
-        reposted: Boolean = user.exists{ u => Post.userHasReposted(u.user_id.get, post.post_id.get)},
+@(post: Post, user: Option[User])(board: Board = Board.find(post.boardId).get,
+        poster: User = User.find(post.userId).get,
+        vote: Option[PostVote] = user.flatMap{u => PostVote.findByPostAndUser(post.postId.get, u.userId.get)},
+        repost: Option[Post] = post.repostId.flatMap(Post.find),
+        reposted: Boolean = user.exists{ u => Post.userHasReposted(u.userId.get, post.postId.get)},
         full: Boolean = false,
         anonImg: String = "https://static.cillo.co/image/anon",
         expanded: Boolean = false,
@@ -12,7 +12,7 @@
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
 
-<li class="post box-shadow-apply" data-item-id="@post.post_id.get">
+<li class="post box-shadow-apply" data-item-id="@post.postId.get">
     <div class="post-wrapper">
         <div class="margin-maker">
             <div class="post-header">
@@ -29,7 +29,7 @@
                         </div>
                     }
                 </div>
-                @if(user.isDefined && (poster.user_id.get == user.get.user_id.get || user.get.admin)) {
+                @if(user.isDefined && (poster.userId.get == user.get.userId.get || user.get.admin)) {
                     <div class="post-functions dropdown displaynone">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="margin-right:-3px;">
                             <i class="icon-drop-arrow"></i>
@@ -53,7 +53,7 @@
                 <div class="user-info">
                     <label class="u-info-wrapper">
                         @if(board.privacy == 0) {
-                            <a href="/user/@poster.username" data-user-id="@poster.user_id.get" class="username-anchor no-dec" style="margin-left:0px;">
+                            <a href="/user/@poster.username" data-user-id="@poster.userId.get" class="username-anchor no-dec" style="margin-left:0px;">
                                 <strong class="hover-blue user-name-text">@poster.name</strong>
                             </a>
                         } else {
@@ -68,7 +68,7 @@
                     </label>
                     <div class="timestamp-wrapper">
                         ·
-                        <a class="post-timestamp" href="/@board.name/posts/@post.post_id.get">
+                        <a class="post-timestamp" href="/@board.name/posts/@post.postId.get">
                             @Etc.convertEpochToTimestamp(post.time.longValue)
                         </a>
                     </div>
@@ -86,8 +86,12 @@
                 @if(media.nonEmpty) {
                     @if(media.head.isDefined) {
                         <div class="post-picture-container">
-                            <a class="fluidbox" href="@media.head.get.media_url">
-                                <img src="@(media.head.get.media_url + "_med")" class="post-picture">
+                            <a class="fluidbox" href="@media.head.get.mediaUrl">
+                                @if(media.head.get.mediaType == 1) {
+                                    <img src="@(media.head.get.mediaUrl)" class="post-picture">
+                                } else {
+                                    <img src="@(media.head.get.mediaUrl + "_med")" class="post-picture">
+                                }
                             </a>
                         </div>
                     }
@@ -100,19 +104,19 @@
                     </div>
                 }
                 @if(repost.isDefined) {
-                    @defining(Board.find(repost.get.board_id)) { b =>
+                    @defining(Board.find(repost.get.boardId)) { b =>
                         <div class="repost-content">
                             <div class="repost-post-info">
                                 <div class="user-info">
                                     <label class="u-info-wrapper">
                                         @if(b.get.privacy == 0) {
-                                            @defining(User.find(repost.get.user_id)) { u =>
+                                            @defining(User.find(repost.get.userId)) { u =>
                                                 <div class="repost-avatar-container">
                                                     <a href="/user/@u.get.username">
                                                         <img class="repost-avatar" src="@(u.get.photo + "_small")">
                                                     </a>
                                                 </div>
-                                                <a href="/user/@u.get.username" data-user-id="@u.get.user_id.get" class="username-anchor no-dec">
+                                                <a href="/user/@u.get.username" data-user-id="@u.get.userId.get" class="username-anchor no-dec">
                                                     <strong class="hover-blue user-name-text">@u.get.name</strong>
                                                 </a>
                                             }
@@ -142,8 +146,8 @@
                             @if(repost.get.media.nonEmpty) {
                                 @defining(Media.find(repost.get.media.head)) { m =>
                                     <div class="post-picture-container">
-                                        <a class="fancybox" href="@m.get.media_url">
-                                            <img src="@(m.get.media_url + "_med")" class="post-picture">
+                                        <a class="fancybox" href="@m.get.mediaUrl">
+                                            <img src="@(m.get.mediaUrl + "_med")" class="post-picture">
                                         </a>
                                     </div>
                                 }
@@ -156,7 +160,7 @@
                                 </div>
                             }
                             <div class="repost-dialog">
-                                <a href="/@b.get.name/posts/@repost.get.post_id.get" class="repost-post-anchor">
+                                <a href="/@b.get.name/posts/@repost.get.postId.get" class="repost-post-anchor">
                                     <i class="glyphicon glyphicon-share-alt" style="margin-right: -1px;"></i>
                                     Original post
                                 </a>
@@ -189,7 +193,7 @@
                         <span class="color-blue comment-text">Comment</span>
                     </a>
                 </span>
-                @if(user.isDefined && (post.user_id != user.get.user_id.get)) {
+                @if(user.isDefined && (post.userId != user.get.userId.get)) {
                     <span>
                         <span class="p-action repost">
                             <span class="bullet"> · </span>
@@ -202,7 +206,7 @@
                 }
                 <span class="p-action comment">
                     <span class="bullet"> · </span>
-                    <a class="p-action-anchor action-link-share" data-share-url="https://www.cillo.co/@board.name/posts/@post.post_id.get" href="#">
+                    <a class="p-action-anchor action-link-share" data-share-url="https://www.cillo.co/@board.name/posts/@post.postId.get" href="#">
                         <i class="icon-fb-share"></i>
                         <span class="color-blue comment-text" style="margin-left:5px;">Share</span>
                     </a>
@@ -210,7 +214,7 @@
             </div>
 
                 @if(!expanded) {
-                    @defining(CommentTree.getTopRootComments(post.post_id.get)) { comments =>
+                    @defining(CommentTree.getTopRootComments(post.postId.get)) { comments =>
                         @if(comments.nonEmpty) {
                             <hr class="hr-no-margin comment-hr">
                         }
@@ -233,10 +237,10 @@
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
                             @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
-                            @defining(CommentTree.getCommentNumChildren(comment.comment_id.get)) { n =>
+                            @defining(CommentTree.getCommentNumChildren(comment.commentId.get)) { n =>
                                 @if(n > 0) {
                                     <div class="view-replies-wrapper">
-                                        <a href="/@board.name/posts/@post.post_id.get">
+                                        <a href="/@board.name/posts/@post.postId.get">
                                             <div class="view-replies">
                                                 <span class="glyphicon glyphicon-share-alt" style="display:inline-block;transform:scale(1,-1);"></span>
                                                 <span class="view-replies-text">
@@ -250,7 +254,7 @@
                         </div>
                     }
                 } else {
-                    @defining(CommentTree.getPostCommentsTop(post.post_id.get)) { comments =>
+                    @defining(CommentTree.getPostCommentsTop(post.postId.get)) { comments =>
                         @if(comments.rootComments.nonEmpty) {
                             <hr class="hr-no-margin comment-hr">
                         }

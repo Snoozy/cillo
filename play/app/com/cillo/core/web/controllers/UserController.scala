@@ -14,10 +14,10 @@ object UserController extends Controller {
         } else {
             val describeUser = User.find(username)
             if (describeUser.isDefined) {
-                val posts = User.getPosts(describeUser.get.user_id.get)
-                val comments = User.getComments(describeUser.get.user_id.get)
-                val boards = User.getBoards(describeUser.get.user_id.get)
-                val postsCount = User.getPostsCount(describeUser.get.user_id.get)
+                val posts = User.getPosts(describeUser.get.userId.get)
+                val comments = User.getComments(describeUser.get.userId.get)
+                val boards = User.getBoards(describeUser.get.userId.get)
+                val postsCount = User.getPostsCount(describeUser.get.userId.get)
                 Ok(core.user(describeUser.get, user, posts, comments, boards, postsCount))
             } else {
                 NotFound("User not found.")

@@ -15,9 +15,9 @@ object PageController extends Controller {
                 val afterPost = request.getQueryString("after")
                 val posts = {
                     if (afterPost.isDefined) {
-                        User.getFeedPaged(user.get.user_id.get, afterPost.get.toInt)
+                        User.getFeedPaged(user.get.userId.get, afterPost.get.toInt)
                     } else {
-                        User.getFeed(user.get.user_id.get)
+                        User.getFeed(user.get.userId.get)
                     }
                 }
                 Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))
@@ -28,9 +28,9 @@ object PageController extends Controller {
                 if (describeUser.isDefined) {
                     val posts = {
                         if (afterPost.isDefined) {
-                            User.getPostsPaged(describeUser.get.user_id.get, afterPost.get.toInt)
+                            User.getPostsPaged(describeUser.get.userId.get, afterPost.get.toInt)
                         } else {
-                            User.getPosts(describeUser.get.user_id.get)
+                            User.getPosts(describeUser.get.userId.get)
                         }
                     }
                     Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))
@@ -43,9 +43,9 @@ object PageController extends Controller {
                 if (board.isDefined) {
                     val posts = {
                         if (afterPost.isDefined) {
-                                Board.getFeedPaged(board.get.board_id.get, afterPost.get.toInt)
+                                Board.getFeedPaged(board.get.boardId.get, afterPost.get.toInt)
                         } else {
-                            Board.getFeed(board.get.board_id.get)
+                            Board.getFeed(board.get.boardId.get)
                         }
                     }
                     Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))

@@ -1523,19 +1523,23 @@ a:hover {
 
 .register-container {
     border-radius: 6px;
-    width: 500px;
+    width: 450px;
     border: 1px solid rgba(200,200,200,1);
     background: #fff;
     margin: 55px auto 35px;
 }
 
 .register-inner {
-    padding: 20px;
+    padding: 20px 30px;
 }
 
 .register-header {
     text-align: center;
     margin-bottom: 15px;
+}
+
+body.modal-open {
+    overflow: visible;
 }
 
 .register-text {

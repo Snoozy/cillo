@@ -21,7 +21,7 @@ object Auth {
     def logInSession(email: String, password: String): Option[String] = {
         val user = User.findByEmail(email)
         if (Etc.checkPass(password, user.getOrElse(return None).password)) {
-            Some(getNewUserSessionId(user.get.user_id.get))
+            Some(getNewUserSessionId(user.get.userId.get))
         } else
             None
     }
@@ -30,8 +30,8 @@ object Auth {
         Redis.del(token)
     }
 
-    def newSessionCookies(user_id: Int): Cookie = {
-        Cookie("auth_token", getNewUserSessionId(user_id))
+    def newSessionCookies(userId: Int): Cookie = {
+        Cookie("auth_token", getNewUserSessionId(userId))
     }
 
     def newSessionCookies(token: String): Cookie ={
@@ -70,8 +70,8 @@ object Auth {
     }
 
     private def parseMemcached(token: String): Option[User] = {
-        val user_id = new Session(token).get("user_id").getOrElse(return None).toInt
-        val user = User.find(user_id)
+        val userId = new Session(token).get("user_id").getOrElse(return None).toInt
+        val user = User.find(userId)
         if (user.isDefined) {
             Some(user.get.copy(token = Some(token), session = Some(new Session(token))))
         } else user

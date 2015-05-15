@@ -19,13 +19,13 @@ object SettingController extends Controller{
                     val bio = form.get("bio").map(_.head).getOrElse(user.get.bio)
                     val pic = {
                         try {
-                            form.get("photo").map(_.head).getOrElse(user.get.photo_id + "").toInt
+                            form.get("photo").map(_.head).getOrElse(user.get.photoId + "").toInt
                         } catch {
-                            case e: java.lang.NumberFormatException => user.get.photo_id
+                            case e: java.lang.NumberFormatException => user.get.photoId
                         }
                     }
-                    if (User.update(user.get.user_id.get, name, username, bio, pic) > 0) {
-                        Ok(User.toJsonByUserID(user.get.user_id.get, self = user))
+                    if (User.update(user.get.userId.get, name, username, bio, pic) > 0) {
+                        Ok(User.toJsonByUserID(user.get.userId.get, self = user))
                     } else {
                         BadRequest(Json.obj("error" -> "Error updating user information."))
                     }
@@ -44,7 +44,7 @@ object SettingController extends Controller{
                     if (currPassword.isDefined && newPassword.isDefined) {
                         if (Etc.checkPass(currPassword.get, user.get.password)) {
                             if (Etc.checkPasswordValidity(newPassword.get)) {
-                                User.updatePassword(user.get.user_id.get, newPassword.get)
+                                User.updatePassword(user.get.userId.get, newPassword.get)
                                 Ok(Json.obj("success" -> "Password successfully changed."))
                             } else {
                                 BadRequest(Json.obj("error" -> "Password format is not valid."))
@@ -64,13 +64,13 @@ object SettingController extends Controller{
             case None => BadRequest(Json.obj("error" -> "User must be authenticated."))
             case Some(_) =>
                 val board = Board.find(board_id)
-                if (board.isDefined && board.get.creator_id == user.get.user_id.get) {
+                if (board.isDefined && board.get.creatorId == user.get.userId.get) {
                     val body: AnyContent = request.body
                     body.asFormUrlEncoded.map { form =>
                         val descr = form.get("description").map(_.head).getOrElse(board.get.description)
                         var pic = 1
                         try {
-                            pic = form.get("picture").map(_.head).getOrElse(board.get.photo_id + "").toInt
+                            pic = form.get("picture").map(_.head).getOrElse(board.get.photoId + "").toInt
                         } catch {
                             case e: java.lang.NumberFormatException =>
                         }

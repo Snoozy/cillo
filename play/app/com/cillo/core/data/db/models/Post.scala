@@ -13,16 +13,16 @@ import play.api.libs.json._
 import scala.util.Random
 
 case class Post (
-    post_id: Option[Int],
-    user_id: Int,
+    postId: Option[Int],
+    userId: Int,
     title: Option[String],
     data: String,
-    board_id: Int,
-    repost_id: Option[Int],
+    boardId: Int,
+    repostId: Option[Int],
     votes: Int,
-    comment_count: Int,
+    commentCount: Int,
     time: Long,
-    post_type: Int,
+    postType: Int,
     media: Seq[Int]
 )
 
@@ -42,9 +42,9 @@ object Post {
             get[Long]("time") ~
             get[Int]("post_type") ~
             get[String]("media") map {
-            case post_id ~ user_id ~ title ~ data ~ board_id ~ repost_id ~ votes ~ comment_count ~ time ~ post_type ~ media =>
+            case postId ~ userId ~ title ~ data ~ boardId ~ repostId ~ votes ~ commentCount ~ time ~ postType ~ media =>
                 val media_ids = media.split("~").filter(_ != "").map(_.toInt)
-                Post(post_id, user_id, title, data, board_id, repost_id, votes, comment_count, time, post_type, media_ids)
+                Post(postId, userId, title, data, boardId, repostId, votes, commentCount, time, postType, media_ids)
         }
     }
 
@@ -54,10 +54,10 @@ object Post {
         }
     }
 
-    def createSimplePost(user_id: Int, title: Option[String], data: String, board_id: Int, repost_id: Option[Int] = None, time: Long = System.currentTimeMillis()): Option[Long] = {
+    def createSimplePost(userId: Int, title: Option[String], data: String, boardId: Int, repostId: Option[Int] = None, time: Long = System.currentTimeMillis()): Option[Long] = {
         // checking that data is a number if post is a repost
-        if (repost_id.isDefined) {
-            val repostExists = Post.find(repost_id.get)
+        if (repostId.isDefined) {
+            val repostExists = Post.find(repostId.get)
             if (!repostExists.isDefined)
                 return None
         }
@@ -72,8 +72,8 @@ object Post {
 
         DB.withConnection { implicit connection =>
             SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
-                " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> user_id, 'title -> titleParsed, 'data -> data,
-                    'board_id -> board_id, 'repost_id -> repost_id, 'time -> time).executeInsert()
+                " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
+                    'board_id -> boardId, 'repost_id -> repostId, 'time -> time).executeInsert()
         }
     }
 
@@ -83,11 +83,11 @@ object Post {
         }
     }
 
-    def createMediaPost(user_id: Int, title: Option[String], data: String, board_id: Int, media_ids: Seq[Int], time: Long = System.currentTimeMillis()): Option[Long] = {
+    def createMediaPost(userId: Int, title: Option[String], data: String, boardId: Int, mediaIds: Seq[Int], time: Long = System.currentTimeMillis()): Option[Long] = {
 
-        media_ids.foreach(id => if (!Media.find(id).isDefined) return None)
+        mediaIds.foreach(id => if (!Media.find(id).isDefined) return None)
 
-        val media_string = media_ids.mkString("~")
+        val mediaString = mediaIds.mkString("~")
 
         val titleParsed: Option[String] = {
             if (title.isDefined) {
@@ -99,35 +99,35 @@ object Post {
 
         DB.withConnection { implicit connection =>
             SQL("INSERT INTO post (user_id, title, data, board_id, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
-                " {board_id}, 0, {time}, 0, 1, {media})").on('user_id -> user_id, 'title -> titleParsed, 'data -> data,
-                    'board_id -> board_id, 'time -> time, 'media -> media_string).executeInsert()
+                " {board_id}, 0, {time}, 0, 1, {media})").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
+                    'board_id -> boardId, 'time -> time, 'media -> mediaString).executeInsert()
         }
     }
 
-    def deletePost(post_id: Int): Boolean = {
+    def deletePost(postId: Int): Boolean = {
         DB.withConnection { implicit connection =>
-            val commentIds: Seq[Int] = SQL("SELECT comment_id FROM comment WHERE post_id = {post_id}").on('post_id -> post_id).as(scalar[Int].*)
+            val commentIds: Seq[Int] = SQL("SELECT comment_id FROM comment WHERE post_id = {post_id}").on('post_id -> postId).as(scalar[Int].*)
             if (commentIds.nonEmpty) {
                 SQL("DELETE FROM comment_vote WHERE comment_id IN ({ids})").on('ids -> commentIds).executeUpdate()
             }
-            SQL("DELETE FROM comment WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
-            SQL("DELETE FROM post_vote WHERE post_id = {post_id}").on('post_id -> post_id).executeUpdate()
-            SQL("DELETE FROM post WHERE post_id = {post_id} OR repost_id = {post_id}").on('post_id -> post_id).executeUpdate()
+            SQL("DELETE FROM comment WHERE post_id = {post_id}").on('post_id -> postId).executeUpdate()
+            SQL("DELETE FROM post_vote WHERE post_id = {post_id}").on('post_id -> postId).executeUpdate()
+            SQL("DELETE FROM post WHERE post_id = {post_id}").on('post_id -> postId).executeUpdate()
         }
     }
 
-    def userHasReposted(user_id: Int, post_id: Int): Boolean = {
+    def userHasReposted(userId: Int, postId: Int): Boolean = {
         DB.withConnection { implicit connection =>
             val post = SQL("SELECT * FROM post WHERE repost_id = {post} AND user_id = {user}")
-                .on('post -> post_id, 'user -> user_id).as(postParser *)
+                .on('post -> postId, 'user -> userId).as(postParser *)
             post.nonEmpty
         }
     }
 
-    def getRootComments(post_id: Int, limit: Int = 5): Seq[Comment] = {
+    def getRootComments(postId: Int, limit: Int = 5): Seq[Comment] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM comment WHERE post_id = {post} AND path = '' ORDER BY votes LIMIT {LIMIT}")
-                .on('post -> post_id, 'limit -> limit).as(commentParser *)
+                .on('post -> postId, 'limit -> limit).as(commentParser *)
         }
     }
 
@@ -137,32 +137,32 @@ object Post {
 
     def toJsonSingle(post: Post, user: Option[User]): JsValue = {
         var newPost = Json.obj(
-            "post_id" -> Json.toJson(post.post_id)
+            "post_id" -> Json.toJson(post.postId)
         )
 
-        if (post.repost_id.isDefined) {
-            val reposted_post = Post.find(post.repost_id.get)
-            if (reposted_post.isDefined) {
-                val board = Board.find(reposted_post.get.board_id)
-                val poster = User.find(reposted_post.get.user_id)
-                val reposter = User.find(post.user_id)
-                val repost_board = Board.find(post.board_id)
+        if (post.repostId.isDefined) {
+            val repostedPost = Post.find(post.repostId.get)
+            if (repostedPost.isDefined) {
+                val board = Board.find(repostedPost.get.boardId)
+                val poster = User.find(repostedPost.get.userId)
+                val reposter = User.find(post.userId)
+                val repost_board = Board.find(post.boardId)
                 if (board.isDefined && poster.isDefined && reposter.isDefined && repost_board.isDefined) {
                     val anon = repost_board.get.privacy == 1
                     newPost = newPost.as[JsObject] +
-                        ("repost" -> Post.toJsonSingle(reposted_post.get, user)) +
+                        ("repost" -> Post.toJsonSingle(repostedPost.get, user)) +
                         ("content" -> Json.toJson(post.data)) +
                         ("title" -> Json.toJson(post.title)) +
                         ("board" -> Board.toJson(repost_board.get)) +
                         ("user" -> User.toJson(reposter.get, self = user, anon = anon)) +
                         ("time" -> Json.toJson(post.time)) +
                         ("votes" -> Json.toJson(post.votes)) +
-                        ("comment_count" -> Json.toJson(post.comment_count))
+                        ("comment_count" -> Json.toJson(post.commentCount))
                 }
             }
         } else {
-            val board = Board.find(post.board_id)
-            val poster = User.find(post.user_id)
+            val board = Board.find(post.boardId)
+            val poster = User.find(post.userId)
             if (board.isDefined && poster.isDefined) {
                 val anon = board.get.privacy == 1
                 newPost = newPost.as[JsObject] +
@@ -172,18 +172,18 @@ object Post {
                     ("user" -> User.toJson(poster.get, self = user, anon = anon)) +
                     ("time" -> Json.toJson(post.time)) +
                     ("votes" -> Json.toJson(post.votes)) +
-                    ("comment_count" -> Json.toJson(post.comment_count))
+                    ("comment_count" -> Json.toJson(post.commentCount))
             }
         }
         if (user.isDefined) {
-            newPost = newPost.as[JsObject] + ("vote_value" -> Json.toJson(PostVote.getPostVoteValue(post.post_id.get, user.get.user_id.get)))
+            newPost = newPost.as[JsObject] + ("vote_value" -> Json.toJson(PostVote.getPostVoteValue(post.postId.get, user.get.userId.get)))
         }
         if (post.media.nonEmpty) {
             var mediaArr = Json.arr()
-            post.media.foreach { media_id =>
-                val media = Media.find(media_id)
+            post.media.foreach { mediaId =>
+                val media = Media.find(mediaId)
                 if (media.isDefined) {
-                    mediaArr = mediaArr.+:(Json.toJson(Media.BaseMediaURL + media.get.media_name))
+                    mediaArr = mediaArr.+:(Json.toJson(Media.BaseMediaURL + media.get.mediaName))
                 }
             }
             newPost = newPost.as[JsObject] + ("media" -> mediaArr)
@@ -195,7 +195,7 @@ object Post {
         Random.shuffle(Constants.FrontBoards.map{ b =>
             val board = Board.find(b)
             if (board.isDefined) {
-                Board.getTopPosts(board.get.board_id.get)
+                Board.getTopPosts(board.get.boardId.get)
             } else {
                 Seq()
             }

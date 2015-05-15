@@ -13,11 +13,11 @@ import play.api.db._
 import play.api.libs.json._
 
 case class User(
-    user_id: Option[Int],
+    userId: Option[Int],
     username: String,
     name: String,
     photo: String,
-    photo_id: Int,
+    photoId: Int,
     token: Option[String] = None,
     session: Option[Session] = None
 ) {
@@ -28,7 +28,7 @@ case class User(
             false
     }
 
-    lazy val userInfo = UserInfo.find(user_id.get).get
+    lazy val userInfo = UserInfo.find(userId.get).get
 
     val password = userInfo.password
     val email = userInfo.email
@@ -49,11 +49,11 @@ object User {
             get[String]("name") ~
             get[Option[Int]]("photo") ~
             get[Option[String]]("photo_name") map {
-            case user_id ~ username ~ name ~ photo ~ photoName =>
+            case userId ~ username ~ name ~ photo ~ photoName =>
                 if (photo.isDefined && photoName.isDefined) {
-                    User(user_id, username, name, ImageURLBase + photoName.get, photo.get)
+                    User(userId, username, name, ImageURLBase + photoName.get, photo.get)
                 } else {
-                    User(user_id, username, name, ImageURLBase + DefaultPhotoString, 0)
+                    User(userId, username, name, ImageURLBase + DefaultPhotoString, 0)
                 }
         }
     }
@@ -64,9 +64,9 @@ object User {
         }
     }
 
-    def isUserAdmin(user_id: Int): Boolean = {
+    def isUserAdmin(userId: Int): Boolean = {
         DB.withConnection { implicit connection =>
-            val admin = SQL("SELECT * FROM admin WHERE user_id = {user}").on('user -> user_id).as(scalar[Long].singleOpt)
+            val admin = SQL("SELECT * FROM admin WHERE user_id = {user}").on('user -> userId).as(scalar[Long].singleOpt)
             admin.isDefined
         }
     }
@@ -158,7 +158,7 @@ object User {
             DB.withConnection { implicit connection =>
                 val picName: Option[String] = {
                     if (pic.isDefined)
-                        Some(Media.find(pic.get).get.media_name)
+                        Some(Media.find(pic.get).get.mediaName)
                     else
                         None
                 }
@@ -171,42 +171,42 @@ object User {
             None
     }
 
-    def update(user_id: Int, name: String, username: String, bio: String, pic: Int) = {
+    def update(userId: Int, name: String, username: String, bio: String, pic: Int) = {
         DB.withConnection { implicit connection =>
             val media = Media.find(pic)
             val mediaName: Option[String] = {
                 if (media.isDefined) {
-                    Some(media.get.media_name)
+                    Some(media.get.mediaName)
                 } else {
                     None
                 }
             }
             SQL("UPDATE user SET name = {name}, username = {username}, photo = {photo}, photo_name = {photoName} WHERE user_id = {user}")
-                .on('name -> name, 'photo -> pic, 'user -> user_id, 'username -> username, 'photoName -> mediaName).executeUpdate()
-            SQL("UPDATE user_info SET bio = {bio} WHERE user_id = {user}").on('bio -> bio, 'user -> user_id).executeUpdate()
+                .on('name -> name, 'photo -> pic, 'user -> userId, 'username -> username, 'photoName -> mediaName).executeUpdate()
+            SQL("UPDATE user_info SET bio = {bio} WHERE user_id = {user}").on('bio -> bio, 'user -> userId).executeUpdate()
         }
     }
 
-    def updatePassword(user_id: Int, password: String) = {
+    def updatePassword(userId: Int, password: String) = {
         DB.withConnection { implicit connection =>
             val pass = makeDigest(password)
-            SQL("UPDATE user_info SET password = {pass} WHERE user_id = {user}").on('pass -> pass, 'user -> user_id).executeUpdate()
+            SQL("UPDATE user_info SET password = {pass} WHERE user_id = {user}").on('pass -> pass, 'user -> userId).executeUpdate()
         }
     }
 
-    def getPosts(user_id: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getPosts(userId: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM post WHERE user_id = {id} ORDER BY time DESC LIMIT {limit}")
-                .on('id -> user_id, 'limit -> limit).as(postParser *)
+                .on('id -> userId, 'limit -> limit).as(postParser *)
         }
     }
 
-    def getPostsPaged(user_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getPostsPaged(userId: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
             val afterPost = Post.find(after)
             if (afterPost.isDefined) {
                 val posts = SQL("SELECT * FROM post WHERE time < {time} AND user_id = {id} ORDER BY time DESC LIMIT {limit}")
-                    .on('id -> user_id, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                    .on('id -> userId, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
                 if (posts.length < limit)
                     posts
                 else
@@ -217,13 +217,13 @@ object User {
         }
     }
 
-    def getFeed(user_id: Int, limit: Int = Post.DefaultPageSize, board_ids: Option[Seq[Int]] = None): Seq[Post] = {
+    def getFeed(userId: Int, limit: Int = Post.DefaultPageSize, boardIds: Option[Seq[Int]] = None): Seq[Post] = {
         DB.withConnection { implicit connection =>
             val boards = {
-                if (board_ids.isDefined)
-                    board_ids.get
+                if (boardIds.isDefined)
+                    boardIds.get
                 else
-                    User.getBoardIDs(user_id)
+                    User.getBoardIDs(userId)
             }
             if (boards.nonEmpty) {
                 SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
@@ -234,16 +234,16 @@ object User {
         }
     }
 
-    def getFeedPaged(user_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getFeedPaged(userId: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            val board_ids = User.getBoardIDs(user_id)
-            if (board_ids.isEmpty)
+            val boardIds = User.getBoardIDs(userId)
+            if (boardIds.isEmpty)
                 Seq()
             else {
                 val afterPost = Post.find(after)
                 if (afterPost.isDefined) {
                     val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
-                        .on('board_ids -> board_ids, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                        .on('board_ids -> boardIds, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
                     if (posts.length < limit)
                         posts
                     else
@@ -255,18 +255,18 @@ object User {
         }
     }
 
-    def getComments(user_id: Int, limit: Int = Post.DefaultPageSize): Seq[Comment] = {
+    def getComments(userId: Int, limit: Int = Post.DefaultPageSize): Seq[Comment] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM comment WHERE user_id = {user_id} ORDER BY time DESC LIMIT {limit}").on('user_id -> user_id, 'limit -> limit).as(commentParser *)
+            SQL("SELECT * FROM comment WHERE user_id = {user_id} ORDER BY time DESC LIMIT {limit}").on('user_id -> userId, 'limit -> limit).as(commentParser *)
         }
     }
 
-    def getCommentsPaged(user_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Comment] = {
+    def getCommentsPaged(userId: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Comment] = {
         DB.withConnection { implicit connection =>
             val afterCom = Comment.find(after)
             if (afterCom.isDefined) {
                 val comments = SQL("SELECT * FROM comment WHERE time < {time} AND user_id = {id} ORDER BY time DESC LIMIT {limit}")
-                    .on('id -> user_id, 'time -> afterCom.get.time, 'limit -> limit).as(commentParser *)
+                    .on('id -> userId, 'time -> afterCom.get.time, 'limit -> limit).as(commentParser *)
                 if (comments.length < limit)
                     comments
                 else
@@ -277,22 +277,22 @@ object User {
         }
     }
 
-    def userIsFollowing(user_id: Int, board_id: Int): Boolean = {
+    def userIsFollowing(userId: Int, boardId: Int): Boolean = {
         DB.withConnection { implicit connection =>
             val count = SQL("SELECT COUNT(*) FROM user_to_board WHERE user_id = {user_id} AND board_id = {board_id}")
-                .on('user_id -> user_id, 'board_id -> board_id).as(scalar[Long].single)
+                .on('user_id -> userId, 'board_id -> boardId).as(scalar[Long].single)
             count > 0L
         }
     }
 
-    def getPostsCount(user_id: Int): Int = {
+    def getPostsCount(userId: Int): Int = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT COUNT(*) FROM post WHERE user_id = {user}").on('user -> user_id).as(scalar[Long].single).toInt
+            SQL("SELECT COUNT(*) FROM post WHERE user_id = {user}").on('user -> userId).as(scalar[Long].single).toInt
         }
     }
 
-    def toJsonByUserID(user_id: Int, self: Option[User] = None, email: Boolean = false): JsValue = {
-        val userExists = User.find(user_id)
+    def toJsonByUserID(userId: Int, self: Option[User] = None, email: Boolean = false): JsValue = {
+        val userExists = User.find(userId)
         if (!userExists.isDefined)
             Json.obj("error" -> "User does not exist.")
         else {
@@ -301,15 +301,15 @@ object User {
         }
     }
 
-    def getBoardIDs(user_id: Int): Seq[Int] = {
+    def getBoardIDs(userId: Int): Seq[Int] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT board_id FROM user_to_board WHERE user_id = {id}").on('id -> user_id).as(int("board_id") *)
+            SQL("SELECT board_id FROM user_to_board WHERE user_id = {id}").on('id -> userId).as(int("board_id") *)
         }
     }
 
-    def getBoards(user_id: Int): Seq[Board] = {
+    def getBoards(userId: Int): Seq[Board] = {
         DB.withConnection { implicit connection =>
-            val boardIDs = User.getBoardIDs(user_id)
+            val boardIDs = User.getBoardIDs(userId)
             if (boardIDs.isEmpty)
                 return List()
             else
@@ -333,11 +333,11 @@ object User {
             newJson = newJson.as[JsObject] +
                 ("name" -> Json.toJson(user.name)) +
                 ("username" -> Json.toJson(user.username)) +
-                ("user_id" -> Json.toJson(user.user_id)) +
+                ("user_id" -> Json.toJson(user.userId)) +
                 ("reputation" -> Json.toJson(user.reputation)) +
                 ("photo" -> Json.toJson(user.photo)) +
                 ("bio" -> Json.toJson(user.bio)) +
-                ("board_count" -> Json.toJson(User.getBoardIDs(user.user_id.get).size))
+                ("board_count" -> Json.toJson(User.getBoardIDs(user.userId.get).size))
         else {
             newJson = newJson.as[JsObject] +
                 ("name" -> Json.toJson("Anonymous")) +
@@ -352,7 +352,7 @@ object User {
         if (email) {
             newJson = newJson.as[JsObject] + ("email" -> Json.toJson(user.email))
         }
-        if (self.isDefined && user.user_id.get == self.get.user_id.get)
+        if (self.isDefined && user.userId.get == self.get.userId.get)
             newJson = newJson.as[JsObject] + ("self" -> Json.toJson(true))
         else
             newJson = newJson.as[JsObject] + ("self" -> Json.toJson(false))

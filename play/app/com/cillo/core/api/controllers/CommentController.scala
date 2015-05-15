@@ -42,11 +42,11 @@ object CommentController extends Controller {
                 val body: AnyContent = request.body
                 body.asFormUrlEncoded.map { form =>
                     try {
-                        val parent_id = form.get("parent_id").map(_.head.toInt)
-                        val post_id = form.get("post_id").map(_.head)
+                        val parentId = form.get("parent_id").map(_.head.toInt)
+                        val postId = form.get("post_id").map(_.head)
                         val data = form.get("data").map(_.head)
-                        if (post_id.isDefined && data.isDefined) {
-                            val comment_id = Comment.create(post_id.get.toInt, user.get.user_id.get, data.get, parent_id)
+                        if (postId.isDefined && data.isDefined) {
+                            val comment_id = Comment.create(postId.get.toInt, user.get.userId.get, data.get, parentId)
                             if (comment_id.isDefined)
                                 Ok(Comment.toJson(Comment.find(comment_id.get.toInt).get, user = user))
                             else

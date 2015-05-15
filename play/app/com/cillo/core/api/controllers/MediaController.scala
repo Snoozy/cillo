@@ -36,12 +36,7 @@ object MediaController extends Controller {
                             if (!id.isDefined)
                                 BadRequest(Json.obj("error" -> "Upload failed. Code: 104"))
                             else {
-                                val DBMedia = Media.create(0, id.get)
-                                if (!DBMedia.isDefined)
-                                    BadRequest(Json.obj("error" -> "Error uploading. Code: 102"))
-                                else {
-                                    Ok(Json.obj("media_id" -> Json.toJson(DBMedia.get)))
-                                }
+                                Ok(Json.obj("media_id" -> Json.toJson(id.get)))
                             }
                         }
                     }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))

@@ -49,15 +49,15 @@ object PostController extends Controller {
                     var post_id: Option[Long] = None
                     val data = form.get("data").map(_.head)
                     if (repost_id.isDefined) {
-                        val board_id = form.get("board_id").map(_.head.toInt)
+                        val boardId = form.get("boardId").map(_.head.toInt)
                         val board_name = form.get("board_name").map(_.head)
                         try {
-                            if (board_id.isDefined)
-                                post_id = Post.createSimplePost(user.get.user_id.get, None, data.getOrElse(""), board_id.get, repost_id)
+                            if (boardId.isDefined)
+                                post_id = Post.createSimplePost(user.get.userId.get, None, data.getOrElse(""), boardId.get, repost_id)
                             else if (board_name.isDefined) {
                                 val board = Board.find(board_name.get)
                                 if (board.isDefined)
-                                    post_id = Post.createSimplePost(user.get.user_id.get, None, data.getOrElse(""), board.get.board_id.get, repost_id)
+                                    post_id = Post.createSimplePost(user.get.userId.get, None, data.getOrElse(""), board.get.boardId.get, repost_id)
                             }
                         } catch {
                             case e: NumberFormatException => // Do nothing so post stays None and if statement is not triggered.
@@ -65,26 +65,26 @@ object PostController extends Controller {
                     } else {
                         val media_ids = form.get("media").map(_.head)
                         try {
-                            val board_id = form.get("board_id").map(_.head.toInt)
+                            val boardId = form.get("boardId").map(_.head.toInt)
                             val board_name = form.get("board_name").map(_.head)
                             if (!media_ids.isDefined) {
-                                if (data.isDefined && board_id.isDefined) {
-                                    post_id = Post.createSimplePost(user.get.user_id.get, form.get("title").map(_.head), data.get,
-                                        board_id.get)
+                                if (data.isDefined && boardId.isDefined) {
+                                    post_id = Post.createSimplePost(user.get.userId.get, form.get("title").map(_.head), data.get,
+                                        boardId.get)
                                 } else if (board_name.isDefined && data.isDefined) {
                                     val board = Board.find(board_name.get)
                                     if (board.isDefined)
-                                        post_id = Post.createSimplePost(user.get.user_id.get, form.get("title").map(_.head), data.get,
-                                            board.get.board_id.get)
+                                        post_id = Post.createSimplePost(user.get.userId.get, form.get("title").map(_.head), data.get,
+                                            board.get.boardId.get)
                                 }
                             } else {
-                                if (data.isDefined && board_id.isDefined) {
-                                    post_id = Post.createMediaPost(user.get.user_id.get, form.get("title").map(_.head), data.get,
-                                        board_id.get, media_ids.get.split(",").map(_.toInt))
+                                if (data.isDefined && boardId.isDefined) {
+                                    post_id = Post.createMediaPost(user.get.userId.get, form.get("title").map(_.head), data.get,
+                                        boardId.get, media_ids.get.split(",").map(_.toInt))
                                 } else if (board_name.isDefined && data.isDefined) {
                                     val board = Board.find(board_name.get)
-                                    post_id = Post.createMediaPost(user.get.user_id.get, form.get("title").map(_.head), data.get,
-                                        board.get.board_id.get, media_ids.get.split(",").map(_.toInt))
+                                    post_id = Post.createMediaPost(user.get.userId.get, form.get("title").map(_.head), data.get,
+                                        board.get.boardId.get, media_ids.get.split(",").map(_.toInt))
                                 }
                             }
                         } catch {

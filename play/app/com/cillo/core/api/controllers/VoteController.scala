@@ -14,49 +14,49 @@ object VoteController extends Controller {
     /**
      * Upvotes a specific comment by id.
      *
-     * @param comment_id Id of the comment to be upvoted.
+     * @param commentId Id of the comment to be upvoted.
      * @return The success/error of the upvote.
      */
-    def upvoteComment(comment_id: Int) = voteComment(comment_id, 1)
+    def upvoteComment(commentId: Int) = voteComment(commentId, 1)
 
     /**
      * Downvotes a specific comment by id.
      *
-     * @param comment_id Id of the comment to be downvoted.
+     * @param commentId Id of the comment to be downvoted.
      * @return The success/error of the downvote.
      */
-    def downvoteComment(comment_id: Int) = voteComment(comment_id, -1)
+    def downvoteComment(commentId: Int) = voteComment(commentId, -1)
 
     /**
      * Upvotes a specific post by id.
      *
-     * @param post_id Id of the post to be upvoted.
+     * @param postId Id of the post to be upvoted.
      * @return The success or error of the upvote.
      */
-    def upvotePost(post_id: Int) = votePost(post_id, 1)
+    def upvotePost(postId: Int) = votePost(postId, 1)
 
     /**
      * Downvotes a specific post.
      *
-     * @param post_id Id of the post to be downvoted.
+     * @param postId Id of the post to be downvoted.
      * @return The success or error of the downvote.
      */
-    def downvotePost(post_id: Int) = votePost(post_id, -1)
+    def downvotePost(postId: Int) = votePost(postId, -1)
 
     /**
      * Votes on a comment.
      *
-     * @param comment_id Id of comment to be voted on.
+     * @param commentId Id of comment to be voted on.
      * @param value Value of the vote.
      * @return The success or error of the vote.
      */
-    private def voteComment(comment_id: Int, value: Int) = AuthAction { implicit user => implicit request =>
+    private def voteComment(commentId: Int, value: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
-                val commentExists = Comment.find(comment_id)
+                val commentExists = Comment.find(commentId)
                 if (commentExists.isDefined) {
-                    if (CommentVote.voteComment(commentExists.get.comment_id.get, user.get.user_id.get, value))
+                    if (CommentVote.voteComment(commentExists.get.commentId.get, user.get.userId.get, value))
                         Ok(Json.obj("success" -> "Comment vote successful."))
                     else
                         BadRequest(Json.obj("error" -> "Request format invalid. Code: 200"))
@@ -68,17 +68,17 @@ object VoteController extends Controller {
     /**
      * Votes on a post.
      *
-     * @param post_id Id of the post to be voted on.
+     * @param postId Id of the post to be voted on.
      * @param value Value of the vote.
      * @return The success or error of the vote.
      */
-    private def votePost(post_id: Int, value: Int) = AuthAction { implicit user => implicit request =>
+    private def votePost(postId: Int, value: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
-                val postExists = Post.find(post_id)
+                val postExists = Post.find(postId)
                 if (postExists.isDefined) {
-                    if (PostVote.votePost(postExists.get.post_id.get, user.get.user_id.get, value))
+                    if (PostVote.votePost(postExists.get.postId.get, user.get.userId.get, value))
                         Ok(Json.obj("success" -> "Post vote successful."))
                     else
                         BadRequest(Json.obj("error" -> "Request format invalid."))

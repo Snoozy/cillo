@@ -34,10 +34,10 @@ object RegisterController extends Controller {
             if (email.isDefined && name.isDefined && password.isDefined) {
                 val userExists = User.findByEmail(email.get)
                 if (userExists.isDefined && Etc.checkPass(password.get, userExists.get.password))
-                    Found("/").withCookies(Auth.newSessionCookies(userExists.get.user_id.get))
+                    Found("/").withCookies(Auth.newSessionCookies(userExists.get.userId.get))
                 val newUser = User.create(User.genUsername(email.get, backup = name.get.replace(" ", "")), name.get, password.get, email.get, None)
                 if (newUser.isDefined) {
-                    val token = Auth.getNewUserSessionId(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).user_id.get)
+                    val token = Auth.getNewUserSessionId(User.find(newUser.get.toInt).getOrElse(return BadRequest("Error.")).userId.get)
                     val sess = new cache.Session(token)
                     sess.set("getting_started", "true")
                     val firstName = Etc.parseFirstName(name.get)

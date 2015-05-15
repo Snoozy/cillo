@@ -6,9 +6,9 @@ import play.api.Play.current
 import play.api.db._
 
 case class PostVote (
-    post_vote_id: Option[Int],
-    post_id: Int,
-    user_id: Int,
+    postVoteId: Option[Int],
+    postId: Int,
+    userId: Int,
     value: Int,
     time: BigInt
 )
@@ -21,69 +21,69 @@ object PostVote {
             get[Int]("user_id") ~
             get[Int]("value") ~
             get[java.math.BigInteger]("time") map {
-            case post_vote_id ~ post_id ~ user_id ~ value ~ time =>
-                PostVote(post_vote_id, post_id, user_id, value, time)
+            case postVoteId ~ postId ~ userId ~ value ~ time =>
+                PostVote(postVoteId, postId, userId, value, time)
         }
     }
 
-    def findByPostAndUser(post_id: Int, user_id: Int): Option[PostVote] = {
+    def findByPostAndUser(postId: Int, userId: Int): Option[PostVote] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post_vote WHERE user_id = {user} AND post_id = {post}").on('user -> user_id, 'post -> post_id)
+            SQL("SELECT * FROM post_vote WHERE user_id = {user} AND post_id = {post}").on('user -> userId, 'post -> postId)
                 .as(postVoteParser.singleOpt)
         }
     }
 
-    def votePost(post_id: Int, user_id: Int, value: Int): Boolean = {
-        val post = Post.find(post_id)
-        val voteExists = PostVote.findByPostAndUser(post_id, user_id)
+    def votePost(postId: Int, userId: Int, value: Int): Boolean = {
+        val post = Post.find(postId)
+        val voteExists = PostVote.findByPostAndUser(postId, userId)
         if (post.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
             DB.withConnection { implicit connection =>
-                if (value == 1 && (user_id != post.get.user_id)) {
+                if (value == 1 && (userId != post.get.userId)) {
                     SQL("UPDATE user_info SET reputation = reputation + 20 WHERE user_id = {user}")
-                        .on('user -> post.get.user_id).executeUpdate()
-                } else if (value == -1 && (user_id != post.get.user_id)) {
+                        .on('user -> post.get.userId).executeUpdate()
+                } else if (value == -1 && (userId != post.get.userId)) {
                     SQL("UPDATE user_info SET reputation = reputation - 20 WHERE user_id = {user}")
-                        .on('user -> post.get.user_id).executeUpdate()
+                        .on('user -> post.get.userId).executeUpdate()
                 }
                 val time = System.currentTimeMillis()
                 SQL("INSERT INTO post_vote (post_id, user_id, value, time) VALUES ({post_id}, {user_id}, {value}, {time})")
-                    .on('post_id -> post_id, 'user_id -> user_id, 'value -> value, 'time -> time).executeInsert()
+                    .on('post_id -> postId, 'user_id -> userId, 'value -> value, 'time -> time).executeInsert()
                 SQL("UPDATE post SET votes = votes + {value} WHERE post_id = {post_id}")
-                    .on('value -> value, 'post_id -> post_id).executeUpdate()
+                    .on('value -> value, 'post_id -> postId).executeUpdate()
             }
             true
         } else if (voteExists.isDefined && (value == -1 || value == 1) && post.isDefined) {
             if (voteExists.get.value != value) {
                 DB.withConnection { implicit connection =>
-                    if (value == 1 && (user_id != post.get.user_id)) {
+                    if (value == 1 && (userId != post.get.userId)) {
                         SQL("UPDATE user_info SET reputation = reputation + 40 WHERE user_id = {user}")
-                            .on('user -> post.get.user_id).executeUpdate()
-                    } else if (value == -1 && (user_id != post.get.user_id)) {
+                            .on('user -> post.get.userId).executeUpdate()
+                    } else if (value == -1 && (userId != post.get.userId)) {
                         SQL("UPDATE user_info SET reputation = reputation - 40 WHERE user_id = {user}")
-                            .on('user -> post.get.user_id).executeUpdate()
+                            .on('user -> post.get.userId).executeUpdate()
                     }
                     val time = System.currentTimeMillis()
                     SQL("UPDATE post_vote SET value = {value}, time = {time} WHERE post_id = {post_id} AND user_id = {user_id}")
-                        .on('value -> value, 'user_id -> user_id, 'post_id -> post_id, 'time -> time).executeUpdate()
+                        .on('value -> value, 'user_id -> userId, 'post_id -> postId, 'time -> time).executeUpdate()
                     SQL("UPDATE post SET votes = votes + {value} WHERE post_id = {post_id}")
-                        .on('value -> 2 * value, 'post_id -> post_id).executeUpdate()
+                        .on('value -> 2 * value, 'post_id -> postId).executeUpdate()
                 }
                 true
             } else false
         } else false
     }
 
-    def getPostVotesByUserAndPost(user_id: Int, post_ids: Seq[Int]): Seq[PostVote] = {
+    def getPostVotesByUserAndPost(userId: Int, postIds: Seq[Int]): Seq[PostVote] = {
         DB.withConnection { implicit connection =>
-            if (post_ids.isEmpty)
+            if (postIds.isEmpty)
                 return List()
             SQL("SELECT * FROM post_vote WHERE post_id IN ({post_id}) AND user_id = {user_id}")
-                .on('post_id -> post_ids, 'user_id -> user_id).as(postVoteParser *)
+                .on('post_id -> postIds, 'user_id -> userId).as(postVoteParser *)
         }
     }
 
-    def getPostVoteValue(post_id: Int, user_id: Int): Int = {
-        val postVote = PostVote.findByPostAndUser(post_id, user_id)
+    def getPostVoteValue(postId: Int, userId: Int): Int = {
+        val postVote = PostVote.findByPostAndUser(postId, userId)
         if (postVote.isDefined)
             postVote.get.value
         else 0

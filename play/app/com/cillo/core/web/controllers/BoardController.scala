@@ -13,30 +13,34 @@ object BoardController extends Controller {
     def boardPage(name: String) = AuthAction { implicit user => implicit request =>
         val board = Board.find(name)
         if (board.isDefined) {
-            val posts = Board.getFeed(board.get.board_id.get)
-            val following = {
-                if (user.isDefined)
-                    User.userIsFollowing(user.get.user_id.get, board.get.board_id.get)
-                else
-                    false
+            if (name != board.get.name) {
+                MovedPermanently("/" + board.get.name)
+            } else {
+                val posts = Board.getFeed(board.get.boardId.get)
+                val following = {
+                    if (user.isDefined)
+                        User.userIsFollowing(user.get.userId.get, board.get.boardId.get)
+                    else
+                        false
+                }
+                Ok(core.board(board.get, user, posts)(following = following))
             }
-            Ok(core.board(board.get, user, posts)(following = following))
         } else {
             NotFound("Board not found.")
         }
     }
 
-    def followBoard(board_id: Int) = AuthAction { implicit user => implicit request =>
+    def followBoard(boardId: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
-                val groupExists = Board.find(board_id)
+                val groupExists = Board.find(boardId)
                 if (groupExists.isDefined) {
-                    val followExists = User.userIsFollowing(user.get.user_id.get, board_id)
+                    val followExists = User.userIsFollowing(user.get.userId.get, boardId)
                     if (followExists)
                         Ok(Json.obj("success" -> "User is following group."))
                     else{
-                        if (Board.addFollower(user.get.user_id.get, board_id)) {
+                        if (Board.addFollower(user.get.userId.get, boardId)) {
                             Ok(Json.obj("success" -> "Add follower successful."))
                         } else {
                             BadRequest(Json.obj("error" -> "Unknown error following group."))
@@ -48,17 +52,17 @@ object BoardController extends Controller {
         }
     }
 
-    def unfollowBoard(board_id: Int) = AuthAction { implicit user => implicit request =>
+    def unfollowBoard(boardId: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
-                val groupExists = Board.find(board_id)
+                val groupExists = Board.find(boardId)
                 if (groupExists.isDefined) {
-                    val followExists = User.userIsFollowing(user.get.user_id.get, board_id)
+                    val followExists = User.userIsFollowing(user.get.userId.get, boardId)
                     if (!followExists)
                         Ok(Json.obj("success" -> "User is not following group."))
                     else{
-                        if (Board.removeFollower(user.get.user_id.get, board_id)) {
+                        if (Board.removeFollower(user.get.userId.get, boardId)) {
                             Ok(Json.obj("success" -> "Remove follower successful."))
                         } else {
                             BadRequest(Json.obj("error" -> "Unknown error unfollowing group."))
@@ -100,10 +104,10 @@ object BoardController extends Controller {
                                         else
                                             0
                                     }
-                                    val board_id = Board.create(board_name.get, board_descr, user.get.user_id.get, privacy = privacy)
-                                    if (board_id.isDefined) {
-                                        val newBoard = Board.find(board_id.get.toInt)
-                                        Board.addFollower(user.get.user_id.get, newBoard.get.board_id.get)
+                                    val boardId = Board.create(board_name.get, board_descr, user.get.userId.get, privacy = privacy)
+                                    if (boardId.isDefined) {
+                                        val newBoard = Board.find(boardId.get.toInt)
+                                        Board.addFollower(user.get.userId.get, newBoard.get.boardId.get)
                                         Redirect("/" + newBoard.get.name)
                                     } else {
                                         Ok(core.create_board(user.get))
@@ -131,7 +135,7 @@ object BoardController extends Controller {
                 if (user.get.admin) {
                     val board = Board.find(boardName)
                     if (board.isDefined) {
-                        Board.delete(board.get.board_id.get)
+                        Board.delete(board.get.boardId.get)
                         Ok(Json.obj("success" -> "Success"))
                     } else {
                         BadRequest(Json.obj("error" -> "Board does not exist."))

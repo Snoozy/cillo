@@ -11,9 +11,9 @@ import play.api.libs.json._
 
 
 case class Referral(
-    referral_id: Option[Int],
+    referralId: Option[Int],
     code: String,
-    user_id: Int
+    userId: Int
 )
 
 object Referral {
@@ -23,21 +23,21 @@ object Referral {
     private[data] val referralParser: RowParser[Referral] = {
         get[Option[Int]]("referral_id") ~
             get[Int]("user_id") map {
-            case referral_id ~ user_id =>
-                val code = hasher.encode(referral_id.get)
-                Referral(referral_id, code, user_id)
+            case referralId ~ userId =>
+                val code = hasher.encode(referralId.get)
+                Referral(referralId, code, userId)
         }
     }
 
-    def find(referral_id: Int): Option[Referral] = {
+    def find(referralId: Int): Option[Referral] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM referral WHERE referral_id = {ref}").on('ref -> referral_id).as(referralParser.singleOpt)
+            SQL("SELECT * FROM referral WHERE referral_id = {ref}").on('ref -> referralId).as(referralParser.singleOpt)
         }
     }
 
-    def findByUser(user_id: Int): Option[Referral] = {
+    def findByUser(userId: Int): Option[Referral] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM referral WHERE user_id = {user}").on('user -> user_id).as(referralParser.singleOpt)
+            SQL("SELECT * FROM referral WHERE user_id = {user}").on('user -> userId).as(referralParser.singleOpt)
         }
     }
 
@@ -46,13 +46,13 @@ object Referral {
         findByUser(user.toInt)
     }
 
-    def create(user_id: Int): Option[Referral] = {
-        val exists = Referral.findByUser(user_id)
+    def create(userId: Int): Option[Referral] = {
+        val exists = Referral.findByUser(userId)
         if (exists.isDefined) {
             exists
         } else {
             DB.withConnection { implicit connection =>
-                val id = SQL("INSERT INTO referral (user_id) VALUES ({user})").on('user -> user_id).executeInsert(scalar[Long].singleOpt)
+                val id = SQL("INSERT INTO referral (user_id) VALUES ({user})").on('user -> userId).executeInsert(scalar[Long].singleOpt)
                 if (id.isDefined) {
                     find(id.get.toInt)
                 } else {

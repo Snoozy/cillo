@@ -204,7 +204,7 @@
 
 } {
 
-    <body class="main-background" style="margin:0" onload="setupBlocks();showBlocks();">
+    <body class="main-background logged-out" style="margin:0" onload="setupBlocks();showBlocks();">
         <!----Page Start---->
         <div class="page" style="">
             @components.welcome_masthead()
@@ -287,5 +287,6 @@
                 </div>
             </div>
         </div>
+        @components.logged_out()
     </body>
 }

@@ -20,7 +20,7 @@ import play.api.mvc._
 object UserController extends Controller {
 
     /**
-     * Describes the user given by the querystring that can either be a user_id or username.
+     * Describes the user given by the querystring that can either be a userId or username.
      *
      * @return Json of the user.
      */
@@ -31,9 +31,9 @@ object UserController extends Controller {
                 val query = request.queryString.map {
                     case (k, v) => k -> v.mkString
                 }
-            if (query.contains("user_id")) {
+            if (query.contains("userId")) {
                 try {
-                    Ok(User.toJsonByUserID(query.get("user_id").get.toInt, self = user))
+                    Ok(User.toJsonByUserID(query.get("userId").get.toInt, self = user))
                 } catch {
                     case e: java.lang.NumberFormatException => BadRequest(Json.obj("error" -> "Invalid request format."))
                 }
@@ -102,20 +102,20 @@ object UserController extends Controller {
     /**
      * Get the boards of a user.
      *
-     * @param user_id user_id of entity to get boards of
+     * @param userId userId of entity to get boards of
      * @return Json of fully hydrated boards.
      */
-    def getBoards(user_id: Int) = AuthAction { implicit user => implicit request =>
+    def getBoards(userId: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
-                val userExists = User.find(user_id)
+                val userExists = User.find(userId)
                 if (!userExists.isDefined)
                     BadRequest(Json.obj("error" -> "User does not exist."))
                 else {
                     val describingUser = userExists.get
                     val json: JsValue = Json.obj(
-                        "boards" -> Board.toJsonSeq(User.getBoards(describingUser.user_id.get), Some(true))
+                        "boards" -> Board.toJsonSeq(User.getBoards(describingUser.userId.get), Some(true))
                     )
                     Ok(json)
                 }
@@ -125,14 +125,14 @@ object UserController extends Controller {
     /**
      * Gets the comments of a specific user by time.
      *
-     * @param user_id User_id of entity to get comments for.
+     * @param userId UserId of entity to get comments for.
      * @return Json for a list of fully hydrated comments.
      */
-    def getComments(user_id: Int) = AuthAction { implicit user => implicit request =>
+    def getComments(userId: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
-                val userExists = User.find(user_id)
+                val userExists = User.find(userId)
                 if (!userExists.isDefined)
                     BadRequest(Json.obj("error" -> "User does not exist."))
                 else {
@@ -140,9 +140,9 @@ object UserController extends Controller {
                     val describingUser = userExists.get
                     val comments = {
                         if (after.isDefined) {
-                            User.getCommentsPaged(describingUser.user_id.get, after.get.toInt)
+                            User.getCommentsPaged(describingUser.userId.get, after.get.toInt)
                         } else {
-                            User.getComments(describingUser.user_id.get)
+                            User.getComments(describingUser.userId.get)
                         }
                     }
                     Ok(Json.obj("comments" -> Comment.toJsonSeqWithUser(comments, user)))
@@ -153,14 +153,14 @@ object UserController extends Controller {
     /**
      * Gets the posts of a specific user by time.
      *
-     * @param user_id User_id of the entity to get posts for.
+     * @param userId UserId of the entity to get posts for.
      * @return Fully hydrated posts for this user.
      */
-    def getPosts(user_id: Int) = AuthAction { implicit user => implicit request =>
+    def getPosts(userId: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
-                val userExists = User.find(user_id)
+                val userExists = User.find(userId)
                 if (!userExists.isDefined)
                     BadRequest(Json.obj("error" -> "User does not exist."))
                 else {
@@ -168,9 +168,9 @@ object UserController extends Controller {
                     val describingUser = userExists.get
                     val posts = {
                         if (after.isDefined && after.get != "") {
-                            User.getPostsPaged(describingUser.user_id.get, after.get.toInt)
+                            User.getPostsPaged(describingUser.userId.get, after.get.toInt)
                         } else {
-                            User.getPosts(describingUser.user_id.get)
+                            User.getPosts(describingUser.userId.get)
                         }
                     }
                     Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user)))
@@ -190,9 +190,9 @@ object UserController extends Controller {
                 val afterPost = request.getQueryString("after")
                 val posts = {
                     if (afterPost.isDefined)
-                        User.getFeedPaged(user.get.user_id.get, afterPost.get.toInt)
+                        User.getFeedPaged(user.get.userId.get, afterPost.get.toInt)
                     else
-                        User.getFeed(user.get.user_id.get)
+                        User.getFeed(user.get.userId.get)
                 }
                 Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user)))
         }

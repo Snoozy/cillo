@@ -83,7 +83,7 @@
                                         @components.first_post(user, boards)
 
                                         @for(post <- posts) {
-                                            @defining(boards.find(b => b.board_id.get == post.board_id)) { b =>
+                                            @defining(boards.find(b => b.boardId.get == post.boardId)) { b =>
                                                 @if(!b.isDefined) {
                                                     @components.post(post, Some(user))()
                                                 } else {

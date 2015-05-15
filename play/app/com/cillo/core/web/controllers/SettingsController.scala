@@ -22,7 +22,7 @@ object SettingsController extends Controller {
             case Some(_) =>
                 val board = Board.find(name)
                 if (board.isDefined) {
-                    if (board.get.creator_id == user.get.user_id.get || user.get.admin) {
+                    if (board.get.creatorId == user.get.userId.get || user.get.admin) {
                         Ok(com.cillo.core.web.views.html.core.board_settings(user.get, board.get))
                     } else {
                         NotFound("Permission denied.")
@@ -38,7 +38,7 @@ object SettingsController extends Controller {
             case None => Found("/login")
             case Some(_) =>
                 val board = Board.find(name)
-                if (board.isDefined && (user.get.user_id.get == board.get.creator_id || user.get.admin)) {
+                if (board.isDefined && (user.get.userId.get == board.get.creatorId || user.get.admin)) {
                     val body = request.body.asMultipartFormData
                     if (body.isDefined) {
                         val res = body.get.asFormUrlEncoded
@@ -59,21 +59,17 @@ object SettingsController extends Controller {
                                         }
                                     }
                                     if (id.isDefined) {
-                                        val mediaID = Media.create(0, id.get)
-                                        if (mediaID.isDefined) {
-                                            mediaID.get.toInt
-                                        } else
-                                            board.get.photo_id
+                                        id.get
                                     } else
-                                        board.get.photo_id
+                                        board.get.photoId
                                 } else
-                                    board.get.photo_id
+                                    board.get.photoId
                             } else {
-                                board.get.photo_id
+                                board.get.photoId
                             }
                         }
                         val desc = res.get("desc").map(_.head).getOrElse(user.get.name)
-                        Board.update(board.get.board_id.get, desc, picID)
+                        Board.update(board.get.boardId.get, desc, picID)
                     }
                     Found("/" + board.get.name)
                 } else {
@@ -106,24 +102,20 @@ object SettingsController extends Controller {
                                     }
                                 }
                                 if (id.isDefined) {
-                                    val mediaID = Media.create(0, id.get)
-                                    if (mediaID.isDefined) {
-                                        mediaID.get.toInt
-                                    } else
-                                        user.get.photo_id
+                                    id.get
                                 } else
-                                    user.get.photo_id
+                                    user.get.photoId
                             } else
-                                user.get.photo_id
+                                user.get.photoId
                         } else {
                             play.api.Logger.debug("file not found.")
-                            user.get.photo_id
+                            user.get.photoId
                         }
                     }
                     val name = res.get("name").map(_.head).getOrElse(user.get.name)
                     val username = res.get("username").map(_.head).getOrElse(user.get.name)
                     val bio = res.get("bio").map(_.head).getOrElse(user.get.name)
-                    User.update(user.get.user_id.get, name, username, bio, picID)
+                    User.update(user.get.userId.get, name, username, bio, picID)
                     Found("/user/" + username)
                 } else {
                     Found("/user/" + user.get.username)

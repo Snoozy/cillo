@@ -26,7 +26,7 @@ object BoardController extends Controller {
             case Some(_) =>
                 val board = Board.find(board_id)
                 if (board.isDefined)
-                    Ok(Board.toJson(board.get, User.userIsFollowing(user.get.user_id.get, board_id)))
+                    Ok(Board.toJson(board.get, User.userIsFollowing(user.get.userId.get, board_id)))
                 else
                     BadRequest(Json.obj("error" -> "Board does not exist."))
         }
@@ -51,9 +51,9 @@ object BoardController extends Controller {
                     val photo = form.get("photo").map(_.head.toInt)
                     if (name.isDefined) {
                         var board_id: Option[Long] = None
-                        board_id = Board.create(name.get, descr, user.get.user_id.get, photo = photo)
+                        board_id = Board.create(name.get, descr, user.get.userId.get, photo = photo)
                         if (board_id.isDefined) {
-                            Board.addFollower(user.get.user_id.get, board_id.get.toInt)
+                            Board.addFollower(user.get.userId.get, board_id.get.toInt)
                             Ok(Board.toJson(Board.find(board_id.get.toInt).get, following = true))
                         } else {
                             BadRequest(Json.obj("error" -> "Board creation failed."))
@@ -100,7 +100,7 @@ object BoardController extends Controller {
                 if (!boardExists.isDefined)
                     BadRequest(Json.obj("error" -> "Board does not exist."))
                 else {
-                    val success = Board.addFollower(user.get.user_id.get, board_id)
+                    val success = Board.addFollower(user.get.userId.get, board_id)
                     if (success)
                         Ok(Json.obj("success" -> "Board successfully followed"))
                     else
@@ -117,7 +117,7 @@ object BoardController extends Controller {
                 if (!boardExists.isDefined)
                     BadRequest(Json.obj("error" -> "Board does not exist."))
                 else {
-                    val success = Board.removeFollower(user.get.user_id.get, board_id)
+                    val success = Board.removeFollower(user.get.userId.get, board_id)
                     if (success)
                         Ok(Json.obj("success" -> "Board successfully followed."))
                     else

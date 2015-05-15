@@ -9,7 +9,7 @@
 @components.base(user.name + " | Cillo") {
 
 } {
-    <body class="main-background context-user@if(!visitor.isDefined){ logged-out}" data-user-id="@user.user_id.get">
+    <body class="main-background context-user@if(!visitor.isDefined){ logged-out}" data-user-id="@user.userId.get">
         <div class="page" style="margin:0;">
             @components.masthead(visitor, searchBar = true)
             <div id="content">
@@ -22,7 +22,7 @@
                                         <a class="fluidbox" href="@user.photo">
                                             <img src="@(user.photo + "_prof")" class="board-avatar-img">
                                         </a>
-                                        @if(visitor.isDefined && user.user_id.get == visitor.get.user_id.get) {
+                                        @if(visitor.isDefined && user.userId.get == visitor.get.userId.get) {
                                             <div class="profile-pic-selector">
                                                 <a class="profile-pic-change" href="/settings">
                                                     <i class="glyphicon glyphicon-camera profile-pic-camera"></i>
@@ -78,7 +78,7 @@
                                 <div class="posts-wrapper" style="text-align:left;">
                                     <ol class="posts">
                                         @for(post <- posts) {
-                                            @defining(Board.find(post.board_id)) { b =>
+                                            @defining(Board.find(post.boardId)) { b =>
                                                 @if(b.get.privacy != 1) {
                                                     @components.post(post, visitor)(board = b.get)
                                                 }
@@ -113,7 +113,7 @@
         </div>
 
         @if(visitor.isDefined) {
-            @components.repost_modal(User.getBoards(visitor.get.user_id.get))
+            @components.repost_modal(User.getBoards(visitor.get.userId.get))
         } else {
             @components.logged_out()
         }

@@ -23,8 +23,9 @@ GET         /a/board/:name/delete          com.cillo.core.web.controllers.BoardC
 
 GET         /connect/facebook              com.cillo.core.web.controllers.SocialController.facebookAuth
 
-GET         /debug                         com.cillo.core.web.controllers.EtcController.debug
-
+GET         /a/wassup                      com.cillo.core.web.controllers.EtcController.refresh
+GET         /a/debug                       com.cillo.core.web.controllers.EtcController.debug
+GET         /a/clean                       com.cillo.core.web.controllers.EtcController.cleanS3
 GET         /a/thedayisnow                 com.cillo.core.web.controllers.EtcController.reddit
 
 #POST

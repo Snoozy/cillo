@@ -11,7 +11,7 @@ import play.api.db._
 import play.api.libs.json._
 
 case class UserInfo(
-    user_id: Int,
+    userId: Int,
     password: String,
     email: String,
     time: Long,
@@ -28,12 +28,12 @@ object UserInfo {
             get[Long]("time") ~
             get[Int]("reputation") ~
             get[String]("bio") map {
-            case user_id ~ password ~ email ~ time ~ reputation ~ bio =>
-                UserInfo(user_id.get.toInt, password, email, time, reputation, bio)
+            case userId ~ password ~ email ~ time ~ reputation ~ bio =>
+                UserInfo(userId.get.toInt, password, email, time, reputation, bio)
         }
     }
 
-    def create(user_id: Int, password: String, email: String, bio: Option[String] = None) = {
+    def create(userId: Int, password: String, email: String, bio: Option[String] = None) = {
         DB.withConnection { implicit connection =>
             val time = System.currentTimeMillis()
 
@@ -44,31 +44,31 @@ object UserInfo {
             }
 
             SQL("INSERT INTO user_info (user_id, password, email, time, reputation, bio) VALUES ({user_id}, {password}, {email}, {time}, 0, {bio})")
-                .on('user_id -> user_id, 'password -> pass, 'email -> email, 'time -> time, 'bio -> bio.getOrElse("")).executeInsert()
+                .on('user_id -> userId, 'password -> pass, 'email -> email, 'time -> time, 'bio -> bio.getOrElse("")).executeInsert()
         }
     }
 
-    def find(user_id: Int) = {
+    def find(userId: Int) = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM user_info WHERE user_id = {user_id}").on('user_id -> user_id).as(userInfoParser.singleOpt)
+            SQL("SELECT * FROM user_info WHERE user_id = {user_id}").on('user_id -> userId).as(userInfoParser.singleOpt)
         }
     }
 
-    def setPhoto(user_id: Int) = {
+    def setPhoto(userId: Int) = {
         DB.withConnection { implicit connection =>
-            val id = SQL("SELECT photo FROM user WHERE user_id = {user}").on('user -> user_id).as(scalar[Int].singleOpt)
+            val id = SQL("SELECT photo FROM user WHERE user_id = {user}").on('user -> userId).as(scalar[Int].singleOpt)
             if (id.isDefined && id.get != 0) {
                 val media = Media.find(id.get)
-                SQL("UPDATE user SET photo_name = {photoName} WHERE user_id = {user}").on('photoName -> media.get.media_name, 'user -> user_id).executeUpdate()
+                SQL("UPDATE user SET photo_name = {photoName} WHERE user_id = {user}").on('photoName -> media.get.mediaName, 'user -> userId).executeUpdate()
             }
         }
     }
 
-    private def createRaw(user_id: Int, password: String, email: String, bio: String, time: Long) = {
+    private def createRaw(userId: Int, password: String, email: String, bio: String, time: Long) = {
         DB.withConnection { implicit connection =>
 
             SQL("INSERT INTO user_info (user_id, password, email, time, reputation, bio) VALUES ({user_id}, {password}, {email}, {time}, 0, {bio})")
-                .on('user_id -> user_id, 'password -> password, 'email -> email, 'time -> time, 'bio -> bio).executeInsert()
+                .on('user_id -> userId, 'password -> password, 'email -> email, 'time -> time, 'bio -> bio).executeInsert()
         }
     }
 

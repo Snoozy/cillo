@@ -9,13 +9,14 @@ import com.cillo.utils.Etc
 import play.api.Logger
 import com.cillo.core.data.cache.Session
 
-//noinspection MutatorLikeMethodIsParameterless
 object AuthController extends Controller {
 
     def cleanLoginPage = AuthAction { implicit user => implicit request =>
         user match {
             case Some(_) => Redirect("/")
-            case None => Ok(html.core.login())
+            case None =>
+                val next = request.getQueryString("next")
+                Ok(html.core.login(next = next))
         }
     }
 
@@ -43,7 +44,7 @@ object AuthController extends Controller {
                     if (currentPass.isDefined && newPass.isDefined) {
                         val check = Etc.checkPass(currentPass.get, user.get.password)
                         if (check && Etc.checkPasswordValidity(newPass.get)) {
-                            User.updatePassword(user.get.user_id.get, newPass.get)
+                            User.updatePassword(user.get.userId.get, newPass.get)
                             Ok(Json.obj("success" -> "Success"))
                         } else {
                             BadRequest(Json.obj("error" -> "Password is invalid."))
@@ -63,8 +64,8 @@ object AuthController extends Controller {
                 body.asFormUrlEncoded.map { form =>
                     val newPass = form.get("new").map(_.head)
                     if (newPass.isDefined) {
-                        if (SocialUser.userIsSocial(user.get.user_id.get) && Etc.checkPasswordValidity(newPass.get) && user.get.password == "") {
-                            User.updatePassword(user.get.user_id.get, newPass.get)
+                        if (SocialUser.userIsSocial(user.get.userId.get) && Etc.checkPasswordValidity(newPass.get) && user.get.password == "") {
+                            User.updatePassword(user.get.userId.get, newPass.get)
                             Ok("Success.")
                         } else {
                             BadRequest("Password invalid.")
@@ -86,12 +87,17 @@ object AuthController extends Controller {
                 if (!token.isDefined)
                     Ok(html.core.login(error = true, email = email.get))
                 else {
-                    val admin = User.isUserAdmin(User.findByEmail(email.get).get.user_id.get)
+                    val admin = User.isUserAdmin(User.findByEmail(email.get).get.userId.get)
                     if (admin) {
                         val sess = new Session(token.get)
                         sess.set("admin", "true")
                     }
-                    Redirect("/").withCookies(Cookie("auth_token", token.get))
+                    val next = request.getQueryString("next")
+                    if (next.isDefined) {
+                        Redirect(next.get).withCookies(Cookie("auth_token", token.get))
+                    } else {
+                        Redirect("/").withCookies(Cookie("auth_token", token.get))
+                    }
                 }
             } else {
                 Ok(html.core.login(error = true))

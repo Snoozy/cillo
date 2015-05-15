@@ -7,20 +7,20 @@ import play.api.mvc._
 
 object VoteController extends Controller {
 
-    def upvotePost(post_id: Int) = votePost(post_id, 1)
+    def upvotePost(postId: Int) = votePost(postId, 1)
 
-    def downvotePost(post_id: Int) = votePost(post_id, -1)
+    def downvotePost(postId: Int) = votePost(postId, -1)
 
-    def upvoteComment(comment_id: Int) = voteComment(comment_id, 1)
+    def upvoteComment(commentId: Int) = voteComment(commentId, 1)
 
-    def downvoteComment(comment_id: Int) = voteComment(comment_id, -1)
+    def downvoteComment(commentId: Int) = voteComment(commentId, -1)
 
-    private def votePost(post_id: Int, value: Int) = AuthAction { implicit user => implicit request =>
+    private def votePost(postId: Int, value: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User must be authenticated"))
             case Some(_) =>
-                val postExists = Post.find(post_id)
-                if (postExists.isDefined && PostVote.votePost(postExists.get.post_id.get, user.get.user_id.get, value)) {
+                val postExists = Post.find(postId)
+                if (postExists.isDefined && PostVote.votePost(postExists.get.postId.get, user.get.userId.get, value)) {
                     Ok(Json.obj("success" -> "Yea!"))
                 } else {
                     BadRequest(Json.obj("error" -> "Vote error."))
@@ -28,12 +28,12 @@ object VoteController extends Controller {
         }
     }
 
-    private def voteComment(comment_id: Int, value: Int) = AuthAction { implicit user => implicit request =>
+    private def voteComment(commentId: Int, value: Int) = AuthAction { implicit user => implicit request =>
         user match {
             case None => BadRequest(Json.obj("error" -> "User must be authenticated"))
             case Some(_) =>
-                val commExists = Comment.find(comment_id)
-                if (commExists.isDefined && CommentVote.voteComment(commExists.get.comment_id.get, user.get.user_id.get, value)) {
+                val commExists = Comment.find(commentId)
+                if (commExists.isDefined && CommentVote.voteComment(commExists.get.commentId.get, user.get.userId.get, value)) {
                     Ok(Json.obj("success" -> "Yea!"))
                 } else {
                     BadRequest(Json.obj("error" -> "Vote error."))

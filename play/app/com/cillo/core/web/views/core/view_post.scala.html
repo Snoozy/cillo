@@ -1,6 +1,6 @@
-@(user: Option[User], post: Post)(poster: Option[User] = User.find(post.user_id),
-        board: Option[Board] = Board.find(post.board_id),
-        repost: Option[Post] = post.repost_id.flatMap(Post.find),
+@(user: Option[User], post: Post)(poster: Option[User] = User.find(post.userId),
+        board: Option[Board] = Board.find(post.boardId),
+        repost: Option[Post] = post.repostId.flatMap(Post.find),
         media: Seq[Option[Media]] = post.media.map(m => Media.find(m)))
 
 @import com.cillo.core.web.views.html.components
@@ -17,7 +17,7 @@
 
     <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# cilloapp: http://ogp.me/ns/fb/cilloapp#">
 
-    <meta property="og:url" content="https://www.cillo.co/@board.get.name/posts/@post.post_id.get" />
+    <meta property="og:url" content="https://www.cillo.co/@board.get.name/posts/@post.postId.get" />
     <meta property="fb:app_id" content="911323222224791" />
     <meta property="og:type"   content="cilloapp:post" />
     <meta property="og:site_name" content="Cillo" />
@@ -37,7 +37,7 @@
         <meta property="og:description" content="@Etc.ellipsize(repost.get.data, 300)">
     }
     @if(media.nonEmpty) {
-        <meta property="og:image" content="@media.head.get.media_url" />
+        <meta property="og:image" content="@media.head.get.mediaUrl" />
     } else {
         <meta property="og:image" content="@board.get.photo" />
     }
@@ -59,7 +59,7 @@
         </div>
 
         @if(user.isDefined) {
-            @components.repost_modal(User.getBoards(user.get.user_id.get))
+            @components.repost_modal(User.getBoards(user.get.userId.get))
         } else {
             @components.logged_out()
         }

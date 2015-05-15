@@ -8,9 +8,9 @@ import play.api.db._
 import play.api.libs.json.{JsObject, JsValue, Json}
 
 case class Comment (
-    comment_id: Option[Int],
-    post_id: Int,
-    user_id: Int,
+    commentId: Option[Int],
+    postId: Int,
+    userId: Int,
     data: String,
     time: Long,
     path: String,
@@ -29,8 +29,8 @@ object Comment {
             get[String]("path") ~
             get[Int]("votes") ~
             get[Int]("status") map {
-            case comment_id ~ post_id ~ user_id ~ data ~ time ~ path ~ votes ~ status =>
-                Comment(comment_id, post_id, user_id ,data, time, path, votes, status)
+            case commentId ~ postId ~ userId ~ data ~ time ~ path ~ votes ~ status =>
+                Comment(commentId, postId, userId ,data, time, path, votes, status)
         }
     }
 
@@ -47,12 +47,12 @@ object Comment {
         }
     }
 
-    def create(post_id: Int, user_id: Int, data: String, parent_id: Option[Int]): Option[Long] = {
-        val path = parent_id match {
+    def create(postId: Int, userId: Int, data: String, parentId: Option[Int]): Option[Long] = {
+        val path = parentId match {
             case None => ""
             case Some(_) =>
-                val parent = Comment.find(parent_id.get).getOrElse(return None)
-                parent.path + "/" + EncodeDecode.encodeNum(parent.comment_id.get)
+                val parent = Comment.find(parentId.get).getOrElse(return None)
+                parent.path + "/" + EncodeDecode.encodeNum(parent.commentId.get)
 
         }
 
@@ -60,17 +60,17 @@ object Comment {
 
         DB.withConnection { implicit connection =>
             val ret = SQL("INSERT INTO comment (post_id, user_id, data, path, time, votes) VALUES ({post_id}, {user_id}, {data}," +
-                "{path}, {time}, 0)").on('post_id -> post_id, 'user_id -> user_id, 'path -> path, 'data -> data, 'time -> time).executeInsert()
+                "{path}, {time}, 0)").on('post_id -> postId, 'user_id -> userId, 'path -> path, 'data -> data, 'time -> time).executeInsert()
             SQL("UPDATE post SET comment_count = comment_count + 1 WHERE post_id = {post_id}")
-                .on('post_id -> post_id).executeUpdate()
+                .on('post_id -> postId).executeUpdate()
             ret
         }
     }
 
     def toJson(comment: Comment, user: Option[User] = None): JsValue = {
         Json.obj(
-            "comment_id" -> comment.comment_id.get,
-            "user" -> User.toJsonByUserID(comment.user_id, self = user),
+            "comment_id" -> comment.commentId.get,
+            "user" -> User.toJsonByUserID(comment.userId, self = user),
             "content" -> (if(comment.status != 1) Json.toJson(comment.data) else Json.toJson("")),
             "time" -> Json.toJson(comment.time),
             "votes" -> Json.toJson(comment.votes),
@@ -81,7 +81,7 @@ object Comment {
     def toJsonSeqWithUser(comments: Seq[Comment], user: Option[User]): JsValue = {
         var json = Json.arr()
         comments.foreach { comment =>
-           json = json.+:(toJson(comment, user).as[JsObject] + ("post" -> Post.toJsonSingle(Post.find(comment.post_id).get, user)))
+           json = json.+:(toJson(comment, user).as[JsObject] + ("post" -> Post.toJsonSingle(Post.find(comment.postId).get, user)))
         }
         json
     }

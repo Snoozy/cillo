@@ -9,15 +9,15 @@ import play.api.db._
 import play.api.libs.json._
 
 case class Board (
-    board_id: Option[Int],
+    boardId: Option[Int],
     name: String,
     time: Long,
     description: String,
-    creator_id: Int,
+    creatorId: Int,
     followers: Int,
     privacy: Int,
     photo: String,
-    photo_id: Int
+    photoId: Int
 )
 
 object Board {
@@ -34,15 +34,15 @@ object Board {
             get[Int]("followers") ~
             get[Int]("privacy") ~
             get[Option[Int]]("photo") map {
-            case board_id ~ name ~ time ~ description ~ creator_id ~ followers ~ privacy ~ photo =>
+            case boardId ~ name ~ time ~ description ~ creatorId ~ followers ~ privacy ~ photo =>
                 if (photo.isDefined) {
                     val p = Media.find(photo.get)
                     if (p.isDefined)
-                        Board(board_id, name, time, description, creator_id, followers, privacy, ImageURLBase + p.get.media_name, photo.get)
+                        Board(boardId, name, time, description, creatorId, followers, privacy, ImageURLBase + p.get.mediaName, photo.get)
                     else
-                        Board(board_id, name, time, description, creator_id, followers, privacy, ImageURLBase + DefaultPhotoString, 0)
+                        Board(boardId, name, time, description, creatorId, followers, privacy, ImageURLBase + DefaultPhotoString, 0)
                 } else {
-                    Board(board_id, name, time, description, creator_id, followers, privacy, ImageURLBase + DefaultPhotoString, 0)
+                    Board(boardId, name, time, description, creatorId, followers, privacy, ImageURLBase + DefaultPhotoString, 0)
                 }
 
         }
@@ -60,31 +60,31 @@ object Board {
         }
     }
 
-    def create(name: String, desc: Option[String], creator_id: Int, privacy: Int = 0, photo: Option[Int] = None): Option[Long] = {
+    def create(name: String, desc: Option[String], creatorId: Int, privacy: Int = 0, photo: Option[Int] = None): Option[Long] = {
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>
             SQL("INSERT INTO `board` (name, description, creator_id, followers, privacy, time, photo) VALUES " +
                 "({name}, {desc}, {creator_id}, {followers}, {privacy}, {time}, {photo})").on('name -> name,
-                    'desc -> desc.getOrElse(""), 'creator_id -> creator_id, 'followers -> 0, 'privacy -> privacy,
+                    'desc -> desc.getOrElse(""), 'creator_id -> creatorId, 'followers -> 0, 'privacy -> privacy,
                     'time -> time, 'photo -> photo).executeInsert()
         }
     }
 
-    def delete(board_id: Int) = {
+    def delete(boardId: Int) = {
         DB.withConnection { implicit connection =>
-            val postIds = Board.getAllPostIds(board_id).map(_.toInt)
+            val postIds = Board.getAllPostIds(boardId).map(_.toInt)
             postIds.foreach { p =>
                 Post.deletePost(p)
             }
-            SQL("DELETE FROM user_to_board WHERE board_id = {board}").on('board -> board_id).executeUpdate()
-            SQL("DELETE FROM board WHERE board_id = {board}").on('board -> board_id).executeUpdate()
+            SQL("DELETE FROM user_to_board WHERE board_id = {board}").on('board -> boardId).executeUpdate()
+            SQL("DELETE FROM board WHERE board_id = {board}").on('board -> boardId).executeUpdate()
         }
     }
 
-    def getAllPostIds(board_id: Int): Seq[Long] = {
+    def getAllPostIds(boardId: Int): Seq[Long] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT post_id FROM post WHERE board_id = {board}").on('board -> board_id).as(scalar[Long] *)
+            SQL("SELECT post_id FROM post WHERE board_id = {board}").on('board -> boardId).as(scalar[Long] *)
         }
     }
 
@@ -94,37 +94,37 @@ object Board {
         }
     }
 
-    def update(board_id: Int, desc: String, pic: Int) = {
+    def update(boardId: Int, desc: String, pic: Int) = {
         DB.withConnection { implicit connection =>
             SQL("UPDATE `board` SET description = {desc}, photo = {pic} WHERE board_id = {board}")
-                .on('desc -> desc, 'pic -> pic, 'board -> board_id).executeUpdate()
+                .on('desc -> desc, 'pic -> pic, 'board -> boardId).executeUpdate()
         }
     }
 
-    def getPostsCount(board_id: Int): Int = {
+    def getPostsCount(boardId: Int): Int = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT COUNT(*) FROM post WHERE board_id = {board}").on('board -> board_id).as(scalar[Long].single).toInt
+            SQL("SELECT COUNT(*) FROM post WHERE board_id = {board}").on('board -> boardId).as(scalar[Long].single).toInt
         }
     }
 
-    def addFollower(user_id: Int, board_id: Int): Boolean = {
+    def addFollower(userId: Int, boardId: Int): Boolean = {
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>
             SQL("UPDATE `board` SET followers = followers + 1 WHERE board_id = {board_id}")
-                .on('board_id -> board_id).executeUpdate()
+                .on('board_id -> boardId).executeUpdate()
             SQL("INSERT INTO user_to_board (user_id, board_id, time) VALUES ({user_id}, {board_id}, {time})")
-                .on('user_id -> user_id, 'board_id -> board_id, 'time -> time).executeInsert()
+                .on('user_id -> userId, 'board_id -> boardId, 'time -> time).executeInsert()
         }
         true
     }
 
-    def removeFollower(user_id: Int, board_id: Int): Boolean = {
+    def removeFollower(userId: Int, boardId: Int): Boolean = {
         DB.withConnection { implicit connection =>
             SQL("DELETE FROM user_to_board WHERE user_id = {user_id} AND board_id = {board_id}")
-                .on('user_id -> user_id, 'board_id -> board_id).executeUpdate()
+                .on('user_id -> userId, 'board_id -> boardId).executeUpdate()
             SQL("UPDATE `board` SET followers = followers - 1 WHERE board_id = {board_id}")
-                .on('board_id -> board_id).executeUpdate()
+                .on('board_id -> boardId).executeUpdate()
         }
         true
     }
@@ -149,18 +149,18 @@ object Board {
         }
     }
 
-    def getFeed(board_id: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getFeed(boardId: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY time DESC LIMIT {limit}").on('board_id -> board_id, 'limit -> limit).as(postParser *)
+            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY time DESC LIMIT {limit}").on('board_id -> boardId, 'limit -> limit).as(postParser *)
         }
     }
 
-    def getFeedPaged(board_id: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getFeedPaged(boardId: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
             val afterPost = Post.find(after)
             if (afterPost.isDefined) {
                 val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id = {board_id} ORDER BY time DESC LIMIT {limit}")
-                    .on('board_id -> board_id, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                    .on('board_id -> boardId, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
                 if (posts.length < limit)
                     posts
                 else
@@ -171,9 +171,9 @@ object Board {
         }
     }
 
-    def getTopPosts(board_id: Int, limit: Int = 10): Seq[Post] = {
+    def getTopPosts(boardId: Int, limit: Int = 10): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY votes DESC LIMIT {limit}").on('board_id -> board_id, 'limit -> limit).as(postParser *)
+            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY votes DESC LIMIT {limit}").on('board_id -> boardId, 'limit -> limit).as(postParser *)
         }
     }
 
@@ -183,7 +183,7 @@ object Board {
             if (following.isDefined) {
                 json = json.+:(toJson(board, following.get))
             } else if (user.isDefined) {
-                val f = User.userIsFollowing(user.get.user_id.get, board.board_id.get)
+                val f = User.userIsFollowing(user.get.userId.get, board.boardId.get)
                 json = json.+:(toJson(board, f))
             } else {
                 json = json.+:(toJson(board))
@@ -196,8 +196,8 @@ object Board {
         Json.obj(
             "name" -> board.name,
             "followers" -> board.followers,
-            "board_id" -> board.board_id.get,
-            "creator_id" -> board.creator_id,
+            "board_id" -> board.boardId.get,
+            "creator_id" -> board.creatorId,
             "photo" -> board.photo,
             "description" -> board.description,
             "following" -> following

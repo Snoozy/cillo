@@ -1,6 +1,6 @@
 @(commentTreeNode: CommentTreeNode, user: Option[User])(expanded: Boolean = false,
-        vote: Option[CommentVote] = user.flatMap{u => CommentVote.findByCommentAndUser(commentTreeNode.comment.comment_id.get, u.user_id.get)},
-        commenter: User = User.find(commentTreeNode.comment.user_id).get,
+        vote: Option[CommentVote] = user.flatMap{u => CommentVote.findByCommentAndUser(commentTreeNode.comment.commentId.get, u.userId.get)},
+        commenter: User = User.find(commentTreeNode.comment.userId).get,
         root: Boolean = false,
         anon: Boolean = false,
         anonImg: String = "https://static.cillo.co/image/anon")
@@ -9,7 +9,7 @@
 @import com.cillo.core.web.views.html.components
 
 <div class="@if(root){root-comment }comment-container">
-    <div class="comment" data-comment-id="@commentTreeNode.comment.comment_id.get" data-post-id="@commentTreeNode.comment.post_id">
+    <div class="comment" data-comment-id="@commentTreeNode.comment.commentId.get" data-post-id="@commentTreeNode.comment.postId">
         @if(!anon) {
             <div class="comment-avatar">
                 <a href="/user/@commenter.username">
