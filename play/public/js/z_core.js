@@ -529,10 +529,8 @@ $(document).ready(function() {
     $('.anon').tooltip({'title' : 'Your posts in this group are anonymous.'});
 
     $(".post-submit").click(function () {
-        $(this).addClass('disabled');
 
         if ($('.post-form').val() == "") {
-            $(this).removeClass('disabled');
             $('.post-submit').shake(3, 15, 250);
             $('.post-form').addClass('error-border');
             return false;
@@ -563,8 +561,11 @@ $(document).ready(function() {
                 contentType: false,
                 processData: false,
                 data: formData,
+                beforeSend: function() {
+                    $('.first-post').css('opacity', '0.6');
+                },
                 success: function(response) {
-                    media_ids = response.media_ids.join("~")
+                    media_ids = response.media_ids.join("~");
                     $.ajax({
                         url: "/a/post",
                         type: "POST",
@@ -584,6 +585,8 @@ $(document).ready(function() {
                             $('.previews').empty();
                             $('.thumbnail-container').addClass('displaynone');
                             collapseFirstPost();
+                            $('.first-post').css('opacity', '1');
+                            reset_form();
                         },
                         error: function () {
                             alert("Unexpected error. Please try again later.");
@@ -595,6 +598,7 @@ $(document).ready(function() {
                 }
             });
         } else {
+            $('.first-post').css('opacity', '0.6');
             $.ajax({
                 url: "/a/post",
                 type: "POST",
@@ -605,19 +609,22 @@ $(document).ready(function() {
                     "board_name": post_board,
                     "user": user
                 },
+                beforeSend: function() {
+                    $('.first-post').css('opacity', '0.6');
+                },
                 success: function (response, textStatus, jqXHR) {
                     $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post');
                     $('textarea.post-form').val('');
                     $('.post-title').val('');
                     collapseFirstPost();
+                    $('.first-post').css('opacity', '1');
+                    reset_form();
                 },
                 error: function () {
                     alert("Unexpected error. Please try again later.");
                 }
             });
         }
-        reset_form();
-        $(this).removeClass('disabled');
         return false;
     });
 

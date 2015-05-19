@@ -18,10 +18,10 @@
         </div>
         @if(!small) {
             @if(searchBar) {
-                <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:7px;padding-left:0;">
+                <div class="navbar-form navbar-left" style="margin-bottom:4px;margin-top:7px;padding-left:0;padding-right:0;">
                     <div class="form-group input-group">
                         <form class="navbar-search">
-                            <input type="search" class="form-control search-query" placeholder="Search" style="width:230px;padding-right:30px;" value="@searchQuery">
+                            <input type="search" class="form-control search-query" placeholder="Search" style="width:200px;padding-right:30px;" value="@searchQuery">
                             <span class="input-group-btn">
                                 <button type="submit" class="search-submit">
                                     <span class="glyphicon glyphicon-search" style="font-size: 13px;"></span>
@@ -42,6 +42,21 @@
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/logout"><span class="glyphicon glyphicon-off" style="font-size:15px;"></span> Logout</a></li>
                     </ul>
                 </div>
+                <div class="navbar-button-separator-wrapper">
+                    <span class="navbar-button-separator">|</span>
+                </div>
+                <div class="navbar-notifs-wrapper" style="margin-top:7px;margin-right:0;padding-left:3px;">
+                    <a href="#" class="dropdown-toggle" id="notifs-dropdown" data-toggle="dropdown" aria-expanded="true">
+                        <span class="glyphicon glyphicon-bell masthead-bell"></span>
+                    </a>
+                    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="notifs-dropdown">
+                        <li role="presentation">
+                            <div class="masthead-notification">
+                                Notifications are coming soon...
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <div class="navbar-user-wrapper">
                     <a href="/user/@user.get.username" class="no-dec navbar-user-anchor">
                         <div class="navbar-user-avatar-wrapper">
@@ -55,12 +70,12 @@
                     </a>
                 </div>
             }
-            @if(buttons) {
-                <div class="navbar-button-wrapper navbar-explore">
-                    <a href="/boards/explore" class="no-dec navbar-button-anchor">
-                        <div class="navbar-button-div" style="padding-right:3px;">
+            @if(buttons && !user.isDefined) {
+                <div class="navbar-button-wrapper navbar-signup">
+                    <a href="/login" class="no-dec navbar-button-anchor">
+                        <div class="navbar-button-div">
                             <span class="navbar-button-text">
-                                Explore
+                                Login
                             </span>
                         </div>
                     </a>
@@ -68,39 +83,27 @@
                 <div class="navbar-button-separator-wrapper">
                     <span class="navbar-button-separator">|</span>
                 </div>
-                @if(user.isDefined) {
-                    <div class="navbar-button-wrapper">
-                        <a href="/boards/create" class="no-dec navbar-button-anchor">
-                            <div class="navbar-button-div">
-                                <span class="navbar-button-text">
-                                    Create
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                } else {
-                    <div class="navbar-button-wrapper navbar-signup">
-                        <a href="/login" class="no-dec navbar-button-anchor">
-                            <div class="navbar-button-div">
-                                <span class="navbar-button-text">
-                                    Login
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="navbar-button-separator-wrapper">
-                        <span class="navbar-button-separator">|</span>
-                    </div>
-                    <div class="navbar-button-wrapper navbar-signup">
-                        <a href="/signup" class="no-dec navbar-button-anchor">
-                            <div class="navbar-button-div">
-                                <span class="navbar-button-text">
-                                    Sign Up
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                }
+                <div class="navbar-button-wrapper navbar-signup">
+                    <a href="/signup" class="no-dec navbar-button-anchor">
+                        <div class="navbar-button-div">
+                            <span class="navbar-button-text">
+                                Sign Up
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                <div class="navbar-button-separator-wrapper">
+                    <span class="navbar-button-separator">|</span>
+                </div>
+                <div class="navbar-button-wrapper navbar-explore">
+                    <a href="/boards/explore" class="no-dec navbar-button-anchor">
+                        <div class="navbar-button-div" style="padding-left:8px;">
+                            <span class="navbar-button-text">
+                                Explore
+                            </span>
+                        </div>
+                    </a>
+                </div>
             }
         }
     </nav>

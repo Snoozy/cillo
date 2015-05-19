@@ -3,6 +3,7 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html
 import com.cillo.utils.play.Auth._
+import com.cillo.utils.play.EmailDoesNotExist
 import play.api.mvc._
 import play.api.libs.json.Json
 import com.cillo.utils.Etc
@@ -82,27 +83,33 @@ object AuthController extends Controller {
         body.asFormUrlEncoded.map { form =>
             val email = form.get("email").map(_.head)
             val password = form.get("password").map(_.head)
-            if (email.isDefined && password.isDefined) {
-                val token = logInSession(email.get, password.get)
-                if (!token.isDefined)
-                    Ok(html.core.login(error = true, email = email.get))
-                else {
-                    val admin = User.isUserAdmin(User.findByEmail(email.get).get.userId.get)
-                    if (admin) {
-                        val sess = new Session(token.get)
-                        sess.set("admin", "true")
+            if (email.isDefined && password.isDefined && email.get.trim.length > 0 && password.get.trim.length > 0) {
+                try {
+                    val token = logInSession(email.get, password.get)
+                    if (!token.isDefined) {
+                        Ok(html.core.login(error = true, errorMessage = "Hmm, wrong password. Try again!", email = email.get))
                     }
-                    val next = request.getQueryString("next")
-                    if (next.isDefined) {
-                        Redirect(next.get).withCookies(Cookie("auth_token", token.get))
-                    } else {
-                        Redirect("/").withCookies(Cookie("auth_token", token.get))
+                    else {
+                        val admin = User.isUserAdmin(User.findByEmail(email.get).get.userId.get)
+                        if (admin) {
+                            val sess = new Session(token.get)
+                            sess.set("admin", "true")
+                        }
+                        val next = request.getQueryString("next")
+                        if (next.isDefined) {
+                            Redirect(next.get).withCookies(Cookie("auth_token", token.get))
+                        } else {
+                            Redirect("/").withCookies(Cookie("auth_token", token.get))
+                        }
                     }
+                } catch {
+                    case e: EmailDoesNotExist =>
+                        Ok(html.core.login(error = true, errorMessage = "Hmm, seems like that email does not exist.", email = email.get))
                 }
             } else {
-                Ok(html.core.login(error = true))
+                Ok(html.core.login(error = true, errorMessage = "You need to fill in your email and password."))
             }
-        }.getOrElse(Ok(html.core.login(error = true)))
+        }.getOrElse(Ok(html.core.login(error = true, errorMessage = "Something went wrong... Please try again.")))
     }
 
 }

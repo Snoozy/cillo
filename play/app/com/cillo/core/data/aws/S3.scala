@@ -1,9 +1,13 @@
 package com.cillo.core.data.aws
 
-import java.io.{InputStream, File}
+import java.io.{FileInputStream, InputStream, File}
 import java.util.UUID
 import javax.imageio.ImageIO
+import com.cillo.core.data.Constants
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream
+import play.api.libs.Files._
 import java.net.URL
+import org.apache.commons.io.FileUtils
 import com.cillo.core.data.db.models._
 
 import com.amazonaws.auth.BasicAWSCredentials
@@ -95,13 +99,17 @@ object S3 {
     }
 
     def uploadURL(url: String, profile: Boolean = false): Option[Int] = {
-        val raw = Option(ImageIO.read(new URL(url)))
-        val reader = ImageIO.getImageReaders(raw.get).next()
-        if (raw.isDefined) {
-            val image = Image(raw.get)
-            uploadImg(image, profile = profile, format = reader.getFormatName)
-        } else {
-            None
+        try {
+            val tempUrl = TemporaryFile("aoifjweoijf")
+            val urlObj = new URL(url)
+            FileUtils.copyURLToFile(urlObj, tempUrl.file)
+            if (tempUrl.file.length() < Constants.MaxMediaSize) {
+                upload(tempUrl.file)
+            } else {
+                None
+            }
+        } catch {
+            case e: Exception => None
         }
     }
 

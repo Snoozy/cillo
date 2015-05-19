@@ -20,7 +20,9 @@ object Auth {
 
     def logInSession(email: String, password: String): Option[String] = {
         val user = User.findByEmail(email)
-        if (Etc.checkPass(password, user.getOrElse(return None).password)) {
+        if (!user.isDefined)
+            throw new EmailDoesNotExist("Email does not exist.")
+        if (Etc.checkPass(password, user.get.password)) {
             Some(getNewUserSessionId(user.get.userId.get))
         } else
             None
@@ -80,3 +82,5 @@ object Auth {
 }
 
 case class AuthTokenCookieExpired(message: String) extends Exception(message)
+
+case class EmailDoesNotExist(message: String) extends Exception(message)

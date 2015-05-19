@@ -12,11 +12,12 @@ import com.cillo.core.data.db.models.User.userParser
 object Search {
 
     def boardSearch(query: String): Seq[Board] = {
-        val natSearch = naturalBoardSearch(query)
+        val newQuery = query.replace(" ", "")
+        val natSearch = naturalBoardSearch(newQuery)
         if (natSearch.length < 5) {
-            val ex = expandedBoardSearch(query)
+            val ex = expandedBoardSearch(newQuery)
             if (ex.length < 1) {
-                partialBoardSearch(query)
+                partialBoardSearch(newQuery)
             } else {
                 ex
             }

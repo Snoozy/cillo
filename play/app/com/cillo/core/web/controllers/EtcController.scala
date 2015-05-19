@@ -3,6 +3,7 @@ package com.cillo.core.web.controllers
 import java.util.regex.Pattern
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.s3.AmazonS3Client
+import play.api.Play.current
 import com.amazonaws.services.s3.model.{DeleteObjectRequest, S3ObjectSummary}
 import com.cillo.core.data.cache.Redis
 import play.api.Play
@@ -40,10 +41,8 @@ object EtcController extends Controller {
         }
     }
 
-    private val imgurRegex = Pattern.compile("^https?:\\/\\/(\\w+\\.)?imgur.com\\/(\\w*\\d\\w*)+(\\.[a-zA-Z]{3})?$")
-
     def reddit = AuthAction { implicit user => implicit request =>
-        if (user.isDefined && user.get.admin) {
+        if ((user.isDefined && user.get.admin) || Play.isDev) {
             subreddits.foreach {
                 case (key, value) =>
                     value.foreach { s =>
@@ -54,35 +53,32 @@ object EtcController extends Controller {
                                 subms.foreach { p =>
                                     val userId = users(Random.nextInt(users.size))
                                     val time = System.currentTimeMillis() - (Random.nextInt(48) * 1800000)
-                                    if (p.getURL.indexOf("imgur") > 0) {
-                                        val matcher = imgurRegex.matcher(p.getUrl)
-                                        if (matcher.find()) {
-                                            val url = {
-                                                if (!p.getUrl.contains("i.imgur.com")) {
-                                                    p.getURL + ".jpg"
-                                                } else {
-                                                    p.getURL
-                                                }
+                                    if ((!p.getUrl.contains("gallery") && !p.getUrl.contains("/a/")) && p.getUrl.contains("imgur")) {
+                                        val url = {
+                                            if (!p.getUrl.contains("i.imgur.com")) {
+                                                p.getURL + ".jpg"
+                                            } else {
+                                                p.getURL.replace(".gifv", ".gif")
                                             }
-                                            val testTitle = unescapeHtml4(p.getTitle.replace("[OC]", "").substring(0, p.getTitle.indexOf("[")))
-                                            val title = {
-                                                if (testTitle.length < 100) {
-                                                    Some(testTitle)
-                                                } else {
-                                                    None
-                                                }
+                                        }
+                                        val testTitle = unescapeHtml4(p.getTitle.replace("[OC]", "").substring(0, p.getTitle.indexOf("[")))
+                                        val title = {
+                                            if (testTitle.length < 100) {
+                                                Some(testTitle)
+                                            } else {
+                                                None
                                             }
-                                            val data = {
-                                                if (testTitle.length < 100) {
-                                                    ""
-                                                } else {
-                                                    testTitle
-                                                }
+                                        }
+                                        val data = {
+                                            if (testTitle.length < 100) {
+                                                ""
+                                            } else {
+                                                testTitle
                                             }
-                                            val id = uploadURL(url)
-                                            if (id.isDefined) {
-                                                Post.createMediaPost(userId, title, data, board.get.boardId.get, Seq(id.get), time = time)
-                                            }
+                                        }
+                                        val id = uploadURL(url)
+                                        if (id.isDefined) {
+                                            Post.createMediaPost(userId, title, data, board.get.boardId.get, Seq(id.get), time = time)
                                         }
                                     }
                                 }
@@ -91,13 +87,12 @@ object EtcController extends Controller {
                                 subms.foreach { p =>
                                     val userId = users(Random.nextInt(users.size))
                                     val time = System.currentTimeMillis() - (Random.nextInt(13) * 1800000)
-                                    val matcher = imgurRegex.matcher(p.getUrl)
-                                    if (matcher.find()) {
+                                    if (p.getUrl.contains("imgur") && (!p.getUrl.contains("gallery") && !p.getUrl.contains("/a/"))) {
                                         val url = {
-                                            if (!p.getUrl.contains("i.imgur.com")) {
+                                            if (!p.getUrl.contains("i.imgur.com") && !p.getUrl.contains("gifv")) {
                                                 p.getURL + ".jpg"
                                             } else {
-                                                p.getURL
+                                                p.getURL.replace(".gifv", ".gif")
                                             }
                                         }
                                         val testTitle = unescapeHtml4(p.getTitle)

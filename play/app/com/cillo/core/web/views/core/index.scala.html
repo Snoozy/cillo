@@ -70,6 +70,12 @@
             }
         </style>
     }
+
+    <script>
+        $(function(){
+            $('.create-board-anchor').tooltip();
+        });
+    </script>
 }{
     <body class="main-background context-home">
         <div class="page" style="margin: 0px;">
@@ -96,19 +102,41 @@
                                 <div @if(posts.length < 19){class="displaynone" }id="neverending_spinner"></div>
                             </div>
                         </div>
-                        <div class="boards-container box-shadow-apply" style="display:inline-block;vertical-align:top;width:250px;background-color:#fdfdfd;">
-                            <div class="small-board-header">
-                                <b style="font-size:16px;">Boards</b>
-                            </div>
-                            @if(boards.size > 0) {
+                        <div class="column2" style="display:inline-block;vertical-align:top;width:250px;">
+                            <div class="boards-container box-shadow-apply" style="background-color:#fdfdfd;margin-bottom:10px;">
+                                <div class="small-board-header">
+                                    <b style="font-size:16px;">Recommended</b>
+                                </div>
                                 @for(b <- boards) {
                                     @components.small_board(b)
                                 }
-                            } else {
-                                <div class="no-boards">
-                                    You are not following any boards.
+                                <div class="small-board-container" style="padding-bottom:0;">
+                                    <a href="/boards/explore" class="no-dec small-board-anchor">
+                                        <div class="explore-boards">
+                                            Explore all of Cillo
+                                        </div>
+                                    </a>
                                 </div>
-                            }
+                            </div>
+                            <div class="boards-container box-shadow-apply" style="background-color:#fdfdfd;">
+                                <div class="small-board-header">
+                                    <b style="font-size:16px;">My Boards</b>
+                                    <div class="create-board">
+                                        <a class="create-board-anchor" href="/boards/create" data-placement="bottom" title="Create a Board">
+                                            <span class="glyphicon glyphicon-plus" style="color:#333;"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                @if(boards.size > 0) {
+                                    @for(b <- boards) {
+                                        @components.small_board(b)
+                                    }
+                                } else {
+                                    <div class="no-boards">
+                                        You are not following any boards.
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
