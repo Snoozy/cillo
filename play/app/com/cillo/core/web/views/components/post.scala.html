@@ -30,9 +30,9 @@
                     }
                 </div>
                 @if(user.isDefined && (poster.userId.get == user.get.userId.get || user.get.admin)) {
-                    <div class="post-functions dropdown displaynone">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="margin-right:-3px;">
-                            <i class="icon-drop-arrow"></i>
+                    <div class="post-functions dropdown">
+                        <a class="dropdown-toggle post-func-dropdown" data-toggle="dropdown" href="#">
+                            <i class="icon-drop-arrow" style="margin-right:0;width:1em;"></i>
                         </a>
                         <ul class="dropdown-menu post-dropdown pull-right">
                             @*<li>
@@ -60,7 +60,7 @@
                             <strong class="hover-blue user-name-text anonymous-user">Anonymous</strong>
                         }
                     </label>
-                    on
+                    <i class="right-arrow-icon"></i>
                     <label class="u-info-wrapper">
                         <a href="/@board.name" class="no-dec">
                             <strong class="hover-blue board-name-text">@board.name</strong>
@@ -236,7 +236,7 @@
                         }
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
-                            @components.comment(CommentTreeNode(comment, Seq()), user)(expanded = expanded, root = true, anon = board.privacy == 1)
+                            @components.comment(CommentTreeNode(comment, Seq()), user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
                             @defining(CommentTree.getCommentNumChildren(comment.commentId.get)) { n =>
                                 @if(n > 0) {
                                     <div class="view-replies-wrapper">
@@ -276,7 +276,7 @@
                         }
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.rootComments) {
-                            @components.comment(comment, user)(expanded = expanded, root = true, anon = board.privacy == 1)
+                            @components.comment(comment, user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
                         }
                         </div>
                     }

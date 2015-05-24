@@ -28,13 +28,13 @@ object CommentTree {
 
     def getTopRootComments(postId: Int): Seq[Comment] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM comment WHERE post_id = {id} AND path = \"\"").on('id -> postId).as(commentParser *)
+            SQL("SELECT * FROM comment WHERE post_id = {id} AND path = \"\" AND status = 0").on('id -> postId).as(commentParser *)
         }
     }
 
     def getCommentNumChildren(commentId: Int): Int = {
         DB.withConnection { implicit connection =>
-            val comment = Comment.find(commentId)
+            val comment = Comment.find(commentId, status = None)
             if (comment.isDefined) {
                 val path = comment.get.path + "/" + EncodeDecode.encodeNum(comment.get.commentId.get)
                 SQL("SELECT COUNT(*) FROM comment WHERE path = {path}").on('path -> path).as(scalar[Long].single).toInt

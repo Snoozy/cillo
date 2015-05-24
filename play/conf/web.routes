@@ -43,6 +43,7 @@ POST        /a/post/:id/comment            com.cillo.core.web.controllers.Commen
 POST        /a/comment/:id/upvote          com.cillo.core.web.controllers.VoteController.upvoteComment(id: Int)
 POST        /a/comment/:id/downvote        com.cillo.core.web.controllers.VoteController.downvoteComment(id: Int)
 POST        /a/post/:id/delete             com.cillo.core.web.controllers.PostController.deletePost(id: Int)
+POST        /a/comment/:id/delete          com.cillo.core.web.controllers.CommentController.deleteComment(id: Int)
 POST        /a/group/:id/follow            com.cillo.core.web.controllers.BoardController.followBoard(id: Int)
 POST        /a/group/:id/unfollow          com.cillo.core.web.controllers.BoardController.unfollowBoard(id: Int)
 POST        /a/upload                      com.cillo.core.web.controllers.MediaController.upload

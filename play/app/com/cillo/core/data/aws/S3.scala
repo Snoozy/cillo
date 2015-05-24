@@ -103,13 +103,15 @@ object S3 {
             val tempUrl = TemporaryFile("aoifjweoijf")
             val urlObj = new URL(url)
             FileUtils.copyURLToFile(urlObj, tempUrl.file)
-            if (tempUrl.file.length() < Constants.MaxMediaSize) {
+            if (tempUrl.file.length() < 4000000) {
                 upload(tempUrl.file)
             } else {
                 None
             }
         } catch {
-            case e: Exception => None
+            case e: Exception =>
+                play.api.Logger.debug(url + " failed")
+                None
         }
     }
 

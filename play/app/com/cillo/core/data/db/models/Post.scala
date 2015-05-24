@@ -71,7 +71,7 @@ object Post {
         }
 
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) values ({user_id}, {title}, {data}," +
+            SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) VALUES ({user_id}, {title}, {data}," +
                 " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
                     'board_id -> boardId, 'repost_id -> repostId, 'time -> time).executeInsert()
         }
@@ -110,6 +110,8 @@ object Post {
             if (commentIds.nonEmpty) {
                 SQL("DELETE FROM comment_vote WHERE comment_id IN ({ids})").on('ids -> commentIds).executeUpdate()
             }
+            val reposts = SQL("SELECT post_id FROM post WHERE repost_id = {post_id}").on('post_id -> postId).as(scalar[Int].*)
+            reposts.foreach(deletePost)
             SQL("DELETE FROM comment WHERE post_id = {post_id}").on('post_id -> postId).executeUpdate()
             SQL("DELETE FROM post_vote WHERE post_id = {post_id}").on('post_id -> postId).executeUpdate()
             SQL("DELETE FROM post WHERE post_id = {post_id}").on('post_id -> postId).executeUpdate()

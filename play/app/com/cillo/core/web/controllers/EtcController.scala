@@ -42,104 +42,100 @@ object EtcController extends Controller {
     }
 
     def reddit = AuthAction { implicit user => implicit request =>
-        if ((user.isDefined && user.get.admin) || Play.isDev) {
-            subreddits.foreach {
-                case (key, value) =>
-                    value.foreach { s =>
-                        val board = Board.find(key)
-                        if (board.isDefined) {
-                            if (s == "earthporn" || s == "foodporn") {
-                                val subms = Reddit.getSubredditPosts(s)
-                                subms.foreach { p =>
-                                    val userId = users(Random.nextInt(users.size))
-                                    val time = System.currentTimeMillis() - (Random.nextInt(48) * 1800000)
-                                    if ((!p.getUrl.contains("gallery") && !p.getUrl.contains("/a/")) && p.getUrl.contains("imgur")) {
-                                        val url = {
-                                            if (!p.getUrl.contains("i.imgur.com")) {
-                                                p.getURL + ".jpg"
-                                            } else {
-                                                p.getURL.replace(".gifv", ".gif")
-                                            }
+        subreddits.foreach {
+            case (key, value) =>
+                value.foreach { s =>
+                    val board = Board.find(key)
+                    if (board.isDefined) {
+                        if (s == "earthporn" || s == "foodporn") {
+                            val subms = Reddit.getSubredditPosts(s)
+                            subms.foreach { p =>
+                                val userId = users(Random.nextInt(users.size))
+                                val time = System.currentTimeMillis() - (Random.nextInt(48) * 1800000)
+                                if ((!p.getUrl.contains("gallery") && !p.getUrl.contains("/a/")) && p.getUrl.contains("imgur")) {
+                                    val url = {
+                                        if (!p.getUrl.contains("i.imgur.com")) {
+                                            p.getURL + ".jpg"
+                                        } else {
+                                            p.getURL.replace(".gifv", ".gif")
                                         }
-                                        val testTitle = unescapeHtml4(p.getTitle.replace("[OC]", "").substring(0, p.getTitle.indexOf("[")))
-                                        val title = {
-                                            if (testTitle.length < 100) {
-                                                Some(testTitle)
-                                            } else {
-                                                None
-                                            }
+                                    }
+                                    val testTitle = unescapeHtml4(p.getTitle.replace("[OC]", "").substring(0, p.getTitle.indexOf("[")))
+                                    val title = {
+                                        if (testTitle.length < 100) {
+                                            Some(testTitle)
+                                        } else {
+                                            None
                                         }
-                                        val data = {
-                                            if (testTitle.length < 100) {
-                                                ""
-                                            } else {
-                                                testTitle
-                                            }
+                                    }
+                                    val data = {
+                                        if (testTitle.length < 100) {
+                                            ""
+                                        } else {
+                                            testTitle
                                         }
-                                        val id = uploadURL(url)
-                                        if (id.isDefined) {
-                                            Post.createMediaPost(userId, title, data, board.get.boardId.get, Seq(id.get), time = time)
-                                        }
+                                    }
+                                    val id = uploadURL(url)
+                                    if (id.isDefined) {
+                                        Post.createMediaPost(userId, title, data, board.get.boardId.get, Seq(id.get), time = time)
                                     }
                                 }
-                            } else {
-                                val subms = Reddit.getSubredditPosts(s)
-                                subms.foreach { p =>
-                                    val userId = users(Random.nextInt(users.size))
-                                    val time = System.currentTimeMillis() - (Random.nextInt(13) * 1800000)
-                                    if (p.getUrl.contains("imgur") && (!p.getUrl.contains("gallery") && !p.getUrl.contains("/a/"))) {
-                                        val url = {
-                                            if (!p.getUrl.contains("i.imgur.com") && !p.getUrl.contains("gifv")) {
-                                                p.getURL + ".jpg"
-                                            } else {
-                                                p.getURL.replace(".gifv", ".gif")
-                                            }
+                            }
+                        } else {
+                            val subms = Reddit.getSubredditPosts(s)
+                            subms.foreach { p =>
+                                val userId = users(Random.nextInt(users.size))
+                                val time = System.currentTimeMillis() - (Random.nextInt(13) * 1800000)
+                                if (p.getUrl.contains("imgur") && (!p.getUrl.contains("gallery") && !p.getUrl.contains("/a/"))) {
+                                    val url = {
+                                        if (!p.getUrl.contains("i.imgur.com") && !p.getUrl.contains("gifv")) {
+                                            p.getURL + ".jpg"
+                                        } else {
+                                            p.getURL.replace(".gifv", ".gif")
                                         }
-                                        val testTitle = unescapeHtml4(p.getTitle)
-                                        val title = {
-                                            if (testTitle.length < 100) {
-                                                Some(testTitle)
-                                            } else {
-                                                None
-                                            }
-                                        }
-                                        val data = {
-                                            if (testTitle.length < 100) {
-                                                ""
-                                            } else {
-                                                testTitle
-                                            }
-                                        }
-                                        val id = uploadURL(url)
-                                        if (id.isDefined) {
-                                            Post.createMediaPost(userId, title, data, board.get.boardId.get, Seq(id.get), time = time)
-                                        }
-                                    } else {
-                                        val title = {
-                                            if (p.getTitle.length < 100) {
-                                                Some(unescapeHtml4(p.getTitle))
-                                            } else {
-                                                None
-                                            }
-                                        }
-                                        val data = {
-                                            if (p.getTitle.length < 100) {
-                                                p.getURL
-                                            } else {
-                                                unescapeHtml4(p.getTitle) + "\n\n" + p.getURL
-                                            }
-                                        }
-                                        Post.createSimplePost(userId, title, data, board.get.boardId.get, time = time)
                                     }
+                                    val testTitle = unescapeHtml4(p.getTitle)
+                                    val title = {
+                                        if (testTitle.length < 100) {
+                                            Some(testTitle)
+                                        } else {
+                                            None
+                                        }
+                                    }
+                                    val data = {
+                                        if (testTitle.length < 100) {
+                                            ""
+                                        } else {
+                                            testTitle
+                                        }
+                                    }
+                                    val id = uploadURL(url)
+                                    if (id.isDefined) {
+                                        Post.createMediaPost(userId, title, data, board.get.boardId.get, Seq(id.get), time = time)
+                                    }
+                                } else {
+                                    val title = {
+                                        if (p.getTitle.length < 100) {
+                                            Some(unescapeHtml4(p.getTitle))
+                                        } else {
+                                            None
+                                        }
+                                    }
+                                    val data = {
+                                        if (p.getTitle.length < 100) {
+                                            p.getURL
+                                        } else {
+                                            unescapeHtml4(p.getTitle) + "\n\n" + p.getURL
+                                        }
+                                    }
+                                    Post.createSimplePost(userId, title, data, board.get.boardId.get, time = time)
                                 }
                             }
                         }
                     }
-            }
-            Ok("done")
-        } else {
-            Found("/")
+                }
         }
+        Ok("done")
     }
 
     def cleanS3 = AuthAction { implicit user => implicit request =>

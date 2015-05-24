@@ -34,9 +34,13 @@ object Comment {
         }
     }
 
-    def find(id: Int): Option[Comment] = {
+    def find(id: Int, status: Option[Int] = Some(0)): Option[Comment] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM comment WHERE comment_id = {id}").on('id -> id).as(commentParser.singleOpt)
+            if (status.isDefined) {
+                SQL("SELECT * FROM comment WHERE comment_id = {id} AND status = {status}").on('id -> id, 'status -> status.get).as(commentParser.singleOpt)
+            } else {
+                SQL("SELECT * FROM comment WHERE comment_id = {id}").on('id -> id).as(commentParser.singleOpt)
+            }
         }
     }
 
@@ -51,7 +55,7 @@ object Comment {
         val path = parentId match {
             case None => ""
             case Some(_) =>
-                val parent = Comment.find(parentId.get).getOrElse(return None)
+                val parent = Comment.find(parentId.get, status = None).getOrElse(return None)
                 parent.path + "/" + EncodeDecode.encodeNum(parent.commentId.get)
 
         }

@@ -2376,8 +2376,8 @@ input[type="button"].btn-block {
 @font-face {
   font-family: 'Glyphicons Halflings';
 
-  src: url('https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/fonts/glyphicons-halflings-regular.eot');
-  src: url('https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/fonts/glyphicons-halflings-regular-iefix.eot') format('embedded-opentype'), url('https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/fonts/glyphicons-halflings-regular.woff') format('woff'), url('https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/fonts/glyphicons-halflings-regular.svg') format('svg');
+  src: url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular.eot');
+  src: url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular-iefix.eot') format('embedded-opentype'), url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular.woff') format('woff'), url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular.svg') format('svg');
 }
 .glyphicon {
   position: relative;
@@ -2390,6 +2390,12 @@ input[type="button"].btn-block {
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.glyphicon-link:before {
+  content: "\e144";
+}
+.glyphicon-option-horizontal:before {
+  content: "\e234";
 }
 .glyphicon-asterisk:before {
   content: "\2a";

@@ -1,4 +1,4 @@
-@(commentTreeNode: CommentTreeNode, user: Option[User])(expanded: Boolean = false,
+@(commentTreeNode: CommentTreeNode, user: Option[User], board: Board)(expanded: Boolean = false,
         vote: Option[CommentVote] = user.flatMap{u => CommentVote.findByCommentAndUser(commentTreeNode.comment.commentId.get, u.userId.get)},
         commenter: User = User.find(commentTreeNode.comment.userId).get,
         root: Boolean = false,
@@ -10,53 +10,89 @@
 
 <div class="@if(root){root-comment }comment-container">
     <div class="comment" data-comment-id="@commentTreeNode.comment.commentId.get" data-post-id="@commentTreeNode.comment.postId">
-        @if(!anon) {
-            <div class="comment-avatar">
-                <a href="/user/@commenter.username">
-                    <img src="@(commenter.photo + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
-                </a>
-            </div>
-            <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;">
-                <strong style="font-weight:500;">@commenter.name</strong>
-            </a>
-        } else {
+        @if(commentTreeNode.comment.status == 1) {
             <div class="comment-avatar">
                 <img src="@(anonImg + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
             </div>
-            <strong style="font-weight:500;margin-right:2px;margin-left:5px;" class="anonymous-user">Anonymous</strong>
+            <strong style="font-weight:500;margin-right:2px;margin-left:5px;" class="deleted-user">
+                [deleted]
+            </strong>
+        } else {
+            @if(!anon) {
+                <div class="comment-avatar">
+                    <a href="/user/@commenter.username">
+                        <img src="@(commenter.photo + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
+                    </a>
+                </div>
+                <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;" class="commenter-anchor">
+                    <strong style="font-weight:500;">@commenter.name</strong>
+                </a>
+            } else {
+                <div class="comment-avatar">
+                    <img src="@(anonImg + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
+                </div>
+                <strong style="font-weight:500;margin-right:2px;margin-left:5px;" class="anonymous-user">
+                    Anonymous
+                </strong>
+            }
         }
         ·
         <span class="comment-timestamp">
             @Etc.convertEpochToTimestamp(commentTreeNode.comment.time)
         </span>
         <p class="comment-content">
-            @Html(Etc.parseHTML(commentTreeNode.comment.data))
+            @if(commentTreeNode.comment.status != 1) {
+                @Html(Etc.parseHTML(commentTreeNode.comment.data))
+            } else {
+                [comment deleted]
+            }
         </p>
         <div class="comment-actions">
-            <span class="like-count" style="margin: 0px;">
+            <span class="like-count" style="margin:0px;">
                 @commentTreeNode.comment.votes
             </span>
             ·
-            <a href="#" class="c-action no-dec like@if(vote.isDefined && vote.get.value == 1){ liked}">
-                <i class="icon-upvote"></i>
-            </a>
-
-            <span style="color:#ccc"> | </span>
-
-            <a href="#" class="c-action no-dec dislike@if(vote.isDefined && vote.get.value == -1){ disliked}" style="margin-left:-2px;margin-right:-2px;">
-                <i class="icon-downvote"></i>
-            </a>
-            ·
+            @if(commentTreeNode.comment.status != 1) {
+                <a href="#" class="c-action no-dec like@if(vote.isDefined && vote.get.value == 1) { liked}">
+                    <i class="icon-upvote"></i>
+                </a>
+                <span style="color : #ccc" class="vote-separator"> | </span>
+                <a href="#" class="c-action no-dec dislike@if(vote.isDefined && vote.get.value == -1) { disliked}" style="margin-left:-2px;margin-right:-2px;">
+                    <i class="icon-downvote"></i>
+                </a>
+                <span class="c-action-separator"> · </span>
+            }
             <a href="#" class="c-action reply">
                 <span class="color-blue">Reply</span>
             </a>
+                <div class="comment-options-dropdown dropdown">
+                    <a href="#" class="c-action comment-options" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-option-horizontal option-icon"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li role="presentation">
+                            <a class="comment-permalink" href="/@board.name/comments/@commentTreeNode.comment.commentId" target="_blank">
+                                <span class="glyphicon glyphicon-link"></span>
+                                Permalink
+                            </a>
+                        </li>
+                        @if(user.isDefined && commentTreeNode.comment.status != 1 && (user.get.userId.get == commenter.userId.get || user.get.admin)) {
+                            <li role="presentation">
+                                <a class="comment-delete" href="#">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                    Delete
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
         </div>
-            <div class="comment-children-container">
-                @if(expanded) {
-                    @for(child <- commentTreeNode.children) {
-                        @components.comment(child, user)(expanded = expanded, anon = anon)
-                    }
+        <div class="comment-children-container">
+            @if(expanded) {
+                @for(child <- commentTreeNode.children) {
+                    @components.comment(child, user, board)(expanded = expanded, anon = anon)
                 }
-            </div>
+            }
+        </div>
     </div>
 </div>

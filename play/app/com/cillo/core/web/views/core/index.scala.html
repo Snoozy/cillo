@@ -1,76 +1,10 @@
-@(posts: Seq[Post], user: User, boards: Seq[Board], intro: Boolean = false)
+@(posts: Seq[Post], user: User, boards: Seq[Board])(recommended: Seq[Board] = Board.getRecommended(user.userId.get))
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.core.data.db.models._
 @import com.cillo.utils.Etc
 
 @components.base("Cillo") {
-    @if(intro) {
-        <style>
-            canvas.highlight {
-                position: absolute;
-                z-index: 1000;
-                display: block;
-                top: 0;
-                left: 0;
-                opacity: 0.8;
-            }
-
-            canvas.new-highlight, canvas.highlight.open {
-                position: absolute;
-                z-index: 1000;
-                display: block;
-                top: 0;
-                left: 0;
-                opacity: 0.8;
-                -webkit-transition: opacity 300ms ease;
-                transition: opacity 300ms ease;
-                -webkit-animation: canvasFade 300ms ease;
-                animation: canvasFade 300ms ease;
-            }
-
-            canvas.new-highlight.open {
-                -webkit-transition: none;
-                transition: none;
-                -webkit-animation: none;
-                animation: none;
-            }
-
-            .intro-btn {
-                padding: 4px 8px;
-            }
-
-            .modal-backdrop.in {
-                filter: alpha(opacity=80);
-                opacity: 0.8;
-            }
-
-            @@-webkit-keyframes canvasFade {
-                from { opacity:0; }
-                to { opacity:0.8; }
-            }
-
-            @@keyframes canvasFade {
-                from { opacity:0; }
-                to { opacity:0.8; }
-            }
-
-            .intro-greeting {
-                color: #66757f;
-                font-size: 22px;
-                text-rendering: optimizeLegibility;
-            }
-
-            .intro-text {
-                font-size: 17px;
-                color: rgb(68, 68, 68);
-                font-weight: normal;
-                line-height: 21px;
-                font-family: "Gibson","Helvetica Neue","HelveticaNeue",Helvetica,Arial,sans-serif;
-            }
-        </style>
-    }
-
     <script>
         $(function(){
             $('.create-board-anchor').tooltip();
@@ -103,11 +37,11 @@
                             </div>
                         </div>
                         <div class="column2" style="display:inline-block;vertical-align:top;width:250px;">
-                            <div class="boards-container box-shadow-apply" style="background-color:#fdfdfd;margin-bottom:10px;">
+                            <div class="recommended-container box-shadow-apply" style="background-color:#fdfdfd;margin-bottom:10px;">
                                 <div class="small-board-header">
                                     <b style="font-size:16px;">Recommended</b>
                                 </div>
-                                @for(b <- boards) {
+                                @for(b <- recommended) {
                                     @components.small_board(b)
                                 }
                                 <div class="small-board-container" style="padding-bottom:0;">
@@ -122,7 +56,7 @@
                                 <div class="small-board-header">
                                     <b style="font-size:16px;">My Boards</b>
                                     <div class="create-board">
-                                        <a class="create-board-anchor" href="/boards/create" data-placement="bottom" title="Create a Board">
+                                        <a class="create-board-anchor" href="/boards/create" data-placement="top" title="Create a Board">
                                             <span class="glyphicon glyphicon-plus" style="color:#333;"></span>
                                         </a>
                                     </div>
@@ -146,158 +80,6 @@
         @components.repost_modal(boards)
 
         @components.fb_init()
-
-        @if(intro) {
-            <div class="modal fade in" id="intro-modal" tabindex="-1" role="dialog" aria-labelledby="intro-modal" aria-hidden="true">
-                <div class="modal-dialog" style="width: 350px;">
-                    <div class="modal-content">
-                        <div class="modal-header" style="padding: 7px 10px;">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 8px;"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="repost-modal-label" style="text-align: center;font-size: 26px;">Welcome to Cillo!</h4>
-                        </div>
-                        <div class="modal-body" style="padding: 13px 20px;">
-                            <span class="intro-greeting">Hi, @Etc.parseFirstName(user.name)</span><br/> <span class="intro-text">Let me show you around your new home page on Cillo.</span>
-                        </div>
-                        <div class="modal-footer" style="margin-top: 0;padding: 8px 11px 8px;">
-                            <button type="button" class="btn btn-primary" onclick="boardPopover()">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <script>
-
-                var padding = 0;  //Space around canvas
-                var animDelay = 250;  //Delay used in CSS animation and transition for canvas.highlight
-
-                function createOverlay(elem) {
-                  var loc = elem.getBoundingClientRect();
-                  var canvas = document.createElement("canvas");
-                  canvas.className = "new-highlight";
-                  canvas.width = window.innerWidth;
-                  canvas.height = window.innerHeight;
-                  var ctx = canvas.getContext("2d");
-                  ctx.fillRect(0, 0, canvas.width, canvas.height);
-                  ctx.clearRect(loc.left - padding, loc.top - padding, loc.width + padding * 2, loc.height + padding * 2);
-                  document.body.appendChild(canvas);
-                  window.overlayCanvas = canvas;
-                }
-
-                function openOverlay(elem) {
-                  var loc = elem.getBoundingClientRect();
-                  var canvas = document.createElement("canvas");
-                  canvas.className = "highlight";
-                  canvas.width = window.innerWidth;
-                  canvas.height = window.innerHeight;
-                  var ctx = canvas.getContext("2d");
-                  ctx.fillRect(0, 0, canvas.width, canvas.height);
-                  ctx.clearRect(loc.left - padding, loc.top - padding, loc.width + padding * 2, loc.height + padding * 2);
-                  document.body.appendChild(canvas);
-                  window.overlayCanvas = canvas;
-                }
-
-                function closeOverlay() {
-                  delete window.overlayCanvas;
-                  this.style.opacity = 0;
-                  var self = this;
-                  setTimeout(function() {
-                    self.parentNode.removeChild(self);
-                  }, animDelay);
-                }
-
-                function closePopover(elem) {
-                    $(elem).popover('hide');
-                    closeOverlay.call(overlayCanvas);
-                }
-
-                function endIntro(elem) {
-                    closePopover(elem);
-                    $('body').removeClass('noscroll');
-                    window.history.replaceState({}, "Cillo", "/");
-                }
-
-                function boardPopover() {
-                    $('#intro-modal').modal('hide');
-                    createOverlay($('.boards-container')[0]);
-                    $('body').addClass('noscroll');
-
-                    $('.boards-container').popover({
-                        placement: 'left',
-                        html: 'true',
-                        title: "<span class=\"intro-title\"><strong>Your Boards</strong></span>" +
-                                '<button type="button" id="close" class="close" onclick="endIntro(\'.boards-container\')" style="margin-top:-3px;">&times;</button>',
-                        content: 'These are the boards you are following. Boards are places to talk about the topic.',
-                        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div><div class="popover-footer">' +
-                         '<button type="button" style="float:left;" class="btn btn-default intro-btn" onclick="endIntro(\'.boards-container\')">Cancel</button>' +
-                         '<button type="button" class="btn btn-primary intro-btn intro-btn-boards" onclick="explorePopover()">Next</button></div></div>'
-                    }).popover('show');
-                    window.setTimeout(function() {$(window.overlayCanvas).addClass('open');}, 700);
-                }
-
-                function explorePopover() {
-                    $('.masthead').css('position', 'initial');
-                    $('.masthead-displacement').addClass('displaynone');
-                    $('.navbar-explore').popover({
-                        placement: 'bottom',
-                        html: 'true',
-                        title: "<span class=\"intro-title\"><strong>Explore Boards</strong></span>" +
-                                '<button type="button" id="close" class="close" onclick="endIntro(\'.navbar-explore\')" style="margin-top:-3px;">&times;</button>',
-                        content: 'Click here to explore more boards from all over Cillo.',
-                        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div><div class="popover-footer">' +
-                         '<button type="button" style="float:left;" class="btn btn-default intro-btn" onclick="endIntro(\'.navbar-explore\')">Cancel</button>' +
-                         '<button type="button" class="btn btn-primary intro-btn intro-btn-explore" onclick="postPopover()">Next</button></div></div>'
-
-                    });
-                    $('.navbar-explore').popover('show');
-                    closePopover('.boards-container');
-                    openOverlay($('.navbar-explore')[0]);
-                }
-
-                function postPopover() {
-                    $('.masthead').css('position', '');
-                    $('.masthead-displacement').removeClass('displaynone');
-                    expandFirstPost();
-                    $('.first-post').popover({
-                        placement: 'bottom',
-                        html: 'true',
-                        title: "<span class=\"intro-title\"><strong>Create a Post</strong></span>" +
-                                '<button type="button" id="close" class="close" onclick="endIntro(\'.first-post\')" style="margin-top:-3px;">&times;</button>',
-                        content: 'Create a post on any board you follow.',
-                        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div><div class="popover-footer">' +
-                         '<button type="button" style="float:left;" class="btn btn-default intro-btn" onclick="endIntro(\'.first-post\')">Cancel</button>' +
-                         '<button type="button" class="btn btn-primary intro-btn intro-btn-explore" onclick="selectBoardPopover()">Next</button></div></div>',
-                         trigger: 'manual'
-                    }).popover('show');
-                    closePopover('.navbar-explore');
-                    openOverlay($('.first-post')[0]);
-                }
-
-                function selectBoardPopover() {
-                    $('.chosen-container').popover({
-                        placement: 'bottom',
-                        html: 'true',
-                        title: "<span class=\"intro-title\"><strong>Select a Board</strong></span>" +
-                                '<button type="button" id="close" class="close" onclick="endIntro(\'.chosen-container\')" style="margin-top:-3px;">&times;</button>',
-                        content: 'Use this to select a board that you are following to add your post to.',
-                        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div><div class="popover-footer">' +
-                         '<button type="button" class="btn btn-primary intro-btn intro-btn-explore" onclick="endIntro(\'.chosen-container\')">Ok!</button></div></div>',
-                         trigger: 'manual'
-
-                    }).popover('show');
-                    closePopover('.first-post');
-                    openOverlay($('.chosen-container')[0]);
-                }
-
-                $(function() {
-                    $('#intro-modal').modal({
-                        trigger: 'manual',
-                        keyboard: false,
-                        backdrop: 'static'
-                    }).modal('show');
-                });
-
-            </script>
-        }
 
     </body>
 }

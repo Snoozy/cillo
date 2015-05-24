@@ -70,17 +70,8 @@ body:after {
     padding-top: 5px;
 }
 
-.gradient-background {
-    background: #fdfdfd;
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#ddd));
-    background:-moz-linear-gradient(top,#fff 0,#ddd 100%);
-    background: -ms-linear-gradient(top,#fff 0,#ddd 100%);
-    background: -o-linear-gradient(top,#fff 0,#ddd 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#dddddd',GradientType=0);
-    background: -webkit-linear-gradient(top,#fff 0,#ddd 100%);
-}
-
 .post-functions {
+    margin-top: 4px;
     float: right;
 }
 
@@ -95,12 +86,28 @@ body:after {
     background-image: url(//static.cillo.co/upvoted-arrow.png);
 }
 
+.comment-functions {
+    float: right;
+    margin-top: 3px;
+}
+
+.comment-func-dropdown {
+    opacity: .35;
+}
+
+.comment-func-dropdown:hover {
+    opacity: 0.7;
+}
+
+.dropdown.open .comment-func-dropdown {
+    opacity: 0.7;
+}
+
 .icon-downvote {
-    background-image: url(//static.cillo.co/downvote-arrow.png);
     width: 15px;
     height: 15px;
     margin-bottom: -4px;
-    background-repeat: no-repeat;
+    background: url(//static.cillo.co/downvote-arrow.png) no-repeat;
 }
 
 .disliked .icon-downvote {
@@ -400,16 +407,6 @@ a.repost-user-link:hover {
     height:5em;
 }
 
-.loading-modal {
-    display:none;
-    position:absolute;
-    z-index:1000;
-    height:100%;
-    width:100%;
-    margin-top:10px;
-    background: url('/static/ajax-loader.gif') no-repeat;
-}
-
 .loading {
     overflow: hidden;
     display:inline-block;
@@ -432,7 +429,7 @@ a.repost-user-link:hover {
 }
 
 .post-timestamp {
-    font-size:13px;
+    font-size:12px;
     color:#999;
 }
 
@@ -493,8 +490,13 @@ a.repost-user-link:hover {
     width:80%;
     word-wrap:break-word;
 }
+
+.small-board-container:hover .board-name-text {
+    text-decoration: underline;
+}
+
 .board {
-    margin-top:6px;
+    margin-top:8px;
     display: block;
     min-height: 60px;
     margin-left: 70px;
@@ -516,8 +518,36 @@ a.repost-user-link:hover {
     border-radius:3px;
 }
 
+.c-action.comment-options {
+    margin-left: 13px;
+}
+
+.comment-options-dropdown {
+    display: inline-block;
+
+}
+
+.comment-options-dropdown .dropdown-menu {
+    left: -55px;
+}
+
+.comment-options-dropdown .dropdown-menu:after {
+    left: 71px;
+}
+
+.comment-options-dropdown .dropdown-menu:before {
+    left: 70px;
+}
+
 textarea {
     resize:none;
+}
+
+.option-icon {
+    font-size: 19px;
+    color: rgb(180,180,180);
+    opacity: 0.6;
+    top: 6px;
 }
 
 .dropdown-noti-bubble {
@@ -745,13 +775,13 @@ textarea {
 }
 
 strong {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .comment-content {
     margin-left:38px;
-    margin-bottom:0px;
-    margin-top: -2px;
+    margin-bottom:0;
+    margin-top: 0;
 }
 
 .user-boards {
@@ -769,9 +799,9 @@ strong {
     margin-right:8px;
     vertical-align:text-top;
     -webkit-border-radius: 5px;
-	-khtml-border-radius: 5px;	
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+    -khtml-border-radius: 5px;	
+    -moz-border-radius: 5px;
+    border-radius: 5px;
     margin-top:4px;  
     height:48px;
     width:48px;
@@ -849,12 +879,11 @@ strong {
 }
 
 .post-text {
-    font-size:115%;
+    font-size:15px;
     word-wrap:break-word;
     margin-bottom: 10px;
     width:100%;
     margin-top: 5px;
-    min-height: 24px;
 }
 
 form.form-search {
@@ -962,7 +991,7 @@ hr {
     float:right;
 }
 
-.boards-container {
+.boards-container, .recommended-container {
     border: 1px solid rgba(233,233,233,1);
     border-radius: 3px;
     padding-top:5px;
@@ -1262,7 +1291,15 @@ a:hover {
 }
 
 .dropdown-menu.post-dropdown {
-    margin: 0px -8px 0px !important;
+    margin: 0px -13px 0px !important;
+}
+
+.post-func-dropdown {
+    opacity: 0.35;
+}
+
+.post-func-dropdown:hover, .post-functions.open .post-func-dropdown {
+    opacity: 0.7;
 }
 
 .background-wrapper {
@@ -1481,6 +1518,7 @@ a:hover {
 }
 
 .post-header {
+    margin-bottom: 5px;
 }
 
 .masthead-logo {
@@ -1716,7 +1754,7 @@ body {
 
 .masthead-notification {
     word-wrap:break-word;
-    padding: 10px;
+    padding: 10px 20px;
 }
 
 .navbar-settings-wrapper.open .masthead-cog {
@@ -1817,10 +1855,6 @@ body {
     opacity: 0.55;
 }
 
-.board:hover .board-name-text {
-    color: #1065C4;
-}
-
 .navbar-button-separator-wrapper {
     float: right;
     margin-top: 13px;
@@ -1855,7 +1889,7 @@ body {
 
 .navbar-notifs-wrapper .dropdown-menu {
     right: 27px;
-    top: 42px;
+    top: 43px;
     width: 350px;
 }
 
@@ -2033,17 +2067,30 @@ body {
 
 .post-text-title {
     margin-bottom: 10px;
-    margin-top: 2px;
+    margin-top: 7px;
 }
 
 .post-text-title-text {
-    font-weight: 700;
-    font-size: 20px;
+    font-weight: 500;
+    font-size: 19px;
     line-height: 1;
 }
 
 .user-name-text, .board-name-text {
     font-weight: bold;
+}
+.user-name-text:hover, .board-name-text:hover {
+    text-decoration: underline;
+}
+
+.right-arrow-icon {
+    background-size: auto;
+    background: url(//static.cillo.co/right-arrow.png) no-repeat;
+    display: inline-block;
+    height: 9px;
+    width: 8px;
+    margin-left: 7px;
+    margin-right: 6px;
 }
 
 strong {
@@ -2900,10 +2947,14 @@ a.login-link:hover {
 }
 
 .comment strong {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .anonymous-user:hover {
+    color: #2f2f2f;
+}
+
+.deleted-user:hover {
     color: #2f2f2f;
 }
 
@@ -2914,6 +2965,10 @@ a.login-link:hover {
 
 .small-board-container:hover {
     background-color: #e9e9e9;
+}
+
+.small-board-container:hover .board-name-text, .small-board-container:hover .explore-boards {
+    color: #3876b4;
 }
 
 .small-board-header {
@@ -3007,7 +3062,8 @@ li [class^="icon-"] {
 }
 
 .post-text-container {
-    margin-top: -6px;
+    margin-top: -3px;
+    min-height: 24px;
 }
 
 .board-name-span {

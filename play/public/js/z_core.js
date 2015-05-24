@@ -151,16 +151,32 @@ $(document).ready(function() {
         return false;
     });
 
-    $(".main-row").on({
-        mouseenter: function () {
-            $(this).find('.post-functions').show();
-            return true;
-        },
-        mouseleave: function () {
-            $(this).find('.post-functions').hide();
-            return true;
+    $(document).on('click', '.comment-delete', function(e) {
+        e.preventDefault();
+        if (confirm("Delete this comment?")) {
+            var $comment = $(this).closest('.comment');
+            var commentId = $comment.data('comment-id');
+            $.ajax({
+                url: '/a/comment/' + commentId + '/delete',
+                type: 'POST',
+                dataType: 'json',
+                success: function() {
+                    $comment.children('.comment-avatar').html('<img src="https://static.cillo.co/image/anon_small" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>');
+                    $comment.children('.commenter-anchor').remove();
+                    $('<strong style="font-weight:500;margin-right:2px;margin-left:5px;" class="deleted-user">[deleted]</strong>').insertAfter($comment.children('.comment-avatar'));
+                    $comment.children('.comment-content').text('[comment deleted]');
+                    var c_actions = $comment.children('.comment-actions')
+                    c_actions.find('.comment-options-dropdown').remove();
+                    c_actions.find('.c-action.like').remove();
+                    c_actions.find('.c-action.dislike').remove();
+                    c_actions.find('.c-action-separator').remove();
+                    c_actions.find('.vote-separator').remove();
+                    c_actions.find('.like-count').css('color', '#333');
+                }
+            });
         }
-    }, 'li.post');
+        return false;
+    });
 
     $('.following .board-follow-btn').click(function() {
         if ($('body').hasClass('logged-out')) {

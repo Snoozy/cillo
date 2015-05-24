@@ -88,6 +88,14 @@ object Board {
         }
     }
 
+    def getRecommended(userId: Int, limit: Int = 3): Seq[Board] = {
+        DB.withConnection { implicit connection =>
+            val boardIds = User.getBoardIDs(userId)
+            SQL("SELECT * FROM board WHERE board_id NOT IN ({board_ids}) ORDER BY followers DESC LIMIT {limit}")
+                .on('board_ids -> boardIds, 'limit -> limit).as(boardParser *)
+        }
+    }
+
     def getAll: Seq[Board] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM board").as(boardParser *)
