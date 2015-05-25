@@ -4,16 +4,16 @@
 
 <a href="/@board.name" class="no-dec small-board-anchor" style="display:inline;color:#000000;">
     <div class="small-board-container">
-            <div class="board" style="cursor:pointer;">
-                <img class="avatar" style="margin-left:-58px;margin-right:7px;height:54px;width:54px;" alt="Board Picture" src="@(board.photo + "_prof")">
-                <div class="board-desc-wrapper">
-                    <span class="board-name-span">
-                        <strong style="font-size:16px;" class="board-name-text">@board.name</strong>
-                    </span>
-                    <p class="description" style="word-wrap:break-word;margin-top:-7px;line-height:1.4;margin-right:7px;color:#000000;margin-bottom:0;">
-                        @Html(Etc.parseHTML(Etc.ellipsize(board.description, 46)))
-                    </p>
-                </div>
+        <div class="board" style="cursor:pointer;">
+            <img class="avatar" style="margin-left:-58px;margin-right:7px;height:54px;width:54px;" alt="Board Picture" src="@(board.photo + "_prof")">
+            <div class="board-desc-wrapper">
+                <span class="board-name-span">
+                    <strong style="font-size:16px;" class="board-name-text">@board.name</strong>
+                </span>
+                <p class="description" style="word-wrap:break-word;margin-top:-7px;line-height:1.4;margin-right:7px;color:#000000;margin-bottom:0;">
+                    @Html(Etc.parseHTML(Etc.ellipsize(board.description, 46)))
+                </p>
             </div>
+        </div>
     </div>
 </a>

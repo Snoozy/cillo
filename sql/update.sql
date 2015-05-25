@@ -23,11 +23,15 @@ CREATE TABLE notification_listener (
 CREATE TABLE notification (
     notification_id INT NOT NULL AUTO_INCREMENT,
     entity_id INT NOT NULL,
-    entity_type TINYINT NOT NULL.
-    title_user INT NOT NULL,
+    entity_type TINYINT NOT NULL,
     action_type TINYINT NOT NULL,    
+    title_user INT NOT NULL,
+    user_id INT NOT NULL,
     count INT DEFAULT 0,
+    read TINYINT DEFAULT 0,
     time BIGINT NOT NULL,
     PRIMARY KEY (`notification_id`),
-    INDEX `notification__entity_id_entity_type_idx` (`entity_id`, `entity_type`)
+    CONSTRAINT `user__notification_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),    
+    INDEX `notificiation_time_idx` (`time`),
+    INDEX `notification__entity_id_entity_type_action_type_idx` (`entity_id`, `entity_type`, `action_type`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;

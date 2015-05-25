@@ -1,6 +1,7 @@
 @(user: Option[User] = None, searchBar: Boolean = false, searchQuery: String = "", fixed: Boolean = true, buttons: Boolean = true, small: Boolean = false)
 
 @import com.cillo.utils.Etc
+@import com.cillo.core.web.views.html.components
 
 @if(fixed && !small) {
     <div style="height:44px;" class="masthead-displacement"></div>
@@ -51,9 +52,9 @@
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="notifs-dropdown">
                         <li role="presentation">
-                            <div class="masthead-notification">
-                                You have no more notifications...
-                            </div>
+                            @components.notification()
+                            @components.notification()
+                            @components.notification()
                         </li>
                     </ul>
                 </div>

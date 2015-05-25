@@ -80,10 +80,11 @@ body:after {
     height: 15px;
     width: 15px;
     margin-bottom: -1px;
+    margin-right: 2px;
 }
 
-.liked .icon-upvote {
-    background-image: url(//static.cillo.co/upvoted-arrow.png);
+.liked .icon-upvote, .icon-green-upvote {
+    background-image: url(//static.cillo.co/upvoted-arrow.png) !important;
 }
 
 .comment-functions {
@@ -1741,8 +1742,7 @@ body {
 }
 
 .u-info-wrapper {
-    margin: 0px;
-    margin-top: 2px;
+    margin: 5px 0px 0px;
     display: inline-block;
 }
 
@@ -1753,8 +1753,13 @@ body {
 }
 
 .masthead-notification {
-    word-wrap:break-word;
-    padding: 10px 20px;
+    height: 64px;
+    word-wrap: break-word;
+    padding: 7px 27px 7px 70px;
+}
+
+.masthead-notification:hover {
+    background-color: #f0f0f0;
 }
 
 .navbar-settings-wrapper.open .masthead-cog {
@@ -1890,7 +1895,7 @@ body {
 .navbar-notifs-wrapper .dropdown-menu {
     right: 27px;
     top: 43px;
-    width: 350px;
+    width: 400px;
 }
 
 .dropdown-menu>li>a:hover {
@@ -2964,11 +2969,19 @@ a.login-link:hover {
 }
 
 .small-board-container:hover {
-    background-color: #e9e9e9;
+    background-color: #f0f0f0;
 }
 
 .small-board-container:hover .board-name-text, .small-board-container:hover .explore-boards {
     color: #3876b4;
+}
+
+.notification-desc-wrapper {
+    margin-top: 3px;
+}
+
+.notification-user-text {
+    font-weight: bold;
 }
 
 .small-board-header {
@@ -3058,7 +3071,7 @@ a.login-link:hover {
 }
 
 li [class^="icon-"] {
-    width: 1.15em;
+    width: 1.1em;
 }
 
 .post-text-container {
