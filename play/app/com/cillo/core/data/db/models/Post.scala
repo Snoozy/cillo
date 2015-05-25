@@ -118,6 +118,18 @@ object Post {
         }
     }
 
+    def mostRecentVoter(postId: Int): Option[Int] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT user_id FROM post_vote WHERE post_id = {post_id} ORDER BY time DESC LIMIT 1").on('post_id -> postId).as(scalar[Int].singleOpt)
+        }
+    }
+    
+    def mostRecentReplier(postId: Int): Option[Int] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT user_id FROM comment WHERE post_id = {post_id} ORDER BY time DESC LIMIT 1").on('post_id -> postId).as(scalar[Int].singleOpt)
+        }
+    }
+
     def userHasReposted(userId: Int, postId: Int): Boolean = {
         DB.withConnection { implicit connection =>
             val post = SQL("SELECT * FROM post WHERE repost_id = {post} AND user_id = {user}")

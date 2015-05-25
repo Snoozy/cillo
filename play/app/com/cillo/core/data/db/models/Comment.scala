@@ -51,6 +51,20 @@ object Comment {
         }
     }
 
+    def mostRecentVoter(commentId: Int): Option[Int] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT user_id FROM comment_vote WHERE comment_id = {comment_id} ORDER BY time DESC LIMIT 1").on('comment_id -> commentId).as(scalar[Int].singleOpt)
+        }
+    }
+
+    def mostRecentReplier(commentId: Int): Option[Int] = {
+        DB.withConnection { implicit connection =>
+            val comment = Comment.find(commentId)
+            val path = comment.get.path + "/" + EncodeDecode.encodeNum(commentId)
+            SQL("SELECT user_id FROM comment WHERE path = {path} ORDER BY time DESC LIMIT 1").on('path -> path).as(scalar[Int].singleOpt)
+        }
+    }
+
     def create(postId: Int, userId: Int, data: String, parentId: Option[Int]): Option[Long] = {
         val path = parentId match {
             case None => ""
