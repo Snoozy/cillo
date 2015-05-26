@@ -26,7 +26,7 @@ $(function() {
             if (scrolled) {
                 scrolled = false;
 
-                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 800) {
 
                     var last_post_id = $(_object.lastElementChild).data('item-id');
 

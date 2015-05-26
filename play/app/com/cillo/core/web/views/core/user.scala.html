@@ -11,7 +11,7 @@
 } {
     <body class="main-background context-user@if(!visitor.isDefined){ logged-out}" data-user-id="@user.userId.get">
         <div class="page" style="margin:0;">
-            @components.masthead(visitor, searchBar = true)
+            @components.masthead(visitor, searchBar = true)()
             <div id="content">
                 <div class="container-fluid inner-container">
                     <div class="main-row">

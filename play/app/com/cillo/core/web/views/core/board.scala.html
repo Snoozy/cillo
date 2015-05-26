@@ -14,7 +14,7 @@
 } {
     <body class="main-background context-board@if(!user.isDefined){ logged-out}" data-board-id="@board.boardId.get">
         <div class="page" style="margin:0;">
-            @components.masthead(user, searchBar = true)
+            @components.masthead(user, searchBar = true)()
             <div id="content">
                 <div class="container-fluid inner-background" style="border-radius:10px;margin-left:auto;margin-right:auto;width:870px;border-top-left-radius:0px;border-top-right-radius:0px;padding-left:0px;padding-right:0px;">
                     @if(!user.isDefined) {

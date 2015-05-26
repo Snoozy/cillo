@@ -144,7 +144,7 @@ CREATE TABLE notification (
     title_user INT NOT NULL,
     user_id INT NOT NULL,
     count INT DEFAULT 0,
-    read TINYINT DEFAULT 0,
+    `read` TINYINT DEFAULT 0,
     time BIGINT NOT NULL,
     PRIMARY KEY (`notification_id`),
     CONSTRAINT `user__notification_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),

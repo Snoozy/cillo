@@ -3,6 +3,7 @@ package com.cillo.core.data.db.models
 import anorm.SqlParser._
 import anorm._
 import com.cillo.core.data.db.models.Comment.commentParser
+import com.cillo.core.data.db.models.Enum.EntityType
 import com.cillo.utils.Etc.{bool2int, int2bool}
 import com.cillo.core.web.views.html.components
 import com.cillo.core.data.Constants
@@ -28,7 +29,7 @@ case class Post (
 
 object Post {
 
-    val DefaultPageSize = 20
+    val DefaultPageSize = 10
 
     private[models] val postParser: RowParser[Post] = {
         get[Option[Int]]("post_id") ~
@@ -54,6 +55,12 @@ object Post {
         }
     }
 
+    def getAll: Seq[Post] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM post").as(postParser *)
+        }
+    }
+
     def createSimplePost(userId: Int, title: Option[String], data: String, boardId: Int, repostId: Option[Int] = None, time: Long = System.currentTimeMillis()): Option[Long] = {
         // checking that data is a number if post is a repost
         if (repostId.isDefined) {
@@ -71,15 +78,13 @@ object Post {
         }
 
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) VALUES ({user_id}, {title}, {data}," +
+            val id: Option[Long] = SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) VALUES ({user_id}, {title}, {data}," +
                 " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
                     'board_id -> boardId, 'repost_id -> repostId, 'time -> time).executeInsert()
-        }
-    }
-
-    def getAll: Seq[Post] = {
-        DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post").as(postParser *)
+            if (id.isDefined) {
+                Notification.addListener(id.get.toInt, EntityType.Post, userId)
+            }
+            id
         }
     }
 
@@ -98,9 +103,13 @@ object Post {
         }
 
         DB.withConnection { implicit connection =>
-            SQL("INSERT INTO post (user_id, title, data, board_id, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
+            val id: Option[Long] = SQL("INSERT INTO post (user_id, title, data, board_id, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
                 " {board_id}, 0, {time}, 0, 1, {media})").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
                     'board_id -> boardId, 'time -> time, 'media -> mediaString).executeInsert()
+            if (id.isDefined) {
+                Notification.addListener(id.get.toInt, EntityType.Post, userId)
+            }
+            id
         }
     }
 

@@ -74,6 +74,11 @@ $(document).ready(function() {
         return false;
     });
 
+    $(document).on('click', '.yt-embed-cover', function() {
+        var id = $(this).data('id');
+        $(this).replaceWith('<iframe class="yt-embed" width="500" height="281" src="https://www.youtube.com/embed/' + id + '?autoplay=1&autohide=1&border=0&wmode=opaque&enablejsapi=1" allowfullscreen></iframe>');
+    });
+
     $('.posts-wrapper').on('click', '.post-delete', function (e) {
         if (confirm('Delete post?')) {
             var post_id = $(this).closest('.post').data('item-id');
@@ -91,6 +96,16 @@ $(document).ready(function() {
             });
         }
         return false;
+    });
+
+    $('.notifications-anchor').click(function() {
+        $.ajax({
+            url: '/a/notifications/read',
+            type: 'POST',
+            success: function() {
+                $('.notification-bubble').addClass('displaynone');
+            }
+        });
     });
 
     $('.single-post').on('click', '.post-delete', function(e) {
@@ -208,6 +223,32 @@ $(document).ready(function() {
                 location.reload();
             }
         });
+    });
+
+    var height = $(window).height() - 140;
+    if (height > 500) {
+        height = 500;
+    }
+
+    $('.notification-list').css('height', height);
+
+    $(".notifications-wrapper").slimScroll({
+        height: "auto"
+    });
+
+    $(window).resize(function() {
+        var height = $(this).height() - 140;
+        if (height > 500) {
+            height = 500;
+        }
+        $('.notification-list').css('height', height);
+        $(".notifications-wrapper").slimScroll({
+            height: "auto"
+        });
+    });
+
+    $(".navbar-notifs-wrapper .dropdown-menu").click(function(e) {
+        e.stopPropagation();
     });
 
     $('input[placeholder], textarea[placeholder]').placeholder();

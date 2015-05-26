@@ -9,7 +9,7 @@
 }{
     <body class="main-background@if(!user.isDefined){ logged-out}">
         <div class="page" style="margin:0px;">
-            @components.masthead(user, searchBar = true, searchQuery = query)
+            @components.masthead(user, searchBar = true, searchQuery = query)()
             <div id="content">
                 <div class="container-fluid inner-container" style="width:870px;">
                     <div class="main-row search-row" style="margin-right: 13px;">

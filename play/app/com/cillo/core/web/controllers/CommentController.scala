@@ -2,12 +2,28 @@ package com.cillo.core.web.controllers
 
 import com.cillo.core.data.db.models._
 import com.cillo.utils.play.Auth.AuthAction
+import com.cillo.core.web.views.html.core
 import com.cillo.core.web.views.html.components
 import com.cillo.utils.Etc._
 import play.api.mvc._
 import play.api.libs.json.Json
 
 object CommentController extends Controller {
+
+    def viewSingleComment(name: String, id: Int) = AuthAction { implicit user => implicit request =>
+        val board = Board.find(name)
+        val comment = Comment.find(id, status = None)
+        if (comment.isDefined && board.isDefined) {
+            val post = Post.find(comment.get.postId)
+            if (post.isDefined) {
+                Ok(core.view_post(user, post.get, singleComment = comment)())
+            } else {
+                NotFound("Comment not found.")
+            }
+        } else {
+            NotFound("Comment not found.")
+        }
+    }
 
     def createComment(postId: Int) = AuthAction { implicit user => implicit request =>
         user match {

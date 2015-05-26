@@ -1,4 +1,4 @@
-@(user: Option[User], post: Post)(poster: Option[User] = User.find(post.userId),
+@(user: Option[User], post: Post, singleComment: Option[Comment] = None)(poster: Option[User] = User.find(post.userId),
         board: Option[Board] = Board.find(post.boardId),
         repost: Option[Post] = post.repostId.flatMap(Post.find),
         media: Seq[Option[Media]] = post.media.map(m => Media.find(m)))
@@ -45,14 +45,14 @@
 } {
     <body class="single-post main-background@if(!user.isDefined){ logged-out}">
         <div class="page" style="margin:0px;">
-            @components.masthead(user, searchBar = true)
+            @components.masthead(user, searchBar = true)()
             <div id="content">
                 <div class="container-fluid inner-background" style="width: 900px;">
                     @if(!user.isDefined) {
                         @components.convince_signup(board.get)
                     }
                     <div class="main-row">
-                        @components.post(post, user)(expanded = true, board = board.get, poster = poster.get, repost = repost)
+                        @components.post(post, user, singleComment = singleComment)(expanded = true, board = board.get, poster = poster.get, repost = repost)
                     </div>
                 </div>
             </div>

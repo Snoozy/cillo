@@ -1,4 +1,4 @@
-@(post: Post, user: Option[User])(board: Board = Board.find(post.boardId).get,
+@(post: Post, user: Option[User], singleComment: Option[Comment] = None)(board: Board = Board.find(post.boardId).get,
         poster: User = User.find(post.userId).get,
         vote: Option[PostVote] = user.flatMap{u => PostVote.findByPostAndUser(post.postId.get, u.userId.get)},
         repost: Option[Post] = post.repostId.flatMap(Post.find),
@@ -127,7 +127,7 @@
                                             <strong class="hover-blue user-name-text anonymous-user">Anonymous</strong>
                                         }
                                     </label>
-                                    on
+                                    <i class="right-arrow-icon"></i>
                                     <label class="u-info-wrapper">
                                             <a href="/@b.get.name" class="no-dec">
                                                 <strong class="hover-blue board-name-text">@b.get.name</strong>
@@ -254,31 +254,68 @@
                         </div>
                     }
                 } else {
-                    @defining(CommentTree.getPostCommentsTop(post.postId.get)) { comments =>
-                        @if(comments.rootComments.nonEmpty) {
-                            <hr class="hr-no-margin comment-hr">
-                        }
-                        <div class="comments-container">
-
-                        @if(user.isDefined) {
-                            <div class="comment-form">
-                                @if(board.privacy == 0) {
-                                    <img class="comment-avatar" src="@(user.get.photo + "_small")">
-                                } else {
-                                    <img class="comment-avatar anon" src="@(anonImg + "_small")">
+                    @if(!singleComment.isDefined) {
+                        @defining(CommentTree.getPostCommentsTop(post.postId.get)) { comments =>
+                            @if(comments.rootComments.nonEmpty) {
+                                <hr class="hr-no-margin comment-hr">
+                            }
+                            <div class="comments-container">
+                                @if(user.isDefined) {
+                                    <div class="comment-form">
+                                        @if(board.privacy == 0) {
+                                            <img class="comment-avatar" src="@(user.get.photo + "_small")">
+                                        } else {
+                                            <img class="comment-avatar anon" src="@(anonImg + "_small")">
+                                        }
+                                        <form class="comment-input">
+                                            <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                                            <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
+                                            <div class="clear"></div>
+                                        </form>
+                                    </div>
                                 }
-                                <form class="comment-input">
-                                    <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
-                                    <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
-                                    <div class="clear"></div>
-                                </form>
+                                <div class="displaynone comment-start-marker"></div>
+                                @for(comment <- comments.rootComments) {
+                                    @components.comment(comment, user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
+                                }
                             </div>
                         }
-                        <div class="displaynone comment-start-marker"></div>
-                        @for(comment <- comments.rootComments) {
-                            @components.comment(comment, user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
+                    } else {
+                        @defining(CommentTree.getCommentTree(singleComment.get)) { comment =>
+                            @if(comment.rootComments.nonEmpty) {
+                                <hr class="hr-no-margin comment-hr">
+                            }
+                            <div class="comments-container">
+                                @if(user.isDefined) {
+                                    <div class="comment-form">
+                                        @if(board.privacy == 0) {
+                                            <img class="comment-avatar" src="@(user.get.photo + "_small")">
+                                        } else {
+                                            <img class="comment-avatar anon" src="@(anonImg + "_small")">
+                                        }
+                                        <form class="comment-input">
+                                            <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                                            <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
+                                            <div class="clear"></div>
+                                        </form>
+                                    </div>
+                                }
+                                <div class="alert alert-info single-comment-warning" style="margin-bottom: 10px;padding: 8px 15px;">
+                                        You are viewing a single comment's thread
+                                    <a href="/@board.name/posts/@post.postId.get">
+                                        <div class="single-comment-link">
+                                            <i class="glyphicon glyphicon-share-alt" style="margin-right: -1px;"></i>
+                                            View the rest of the comments
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="displaynone comment-start-marker"></div>
+                                @for(comment <- comment.rootComments) {
+                                    @components.comment(comment, user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
+                                }
+                            </div>
+
                         }
-                        </div>
                     }
                 }
         </div>

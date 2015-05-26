@@ -22,6 +22,15 @@ object CommentTree {
         }
     }
 
+    def getCommentTree(comment: Comment): CommentTree = {
+        DB.withConnection { implicit connection =>
+            val path = comment.path + "/" + EncodeDecode.encodeNum(comment.commentId.get) + "%"
+            play.api.Logger.debug(path)
+            val comments = SQL("SELECT * FROM comment WHERE path LIKE {path}").on('path -> path).as(commentParser *)
+            CommentTree(sortTopRecurse(comments, Seq(comment)), comment.postId)
+        }
+    }
+
     def commentTreeToJson(tree: CommentTree, user: Option[User] = None): JsValue = {
         Json.obj("post_id" -> tree.postId, "comments" -> commentTreeJsonRecurse(tree.rootComments, user))
     }

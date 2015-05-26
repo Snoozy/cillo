@@ -2,6 +2,7 @@ package com.cillo.core.data.db.models
 
 import anorm.SqlParser._
 import anorm._
+import com.cillo.core.data.db.models.Enum.{ActionType, EntityType}
 import play.api.Play.current
 import play.api.db._
 
@@ -41,6 +42,7 @@ object PostVote {
                 if (value == 1 && (userId != post.get.userId)) {
                     SQL("UPDATE user_info SET reputation = reputation + 20 WHERE user_id = {user}")
                         .on('user -> post.get.userId).executeUpdate()
+                    Notification.create(postId, EntityType.Post, ActionType.Vote, userId)
                 } else if (value == -1 && (userId != post.get.userId)) {
                     SQL("UPDATE user_info SET reputation = reputation - 20 WHERE user_id = {user}")
                         .on('user -> post.get.userId).executeUpdate()
@@ -58,9 +60,11 @@ object PostVote {
                     if (value == 1 && (userId != post.get.userId)) {
                         SQL("UPDATE user_info SET reputation = reputation + 40 WHERE user_id = {user}")
                             .on('user -> post.get.userId).executeUpdate()
+                        Notification.create(postId, EntityType.Post, ActionType.Vote, userId)
                     } else if (value == -1 && (userId != post.get.userId)) {
                         SQL("UPDATE user_info SET reputation = reputation - 40 WHERE user_id = {user}")
                             .on('user -> post.get.userId).executeUpdate()
+                        Notification.delete(postId, EntityType.Post, ActionType.Vote, userId)
                     }
                     val time = System.currentTimeMillis()
                     SQL("UPDATE post_vote SET value = {value}, time = {time} WHERE post_id = {post_id} AND user_id = {user_id}")

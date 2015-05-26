@@ -2,6 +2,7 @@ package com.cillo.core.data.db.models
 
 import anorm.SqlParser._
 import anorm._
+import com.cillo.core.data.db.models.Enum.{ActionType, EntityType}
 import com.cillo.utils.EncodeDecode
 import play.api.Play.current
 import play.api.db._
@@ -46,8 +47,12 @@ object Comment {
 
     def delete(id: Int): Boolean = {
         DB.withConnection { implicit connection =>
-            val res = SQL("UPDATE comment SET status = 1 WHERE comment_id = {id}").on('id -> id).executeUpdate()
-            res > 0
+            val comment = Comment.find(id)
+            if (comment.isDefined) {
+                val res = SQL("UPDATE comment SET status = 1 WHERE comment_id = {id}").on('id -> id).executeUpdate()
+                res > 0
+            } else
+                false
         }
     }
 
@@ -77,10 +82,17 @@ object Comment {
         val time = System.currentTimeMillis()
 
         DB.withConnection { implicit connection =>
-            val ret = SQL("INSERT INTO comment (post_id, user_id, data, path, time, votes) VALUES ({post_id}, {user_id}, {data}," +
+            val ret: Option[Long] = SQL("INSERT INTO comment (post_id, user_id, data, path, time, votes) VALUES ({post_id}, {user_id}, {data}," +
                 "{path}, {time}, 0)").on('post_id -> postId, 'user_id -> userId, 'path -> path, 'data -> data, 'time -> time).executeInsert()
-            SQL("UPDATE post SET comment_count = comment_count + 1 WHERE post_id = {post_id}")
-                .on('post_id -> postId).executeUpdate()
+            if (ret.isDefined) {
+                SQL("UPDATE post SET comment_count = comment_count + 1 WHERE post_id = {post_id}")
+                    .on('post_id -> postId).executeUpdate()
+                Notification.addListener(ret.get.toInt, EntityType.Comment, userId)
+                Notification.create(postId, EntityType.Post, ActionType.Reply, userId)
+                if (parentId.isDefined) {
+                    Notification.create(parentId.get, EntityType.Comment, ActionType.Reply, userId)
+                }
+            }
             ret
         }
     }

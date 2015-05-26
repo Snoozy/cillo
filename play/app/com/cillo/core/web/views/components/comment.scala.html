@@ -38,7 +38,9 @@
         }
         ·
         <span class="comment-timestamp">
-            @Etc.convertEpochToTimestamp(commentTreeNode.comment.time)
+            <a class="post-timestamp" href="/@board.name/comments/@commentTreeNode.comment.commentId.get">
+                @Etc.convertEpochToTimestamp(commentTreeNode.comment.time)
+            </a>
         </span>
         <p class="comment-content">
             @if(commentTreeNode.comment.status != 1) {
@@ -48,13 +50,13 @@
             }
         </p>
         <div class="comment-actions">
-            <span class="like-count" style="margin:0px;">
+            <div class="like-count" style="margin:0;display:inline-block;vertical-align: text-top;line-height:1;">
                 @commentTreeNode.comment.votes
-            </span>
+            </div>
             ·
             @if(commentTreeNode.comment.status != 1) {
                 <a href="#" class="c-action no-dec like@if(vote.isDefined && vote.get.value == 1) { liked}">
-                    <i class="icon-upvote"></i>
+                    <i class="icon-upvote" style="vertical-align:text-top;"></i>
                 </a>
                 <span style="color : #ccc" class="vote-separator"> | </span>
                 <a href="#" class="c-action no-dec dislike@if(vote.isDefined && vote.get.value == -1) { disliked}" style="margin-left:-2px;margin-right:-2px;">

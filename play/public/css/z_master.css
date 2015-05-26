@@ -21,6 +21,23 @@
     text-align: right;
 }
 
+.masthead-notification.unread {
+    background: rgba(237,239,245,.98);
+}
+
+.notification-bubble {
+    position:absolute;
+    top: 8px;
+    right: 36px;
+    padding: 0 2px 0 2px;
+    background-color:red;
+    color:white;
+    font-weight:bold;
+    font-size:10px;
+    border-radius:3px;
+    box-shadow:1px 1px 1px gray;
+}
+
 .form-control {
     border-radius: 3px;
 }
@@ -437,6 +454,18 @@ a.repost-user-link:hover {
 .comment-timestamp {
     font-size:12px;
     color:#999;
+}
+
+.notification-preview {
+    font-style: italic;
+    margin-top: -3px;
+    display: inline-block;
+    word-wrap: break-word;
+}
+
+.notification-timestamp {
+    font-size: 13px;
+    color: #999;
 }
 
 .alert-body {
@@ -1490,7 +1519,13 @@ a:hover {
     height: 0;
     margin-bottom: 10px;
     margin-top: 10px;
+    overflow: hidden;
 }
+
+.yt-embed-cover {
+    cursor: pointer;
+}
+
 .videoWrapper iframe {
     position: absolute;
     top: 0;
@@ -1753,9 +1788,26 @@ body {
 }
 
 .masthead-notification {
-    height: 64px;
+    border-bottom: 1px solid #ddd;
+    height: 65px;
     word-wrap: break-word;
     padding: 7px 27px 7px 70px;
+}
+
+.notifications-header {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    padding: 0 8px 6px 8px;
+}
+
+.notification-list {
+    display: list-item;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.notifications-header-text {
+    font-weight: bold;
 }
 
 .masthead-notification:hover {
@@ -1893,8 +1945,8 @@ body {
 }
 
 .navbar-notifs-wrapper .dropdown-menu {
-    right: 27px;
-    top: 43px;
+    right: 26px;
+    top: 44px;
     width: 400px;
 }
 
@@ -2977,7 +3029,7 @@ a.login-link:hover {
 }
 
 .notification-desc-wrapper {
-    margin-top: 3px;
+    font-size: 13px;
 }
 
 .notification-user-text {
@@ -3156,4 +3208,28 @@ button.search-submit:focus {
 
 .yt-embed {
     border: none;
+}
+
+img.youtube-thumb {
+    bottom: 0;
+    display: block;
+    left: 0;
+    margin: auto;
+    max-width: 100%;
+    width: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: auto
+}
+
+div.play-button {
+    height: 72px;
+    width: 72px;
+    left: 50%;
+    top: 50%;
+    margin-left: -36px;
+    margin-top: -36px;
+    position: absolute;
+    background: url("//static.cillo.co/yt-cover-play.png") no-repeat;
 }

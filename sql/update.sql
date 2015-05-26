@@ -28,10 +28,11 @@ CREATE TABLE notification (
     title_user INT NOT NULL,
     user_id INT NOT NULL,
     count INT DEFAULT 0,
-    read TINYINT DEFAULT 0,
+    `read` TINYINT DEFAULT 0,
     time BIGINT NOT NULL,
     PRIMARY KEY (`notification_id`),
-    CONSTRAINT `user__notification_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),    
+    CONSTRAINT `user__notification_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),
+    INDEX `notification_read_idx` (`read`),
     INDEX `notificiation_time_idx` (`time`),
     INDEX `notification__entity_id_entity_type_action_type_idx` (`entity_id`, `entity_type`, `action_type`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;

@@ -2,7 +2,6 @@ package com.cillo.core.web.controllers
 
 import com.cillo.core.data.db.models.{Board, Post, User}
 import com.cillo.utils.play.Auth.AuthAction
-import play.Play
 import com.cillo.core.data.Constants
 import play.api.mvc._
 import com.cillo.core.data.cache.Redis

@@ -22,6 +22,14 @@ object Etc {
             s
     }
 
+    def preview(s: String, n: Int) = {
+        if (s.length <= n) {
+            s
+        } else {
+            s.take(s.lastIndexWhere(_.isSpaceChar, n + 1)).trim
+        }
+    }
+
     def checkPasswordValidity(p: String) = {
         true
     }
@@ -127,7 +135,8 @@ object Etc {
             val ytMatcher = youtubeIdRegex.matcher(raw)
             if (ytMatcher.find()) {
                 val ytId = ytMatcher.group(1)
-                "<div class=\"videoWrapper\"><iframe class=\"yt-embed\" width=\"500\" height=\"281\" src=\"https://www.youtube.com/embed/" + ytId + "\" allowfullscreen></iframe></div>"
+                //"<div class=\"videoWrapper\"><iframe class=\"yt-embed\" width=\"500\" height=\"281\" src=\"https://www.youtube.com/embed/" + ytId + "\" allowfullscreen></iframe></div>"
+                "<div class=\"videoWrapper\"><div class=\"yt-embed-cover\" data-id=\"" + ytId + "\"><img class=\"youtube-thumb\" src=\"//i.ytimg.com/vi/" + ytId + "/hqdefault.jpg\"><div class=\"play-button\"></div></div></div>"
             } else {
                 val parsed = {
                     if (raw.substring(0, 7).indexOf(':') < 0) {

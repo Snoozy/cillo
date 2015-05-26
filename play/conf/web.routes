@@ -16,6 +16,7 @@ GET         /settings                      com.cillo.core.web.controllers.Settin
 GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
 GET         /singup                        com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
 GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
+GET         /:name/comments/:id            com.cillo.core.web.controllers.CommentController.viewSingleComment(name: String, id: Int)
 
 GET         /a/neverending                 com.cillo.core.web.controllers.PageController.neverending
 GET         /a/check_email                 com.cillo.core.web.controllers.UserController.checkEmail
@@ -49,6 +50,7 @@ POST        /a/group/:id/unfollow          com.cillo.core.web.controllers.BoardC
 POST        /a/upload                      com.cillo.core.web.controllers.MediaController.upload
 POST        /a/setPass                     com.cillo.core.web.controllers.AuthController.setPassword
 POST        /a/changePass                  com.cillo.core.web.controllers.AuthController.changePassword
+POST        /a/notifications/read          com.cillo.core.web.controllers.NotificationController.readNotifications
 
 #Board catchalls
 GET         /:name                         com.cillo.core.web.controllers.BoardController.boardPage(name: String)
