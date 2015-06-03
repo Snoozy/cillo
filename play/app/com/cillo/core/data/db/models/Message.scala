@@ -2,16 +2,13 @@ package com.cillo.core.data.db.models
 
 import anorm.SqlParser._
 import anorm._
-import play.api.Play
 import play.api.Play.current
 import play.api.db._
-import play.api.libs.json._
 
 case class Message (
     messageId: Option[Int],
     conversationId: Int,
-    user1Id: Int,
-    user2Id: Int,
+    userId: Int,
     content: String,
     time: Long
 )
@@ -21,12 +18,11 @@ object Message {
     private[data] val messageParser: RowParser[Message] = {
         get[Option[Int]]("message_id") ~
             get[Int]("conversation_id") ~
-            get[Int]("user1_id") ~
-            get[Int]("user2_id") ~
+            get[Int]("user_id") ~
             get[String]("content") ~
             get[Long]("time") map {
-            case messageId ~ conversationId ~ user1Id ~ user2Id ~ content ~ time =>
-                Message(messageId, conversationId, user1Id, user2Id, content, time)
+            case messageId ~ conversationId ~ userId ~ content ~ time =>
+                Message(messageId, conversationId, userId, content, time)
         }
     }
     

@@ -16,6 +16,7 @@ case class UserInfo(
     email: String,
     time: Long,
     reputation: Int,
+    inboxCount: Int,
     bio: String
 )
 
@@ -27,9 +28,10 @@ object UserInfo {
             get[String]("email") ~
             get[Long]("time") ~
             get[Int]("reputation") ~
+            get[Int]("inbox_count") ~
             get[String]("bio") map {
-            case userId ~ password ~ email ~ time ~ reputation ~ bio =>
-                UserInfo(userId.get.toInt, password, email, time, reputation, bio)
+            case userId ~ password ~ email ~ time ~ reputation ~ inboxCount ~ bio =>
+                UserInfo(userId.get.toInt, password, email, time, reputation, inboxCount, bio)
         }
     }
 

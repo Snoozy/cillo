@@ -1,5 +1,5 @@
 @(user: Option[User] = None, searchBar: Boolean = false, searchQuery: String = "",
-         fixed: Boolean = true, buttons: Boolean = true, small: Boolean = false)(notifications: Option[Seq[Notification]] = user.map(u => Notification.getNotifications(user.get.userId.get)))
+        fixed: Boolean = true, buttons: Boolean = true, small: Boolean = false)(notifications: Option[Seq[Notification]] = user.map(u => Notification.getNotifications(u.userId.get)))
 
 @import com.cillo.utils.Etc
 @import com.cillo.core.web.views.html.components
@@ -47,7 +47,13 @@
                 <div class="navbar-button-separator-wrapper">
                     <span class="navbar-button-separator">|</span>
                 </div>
-                <div class="navbar-notifs-wrapper" style="margin-top:7px;margin-right:0;padding-left:3px;">
+                <div class="navbar-inbox-wrapper" style="margin-top:7px;margin-right:3px;padding-left:8px;">
+                    <a href="/inbox" class="inbox-anchor">
+                        <span class="glyphicon glyphicon-envelope masthead-inbox" style="font-size: 17px;"></span>
+                        <div class="inbox-bubble@if(user.get.inboxCount < 1) { displaynone}">@if(user.get.inboxCount < 100) {@user.get.inboxCount} else {99+}</div>
+                    </a>
+                </div>
+                <div class="navbar-notifs-wrapper" style="margin-top:7px;margin-right:0;padding-left:5px;">
                     <a href="#" class="dropdown-toggle notifications-anchor" id="notifs-dropdown" data-toggle="dropdown" aria-expanded="true">
                         <span class="glyphicon glyphicon-bell masthead-bell"></span>
                         @defining(notifications.get.count(!_.read)) { s =>

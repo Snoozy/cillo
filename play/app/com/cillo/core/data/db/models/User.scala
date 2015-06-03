@@ -35,7 +35,7 @@ case class User(
     val time = userInfo.time
     val reputation = userInfo.reputation
     val bio = userInfo.bio
-
+    val inboxCount = userInfo.inboxCount
 }
 
 object User {
