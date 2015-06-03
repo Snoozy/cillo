@@ -327,28 +327,16 @@ object User {
         }
     }
 
-    def toJson(user: User, self: Option[User] = None, email: Boolean = false, anon: Boolean = false): JsValue = {
+    def toJson(user: User, self: Option[User] = None, email: Boolean = false): JsValue = {
         var newJson = Json.obj()
-        if (!anon)
-            newJson = newJson.as[JsObject] +
-                ("name" -> Json.toJson(user.name)) +
-                ("username" -> Json.toJson(user.username)) +
-                ("user_id" -> Json.toJson(user.userId)) +
-                ("reputation" -> Json.toJson(user.reputation)) +
-                ("photo" -> Json.toJson(user.photo)) +
-                ("bio" -> Json.toJson(user.bio)) +
-                ("board_count" -> Json.toJson(User.getBoardIDs(user.userId.get).size))
-        else {
-            newJson = newJson.as[JsObject] +
-                ("name" -> Json.toJson("Anonymous")) +
-                ("username" -> Json.toJson("")) +
-                ("user_id" -> Json.toJson("")) +
-                ("reputation" -> Json.toJson("")) +
-                ("photo" -> Json.toJson("https://static.cillo.co/image/anon")) +
-                ("bio" -> Json.toJson("")) +
-                ("board_count" -> Json.toJson(0))
-
-        }
+        newJson = newJson.as[JsObject] +
+            ("name" -> Json.toJson(user.name)) +
+            ("username" -> Json.toJson(user.username)) +
+            ("user_id" -> Json.toJson(user.userId)) +
+            ("reputation" -> Json.toJson(user.reputation)) +
+            ("photo" -> Json.toJson(user.photo)) +
+            ("bio" -> Json.toJson(user.bio)) +
+            ("board_count" -> Json.toJson(User.getBoardIDs(user.userId.get).size))
         if (email) {
             newJson = newJson.as[JsObject] + ("email" -> Json.toJson(user.email))
         }

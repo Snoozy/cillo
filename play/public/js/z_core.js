@@ -225,8 +225,12 @@ $(document).ready(function() {
         });
     });
 
+    var numNotifs = $('.notifications-wrapper').children().length;
+    var notifsRawHeight = (numNotifs * 65);
     var height = $(window).height() - 140;
-    if (height > 500) {
+    if (notifsRawHeight < height) {
+        height = notifsRawHeight;
+    } else if (height > 500) {
         height = 500;
     }
 
@@ -238,7 +242,9 @@ $(document).ready(function() {
 
     $(window).resize(function() {
         var height = $(this).height() - 140;
-        if (height > 500) {
+        if (notifsRawHeight < height) {
+            height = notifsRawHeight;
+        } else if (height > 500) {
             height = 500;
         }
         $('.notification-list').css('height', height);
@@ -582,8 +588,6 @@ $(document).ready(function() {
     $('#repost-board-select').chosen();
 
     $('#post-board-select').chosen();
-
-    $('.anon').tooltip({'title' : 'Your posts in this group are anonymous.'});
 
     $(".post-submit").click(function () {
 

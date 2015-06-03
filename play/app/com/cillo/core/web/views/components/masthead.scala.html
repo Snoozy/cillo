@@ -50,7 +50,7 @@
                 <div class="navbar-notifs-wrapper" style="margin-top:7px;margin-right:0;padding-left:3px;">
                     <a href="#" class="dropdown-toggle notifications-anchor" id="notifs-dropdown" data-toggle="dropdown" aria-expanded="true">
                         <span class="glyphicon glyphicon-bell masthead-bell"></span>
-                        @defining(notifications.get.filter(!_.read).size) { s =>
+                        @defining(notifications.get.count(!_.read)) { s =>
                             <div class="notification-bubble@if(s < 1) { displaynone}">@s</div>
                         }
                     </a>
@@ -64,12 +64,14 @@
                         </li>
                         <li role="presentation" class="notification-list">
                             <div class="notifications-wrapper">
-                                @if(notifications.isDefined && notifications.get.size > 0) {
+                                @if(notifications.isDefined && notifications.get.nonEmpty) {
                                     @for(n <- notifications.get) {
                                         @components.notification(n)()
                                     }
                                 } else {
-                                    No more notifications...
+                                    <div class="no-notifications">
+                                        No more notifications...
+                                    </div>
                                 }
                             </div>
                         </li>
@@ -88,7 +90,7 @@
                     </a>
                 </div>
             }
-            @if(buttons && !user.isDefined) {
+            @if(buttons && user.isEmpty) {
                 <div class="navbar-button-wrapper navbar-signup">
                     <a href="/login" class="no-dec navbar-button-anchor">
                         <div class="navbar-button-div">

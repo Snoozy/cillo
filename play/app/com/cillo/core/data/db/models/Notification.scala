@@ -77,6 +77,14 @@ object Notification {
         }
     }
 
+    /**
+     * Deletes notifications from a specific user on an entity. Used for when user changes vote/deletes reply. Will remove notification from listeners.
+     *
+     * @param entityId Entity id
+     * @param entityType Entity type
+     * @param actionType Action type
+     * @param userId User's id
+     */
     def delete(entityId: Int, entityType: EntityType, actionType: ActionType, userId: Int): Unit = {
         Akka.system.scheduler.scheduleOnce(10.milliseconds) {
             DB.withConnection { implicit connection =>
@@ -122,6 +130,24 @@ object Notification {
         }
     }
 
+    /**
+     * Removes a users listener on an entity. For when a user their own comment, and does not want notifications anymore.
+     *
+     * @param entityId Entity's id
+     * @param entityType Entity's type
+     * @param userId User's id
+     */
+    def removeListener(entityId: Int, entityType: EntityType, userId: Int): Unit = {
+        Akka.system.scheduler.scheduleOnce(10.milliseconds) {
+            DB.withConnection { implicit connection =>
+                SQL("DELETE FROM notification_listener WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND user_id = {user}")
+                    .on('entity_id -> entityId, 'entity_type -> entityType.id, 'user -> userId).executeUpdate()
+                SQL("DELETE FROM notification WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND user_id = {user}")
+                    .on('entity_id -> entityId, 'entity_type -> entityType.id, 'user -> userId).executeUpdate()
+            }
+        }
+    }
+
     def read(userId: Int): Boolean = {
         DB.withConnection { implicit connection =>
             SQL("UPDATE notification SET `read` = 1 WHERE user_id = {user_id}").on('user_id -> userId).executeUpdate()
@@ -142,7 +168,7 @@ object Notification {
                 }
                 ("/" + board.get.name + "/posts/" + post.get.postId.get, descr)
             case EntityType.Comment =>
-                val comment = Comment.find(notification.entityId)
+                val comment = Comment.find(notification.entityId, status = None)
                 val board = Board.find(Post.find(comment.get.postId).get.boardId)
                 val descr = Etc.preview(comment.get.data, 50)
                 ("/" + board.get.name + "/comments/" + comment.get.commentId.get, descr)

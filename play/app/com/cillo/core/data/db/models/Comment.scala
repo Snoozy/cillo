@@ -50,6 +50,8 @@ object Comment {
             val comment = Comment.find(id)
             if (comment.isDefined) {
                 val res = SQL("UPDATE comment SET status = 1 WHERE comment_id = {id}").on('id -> id).executeUpdate()
+                if (res > 0)
+                    Notification.removeListener(id, EntityType.Comment, comment.get.userId)
                 res > 0
             } else
                 false

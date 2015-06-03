@@ -86,7 +86,7 @@
                                     <ol class="posts">
                                             <!--First post is the ui for creating a post. -->
                                         @if(user.isDefined && following) {
-                                            @components.first_post(user.get, Seq(board), boardPage = true, anon = board.privacy == 1)
+                                            @components.first_post(user.get, Seq(board), boardPage = true)
                                         }
 
                                         @for(post <- posts) {

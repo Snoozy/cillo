@@ -65,7 +65,7 @@ object Post {
         // checking that data is a number if post is a repost
         if (repostId.isDefined) {
             val repostExists = Post.find(repostId.get)
-            if (!repostExists.isDefined)
+            if (repostExists.isEmpty)
                 return None
         }
 
@@ -90,7 +90,7 @@ object Post {
 
     def createMediaPost(userId: Int, title: Option[String], data: String, boardId: Int, mediaIds: Seq[Int], time: Long = System.currentTimeMillis()): Option[Long] = {
 
-        mediaIds.foreach(id => if (!Media.find(id).isDefined) return None)
+        mediaIds.foreach(id => if (Media.find(id).isEmpty) return None)
 
         val mediaString = mediaIds.mkString("~")
 
@@ -171,13 +171,12 @@ object Post {
                 val reposter = User.find(post.userId)
                 val repost_board = Board.find(post.boardId)
                 if (board.isDefined && poster.isDefined && reposter.isDefined && repost_board.isDefined) {
-                    val anon = repost_board.get.privacy == 1
                     newPost = newPost.as[JsObject] +
                         ("repost" -> Post.toJsonSingle(repostedPost.get, user)) +
                         ("content" -> Json.toJson(post.data)) +
                         ("title" -> Json.toJson(post.title)) +
                         ("board" -> Board.toJson(repost_board.get)) +
-                        ("user" -> User.toJson(reposter.get, self = user, anon = anon)) +
+                        ("user" -> User.toJson(reposter.get, self = user)) +
                         ("time" -> Json.toJson(post.time)) +
                         ("votes" -> Json.toJson(post.votes)) +
                         ("comment_count" -> Json.toJson(post.commentCount))
@@ -187,12 +186,11 @@ object Post {
             val board = Board.find(post.boardId)
             val poster = User.find(post.userId)
             if (board.isDefined && poster.isDefined) {
-                val anon = board.get.privacy == 1
                 newPost = newPost.as[JsObject] +
                     ("content" -> Json.toJson(post.data)) +
                     ("title" -> Json.toJson(post.title)) +
                     ("board" -> Board.toJson(board.get)) +
-                    ("user" -> User.toJson(poster.get, self = user, anon = anon)) +
+                    ("user" -> User.toJson(poster.get, self = user)) +
                     ("time" -> Json.toJson(post.time)) +
                     ("votes" -> Json.toJson(post.votes)) +
                     ("comment_count" -> Json.toJson(post.commentCount))
@@ -215,14 +213,14 @@ object Post {
     }
 
     def getTrendingPosts: Seq[Post] = {
-        Random.shuffle(Constants.FrontBoards.map{ b =>
+        Random.shuffle(Constants.FrontBoards.flatMap { b =>
             val board = Board.find(b)
             if (board.isDefined) {
                 Board.getTopPosts(board.get.boardId.get)
             } else {
                 Seq()
             }
-        }.flatten)
+        })
     }
 
     def toJsonWithUser(posts: Seq[Post], user: Option[User]): JsValue = {

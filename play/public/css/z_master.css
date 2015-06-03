@@ -1111,9 +1111,14 @@ a.whitespace:hover {
 }
 
 .comment-form {
-    margin-top: -4px;
+    margin-top: 8px;
     margin-right: 0;
     margin-bottom: 9px;
+}
+
+.no-notifications {
+    text-align: center;
+    padding-top: 20px;
 }
 
 .color-blue {
@@ -1636,8 +1641,8 @@ body.modal-open {
 
 .chosen-avatar-small {
     margin-bottom: 2px;
-    height: 23px;
-    width: 23px;
+    height: 24px;
+    width: 24px;
     margin-right: 6px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -1946,7 +1951,7 @@ body {
 
 .navbar-notifs-wrapper .dropdown-menu {
     right: 26px;
-    top: 44px;
+    top: 43px;
     width: 400px;
 }
 
@@ -3030,6 +3035,7 @@ a.login-link:hover {
 
 .notification-desc-wrapper {
     font-size: 13px;
+    line-height: 1.35;
 }
 
 .notification-user-text {
@@ -3231,5 +3237,10 @@ div.play-button {
     margin-left: -36px;
     margin-top: -36px;
     position: absolute;
+    border-radius: 50px;
     background: url("//static.cillo.co/yt-cover-play.png") no-repeat;
+}
+
+.videoWrapper:hover .play-button {
+    background-color: rgba(0,0,0,0.75);
 }

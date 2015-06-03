@@ -117,20 +117,20 @@ object PostController extends Controller {
                                         }
                                     }
                                     val newUser = User.find(newUserId)
-                                    if (!mediaIds.isDefined || mediaIds.get == "") {
+                                    if (mediaIds.isEmpty || mediaIds.get == "") {
                                         Post.createSimplePost(newUser.get.userId.get, title, data.get, board.get.boardId.get)
                                     } else {
                                         Post.createMediaPost(newUser.get.userId.get, title, data.get, board.get.boardId.get, mediaIds.get.split("~").map(_.toInt))
                                     }
                                 } else {
-                                    if (!mediaIds.isDefined || mediaIds.get == "") {
+                                    if (mediaIds.isEmpty || mediaIds.get == "") {
                                         Post.createSimplePost(user.userId.get, title, data.get, board.get.boardId.get)
                                     } else {
                                         Post.createMediaPost(user.userId.get, title, data.get, board.get.boardId.get, mediaIds.get.split("~").map(_.toInt))
                                     }
                                 }
                             } else {
-                                if (!mediaIds.isDefined || mediaIds.get == "") {
+                                if (mediaIds.isEmpty || mediaIds.get == "") {
                                     Post.createSimplePost(user.userId.get, title, data.get, board.get.boardId.get)
                                 } else {
                                     Post.createMediaPost(user.userId.get, title, data.get, board.get.boardId.get, mediaIds.get.split("~").map(_.toInt))

@@ -17,17 +17,11 @@
         <div class="margin-maker">
             <div class="post-header">
                 <div class="user-avatar">
-                    @if(board.privacy == 0) {
-                        <a href="/user/@poster.username">
-                            <div class="post-avatar-wrapper">
-                                <img class="post-avatar" src="@(poster.photo + "_small")">
-                            </div>
-                        </a>
-                    } else {
+                    <a href="/user/@poster.username">
                         <div class="post-avatar-wrapper">
-                            <img class="post-avatar" src="@(anonImg + "_prof")">
+                            <img class="post-avatar" src="@(poster.photo + "_small")">
                         </div>
-                    }
+                    </a>
                 </div>
                 @if(user.isDefined && (poster.userId.get == user.get.userId.get || user.get.admin)) {
                     <div class="post-functions dropdown">
@@ -52,13 +46,9 @@
                 }
                 <div class="user-info">
                     <label class="u-info-wrapper">
-                        @if(board.privacy == 0) {
-                            <a href="/user/@poster.username" data-user-id="@poster.userId.get" class="username-anchor no-dec" style="margin-left:0px;">
-                                <strong class="hover-blue user-name-text">@poster.name</strong>
-                            </a>
-                        } else {
-                            <strong class="hover-blue user-name-text anonymous-user">Anonymous</strong>
-                        }
+                        <a href="/user/@poster.username" data-user-id="@poster.userId.get" class="username-anchor no-dec" style="margin-left:0px;">
+                            <strong class="hover-blue user-name-text">@poster.name</strong>
+                        </a>
                     </label>
                     <i class="right-arrow-icon"></i>
                     <label class="u-info-wrapper">
