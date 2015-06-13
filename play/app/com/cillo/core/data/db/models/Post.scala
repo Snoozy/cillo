@@ -189,7 +189,7 @@ object Post {
                 newPost = newPost.as[JsObject] +
                     ("content" -> Json.toJson(post.data)) +
                     ("title" -> Json.toJson(post.title)) +
-                    ("board" -> Board.toJson(board.get)) +
+                    ("board" -> Board.toJsonSingle(board.get)) +
                     ("user" -> User.toJson(poster.get, self = user)) +
                     ("time" -> Json.toJson(post.time)) +
                     ("votes" -> Json.toJson(post.votes)) +

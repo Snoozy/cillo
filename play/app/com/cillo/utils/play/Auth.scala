@@ -5,12 +5,13 @@ import com.cillo.core.data.db.models.User
 import com.cillo.utils.Etc
 import com.cillo.utils.security.SecureRand
 import play.api.mvc._
+import com.cillo.utils.play.errors._
 
 object Auth {
 
     def AuthAction(f: (Option[User]) => (Request[AnyContent]) => Result) = Action { implicit request: Request[AnyContent] =>
         try {
-            val user = parseUserFromCookie orElse parseUserFromPostData orElse parseUserFromQueryString  orElse parseUserFromHeader
+            val user = parseUserFromCookie orElse parseUserFromQueryString orElse parseUserFromHeader orElse parseUserFromPostData
             f(user)(request)
         } catch {
             case e: AuthTokenCookieExpired =>
@@ -18,9 +19,22 @@ object Auth {
         }
     }
 
+    def ApiAuthAction(f: (Option[User]) => (Request[AnyContent]) => Result) = Action { implicit request: Request[AnyContent] =>
+        try {
+            val user = parseUserFromCookie orElse parseUserFromPostData orElse parseUserFromQueryString orElse parseUserFromHeader
+            if (user.isDefined)
+                f(user)(request)
+            else
+                Results.BadRequest(UserNotAuthenticated.toJson)
+        } catch {
+            case e: AuthTokenCookieExpired =>
+                Results.BadRequest(UserNotAuthenticated.toJson).discardingCookies(deleteSessionCookies)
+        }
+    }
+
     def logInSession(email: String, password: String): Option[String] = {
         val user = User.findByEmail(email)
-        if (!user.isDefined)
+        if (user.isEmpty)
             throw new EmailDoesNotExist("Email does not exist.")
         if (Etc.checkPass(password, user.get.password)) {
             Some(getNewUserSessionId(user.get.userId.get))

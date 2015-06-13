@@ -25,7 +25,7 @@ object PostController extends Controller {
             case None => BadRequest(Json.obj("error" -> "User authentication required."))
             case Some(_) =>
                 val postExists = Post.find(post_id)
-                if (!postExists.isDefined)
+                if (postExists.isEmpty)
                     BadRequest(Json.obj("error" -> "Post does not exist."))
                 else {
                     val post = postExists.get
@@ -67,7 +67,7 @@ object PostController extends Controller {
                         try {
                             val boardId = form.get("boardId").map(_.head.toInt)
                             val board_name = form.get("board_name").map(_.head)
-                            if (!media_ids.isDefined) {
+                            if (media_ids.isEmpty) {
                                 if (data.isDefined && boardId.isDefined) {
                                     post_id = Post.createSimplePost(user.get.userId.get, form.get("title").map(_.head), data.get,
                                         boardId.get)

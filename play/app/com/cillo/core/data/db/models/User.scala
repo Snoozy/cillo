@@ -35,7 +35,14 @@ case class User(
     val time = userInfo.time
     val reputation = userInfo.reputation
     val bio = userInfo.bio
-    val inboxCount = userInfo.inboxCount
+    var inboxCount = userInfo.inboxCount
+
+    def readInbox() = {
+        DB.withConnection { implicit connection =>
+            SQL("UPDATE user_info SET inbox_count = 0 WHERE user_id = {user_id}").on('user_id -> userId.get).executeUpdate()
+            this.inboxCount = 0
+        }
+    }
 }
 
 object User {

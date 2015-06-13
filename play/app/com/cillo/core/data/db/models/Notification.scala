@@ -7,8 +7,10 @@ import com.cillo.utils.Etc
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.concurrent.Akka
+import play.api.libs.json.JsValue
 import scala.concurrent.duration._
 import play.api.db._
+import play.api.libs.json.Json
 
 case class Notification (
     notificationId: Option[Int],
@@ -179,6 +181,25 @@ object Notification {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM notification WHERE user_id = {user_id} ORDER BY time DESC LIMIT {limit}").on('user_id -> userId, 'limit -> limit).as(notificationParser *)
         }
+    }
+
+    def toJsonSeq(notifications: Seq[Notification]): JsValue = {
+        Json.arr(notifications.map {n => toJson(n)})
+    }
+
+    def toJson(notification: Notification): JsValue = {
+        Json.obj(
+            "notification_id" -> notification.notificationId,
+            "notification_count" -> notification.count,
+            "title_user" -> User.toJsonByUserID(notification.titleUser),
+            "time" -> notification.time,
+            if(notification.entityType == EntityType.Post) {
+                "post_id" -> notification.entityId
+            } else {
+                "comment_id" -> notification.entityId
+            },
+            "action_type" -> (if (notification.actionType == ActionType.Reply) {"reply"} else {"vote"})
+        )
     }
 
 }

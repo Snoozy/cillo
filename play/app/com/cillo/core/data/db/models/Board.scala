@@ -188,16 +188,21 @@ object Board {
     def toJsonSeq(boards: Seq[Board], following: Option[Boolean] = None, user: Option[User] = None): JsValue = {
         var json = Json.arr()
         boards.foreach { board =>
-            if (following.isDefined) {
-                json = json.+:(toJson(board, following.get))
-            } else if (user.isDefined) {
-                val f = User.userIsFollowing(user.get.userId.get, board.boardId.get)
-                json = json.+:(toJson(board, f))
-            } else {
-                json = json.+:(toJson(board))
-            }
+            json = json.+:(toJsonSingle(board, following, user))
         }
         json
+    }
+
+    def toJsonSingle(board: Board, following: Option[Boolean] = None, user: Option[User] = None): JsValue = {
+        if (following.isDefined) {
+            toJson(board, following.get)
+        } else if (user.isDefined) {
+            val f = User.userIsFollowing(user.get.userId.get, board.boardId.get)
+            toJson(board, f)
+        } else {
+            toJson(board)
+        }
+
     }
 
     def toJson(board: Board, following: Boolean = false): JsValue = {

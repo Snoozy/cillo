@@ -30,7 +30,7 @@ object S3 {
                 val aws_creds = new BasicAWSCredentials(aws_key.get, aws_secret.get)
                 val s3client = new AmazonS3Client(aws_creds)
                 val metadata = new ObjectMetadata()
-                metadata.setContentType("image/" + format)
+                metadata.setContentType("image/" + (if(format == "gif") format else "jpeg"))
                 if (format != "gif") {
                     val normal = {
                         if (original.isDefined) {
