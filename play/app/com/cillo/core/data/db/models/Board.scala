@@ -205,7 +205,7 @@ object Board {
 
     }
 
-    def toJson(board: Board, following: Boolean = false): JsValue = {
+    private def toJson(board: Board, following: Boolean = false): JsValue = {
         Json.obj(
             "name" -> board.name,
             "followers" -> board.followers,

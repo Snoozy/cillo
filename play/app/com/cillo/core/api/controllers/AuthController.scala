@@ -38,7 +38,7 @@ object AuthController extends Controller {
 
     private def attemptLogin(email: String, password: String): Result = {
         val token = logInSession(email, password)
-        if (!token.isDefined)
+        if (token.isEmpty)
             BadRequest(Json.obj("error" -> "Invalid Credentials."))
         else {
             Ok(Json.obj("auth_token" -> token.get))

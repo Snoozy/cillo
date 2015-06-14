@@ -1,10 +1,7 @@
 package com.cillo.core.api.controllers
 
-import java.util.UUID
-
 import com.cillo.core.data.aws.S3
-import com.cillo.core.data.db.models.Media
-import com.cillo.utils.play.Auth.AuthAction
+import com.cillo.utils.play.Auth._
 import com.cillo.core.data.Constants
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -21,28 +18,24 @@ object MediaController extends Controller {
      *
      * @return Json with the media id of the media just uploaded.
      */
-    def upload = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required. Code: 10"))
-            case Some(_) =>
-                val multiBody = request.body.asMultipartFormData
-                if (multiBody.isDefined) {
-                    multiBody.get.file("media").map { media =>
-                        val mediaFile = media.ref.file
-                        if (mediaFile.length() > Constants.MaxMediaSize)
-                            BadRequest(Json.obj("error" -> "Media upload too large. Code: 101"))
-                        else {
-                            val id = S3.upload(mediaFile)
-                            if (!id.isDefined)
-                                BadRequest(Json.obj("error" -> "Upload failed. Code: 104"))
-                            else {
-                                Ok(Json.obj("media_id" -> Json.toJson(id.get)))
-                            }
-                        }
-                    }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
-                } else {
-                    BadRequest(Json.obj("error" -> "No file detected. Code: 103"))
+    def upload = ApiAuthAction { implicit user => implicit request =>
+        val multiBody = request.body.asMultipartFormData
+        if (multiBody.isDefined) {
+            multiBody.get.file("media").map { media =>
+                val mediaFile = media.ref.file
+                if (mediaFile.length() > Constants.MaxMediaSize)
+                    BadRequest(Json.obj("error" -> "Media upload too large. Code: 101"))
+                else {
+                    val id = S3.upload(mediaFile)
+                    if (id.isEmpty)
+                        BadRequest(Json.obj("error" -> "Upload failed. Code: 104"))
+                    else {
+                        Ok(Json.obj("media_id" -> Json.toJson(id.get)))
+                    }
                 }
+            }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
+        } else {
+            BadRequest(Json.obj("error" -> "No file detected. Code: 103"))
         }
     }
 

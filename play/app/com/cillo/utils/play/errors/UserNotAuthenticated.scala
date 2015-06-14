@@ -1,11 +1,6 @@
 package com.cillo.utils.play.errors
 
-import play.api.libs.json.Json
-
-object UserNotAuthenticated {
-
-    def toJson = {
-        Json.obj("error" -> "User must be authenticated", "code" -> Code.UserNotAuthenticated.id)
-    }
-
+object UserNotAuthenticated extends Error {
+    val message = "User not authenticated"
+    val code = ErrorCode.UserNotAuthenticated
 }

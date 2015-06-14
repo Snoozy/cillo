@@ -1,7 +1,7 @@
 package com.cillo.core.api.controllers
 
 import com.cillo.core.data.db.models.{Board, Post, User}
-import com.cillo.utils.play.Auth.AuthAction
+import com.cillo.utils.play.Auth._
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -20,16 +20,12 @@ object BoardController extends Controller {
      * @param board_id Id of board to be described.
      * @return
      */
-    def describe(board_id: Int)  = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val board = Board.find(board_id)
-                if (board.isDefined)
-                    Ok(Board.toJson(board.get, User.userIsFollowing(user.get.userId.get, board_id)))
-                else
-                    BadRequest(Json.obj("error" -> "Board does not exist."))
-        }
+    def describe(board_id: Int)  = ApiAuthAction { implicit user => implicit request =>
+        val board = Board.find(board_id)
+        if (board.isDefined)
+            Ok(Board.toJsonSingle(board.get))
+        else
+            BadRequest(Json.obj("error" -> "Board does not exist."))
     }
 
     /**
@@ -40,29 +36,25 @@ object BoardController extends Controller {
      *
      * @return Fully hydrated Json of the new board.
      */
-    def create = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val body: AnyContent = request.body
-                body.asFormUrlEncoded.map { form =>
-                    val name = form.get("name").map(_.head)
-                    val descr = form.get("description").map(_.head)
-                    val photo = form.get("photo").map(_.head.toInt)
-                    if (name.isDefined) {
-                        var board_id: Option[Long] = None
-                        board_id = Board.create(name.get, descr, user.get.userId.get, photo = photo)
-                        if (board_id.isDefined) {
-                            Board.addFollower(user.get.userId.get, board_id.get.toInt)
-                            Ok(Board.toJson(Board.find(board_id.get.toInt).get, following = true))
-                        } else {
-                            BadRequest(Json.obj("error" -> "Board creation failed."))
-                        }
-                    } else {
-                        BadRequest(Json.obj("error" -> "Request format invalid."))
-                    }
-                }.getOrElse(BadRequest(Json.obj("error" -> "Request Content-Type invalid.")))
-        }
+    def create = ApiAuthAction { implicit user => implicit request =>
+        val body: AnyContent = request.body
+        body.asFormUrlEncoded.map { form =>
+            val name = form.get("name").map(_.head)
+            val descr = form.get("description").map(_.head)
+            val photo = form.get("photo").map(_.head.toInt)
+            if (name.isDefined) {
+                var board_id: Option[Long] = None
+                board_id = Board.create(name.get, descr, user.get.userId.get, photo = photo)
+                if (board_id.isDefined) {
+                    Board.addFollower(user.get.userId.get, board_id.get.toInt)
+                    Ok(Board.toJsonSingle(Board.find(board_id.get.toInt).get, following = Option(true)))
+                } else {
+                    BadRequest(Json.obj("error" -> "Board creation failed."))
+                }
+            } else {
+                BadRequest(Json.obj("error" -> "Request format invalid."))
+            }
+        }.getOrElse(BadRequest(Json.obj("error" -> "Request Content-Type invalid.")))
     }
 
     /**
@@ -71,58 +63,46 @@ object BoardController extends Controller {
      * @param board_id Board to get trending posts for.
      * @return Fully hydrated posts
      */
-    def getBoardTrendingPosts(board_id: Int) = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val board = Board.find(board_id)
-                if (!board.isDefined)
-                    BadRequest(Json.obj("error" -> "Board does not exist."))
-                else {
-                    val after = request.getQueryString("after")
-                    val posts = {
-                        if (after.isDefined) {
-                            Board.getFeedPaged(board_id, after.get.toInt)
-                        } else {
-                            Board.getFeed(board_id)
-                        }
-                    }
-                    Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user)))
+    def getBoardTrendingPosts(board_id: Int) = ApiAuthAction { implicit user => implicit request =>
+        val board = Board.find(board_id)
+        if (board.isEmpty)
+            BadRequest(Json.obj("error" -> "Board does not exist."))
+        else {
+            val after = request.getQueryString("after")
+            val posts = {
+                if (after.isDefined) {
+                    Board.getFeedPaged(board_id, after.get.toInt)
+                } else {
+                    Board.getFeed(board_id)
                 }
+            }
+            Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user)))
         }
     }
 
-    def followBoard(board_id: Int) = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val boardExists = Board.find(board_id)
-                if (!boardExists.isDefined)
-                    BadRequest(Json.obj("error" -> "Board does not exist."))
-                else {
-                    val success = Board.addFollower(user.get.userId.get, board_id)
-                    if (success)
-                        Ok(Json.obj("success" -> "Board successfully followed"))
-                    else
-                        BadRequest(Json.obj("error" -> "Unknown error."))
-                }
+    def followBoard(board_id: Int) = ApiAuthAction { implicit user => implicit request =>
+        val boardExists = Board.find(board_id)
+        if (boardExists.isEmpty)
+            BadRequest(Json.obj("error" -> "Board does not exist."))
+        else {
+            val success = Board.addFollower(user.get.userId.get, board_id)
+            if (success)
+                Ok(Json.obj("success" -> "Board successfully followed"))
+            else
+                BadRequest(Json.obj("error" -> "Unknown error."))
         }
     }
 
-    def unfollowBoard(board_id: Int) = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val boardExists = Board.find(board_id)
-                if (!boardExists.isDefined)
-                    BadRequest(Json.obj("error" -> "Board does not exist."))
-                else {
-                    val success = Board.removeFollower(user.get.userId.get, board_id)
-                    if (success)
-                        Ok(Json.obj("success" -> "Board successfully followed."))
-                    else
-                        BadRequest(Json.obj("error" -> "Unknown error."))
-                }
+    def unfollowBoard(board_id: Int) = ApiAuthAction { implicit user => implicit request =>
+        val boardExists = Board.find(board_id)
+        if (boardExists.isEmpty)
+            BadRequest(Json.obj("error" -> "Board does not exist."))
+        else {
+            val success = Board.removeFollower(user.get.userId.get, board_id)
+            if (success)
+                Ok(Json.obj("success" -> "Board successfully followed."))
+            else
+                BadRequest(Json.obj("error" -> "Unknown error."))
         }
     }
 

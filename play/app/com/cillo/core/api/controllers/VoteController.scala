@@ -1,7 +1,7 @@
 package com.cillo.core.api.controllers
 
 import com.cillo.core.data.db.models._
-import com.cillo.utils.play.Auth.AuthAction
+import com.cillo.utils.play.Auth._
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -50,19 +50,15 @@ object VoteController extends Controller {
      * @param value Value of the vote.
      * @return The success or error of the vote.
      */
-    private def voteComment(commentId: Int, value: Int) = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val commentExists = Comment.find(commentId)
-                if (commentExists.isDefined) {
-                    if (CommentVote.voteComment(commentExists.get.commentId.get, user.get.userId.get, value))
-                        Ok(Json.obj("success" -> "Comment vote successful."))
-                    else
-                        BadRequest(Json.obj("error" -> "Request format invalid. Code: 200"))
-                } else
-                    BadRequest(Json.obj("error" -> "Comment does not exist."))
-        }
+    private def voteComment(commentId: Int, value: Int) = ApiAuthAction { implicit user => implicit request =>
+        val commentExists = Comment.find(commentId)
+        if (commentExists.isDefined) {
+            if (CommentVote.voteComment(commentExists.get.commentId.get, user.get.userId.get, value))
+                Ok(Json.obj("success" -> "Comment vote successful."))
+            else
+                BadRequest(Json.obj("error" -> "Request format invalid. Code: 200"))
+        } else
+            BadRequest(Json.obj("error" -> "Comment does not exist."))
     }
 
     /**
@@ -72,19 +68,14 @@ object VoteController extends Controller {
      * @param value Value of the vote.
      * @return The success or error of the vote.
      */
-    private def votePost(postId: Int, value: Int) = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val postExists = Post.find(postId)
-                if (postExists.isDefined) {
-                    if (PostVote.votePost(postExists.get.postId.get, user.get.userId.get, value))
-                        Ok(Json.obj("success" -> "Post vote successful."))
-                    else
-                        BadRequest(Json.obj("error" -> "Request format invalid."))
-                } else
-                    BadRequest(Json.obj("error" -> "Vote does not exist."))
-        }
+    private def votePost(postId: Int, value: Int) = ApiAuthAction { implicit user => implicit request =>
+        val postExists = Post.find(postId)
+        if (postExists.isDefined) {
+            if (PostVote.votePost(postExists.get.postId.get, user.get.userId.get, value))
+                Ok(Json.obj("success" -> "Post vote successful."))
+            else
+                BadRequest(Json.obj("error" -> "Request format invalid."))
+        } else
+            BadRequest(Json.obj("error" -> "Vote does not exist."))
     }
-
 }

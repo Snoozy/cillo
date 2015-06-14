@@ -198,6 +198,7 @@ object Notification {
             } else {
                 "comment_id" -> notification.entityId
             },
+            "read" -> notification.read,
             "action_type" -> (if (notification.actionType == ActionType.Reply) {"reply"} else {"vote"})
         )
     }

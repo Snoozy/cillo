@@ -158,7 +158,7 @@ object Post {
         toJsonWithUser(posts, None)
     }
 
-    def toJsonSingle(post: Post, user: Option[User]): JsValue = {
+    def toJsonSingle(post: Post, user: Option[User], following: Option[Boolean] = None): JsValue = {
         var newPost = Json.obj(
             "post_id" -> Json.toJson(post.postId)
         )
@@ -175,7 +175,7 @@ object Post {
                         ("repost" -> Post.toJsonSingle(repostedPost.get, user)) +
                         ("content" -> Json.toJson(post.data)) +
                         ("title" -> Json.toJson(post.title)) +
-                        ("board" -> Board.toJson(repost_board.get)) +
+                        ("board" -> Board.toJsonSingle(repost_board.get, following)) +
                         ("user" -> User.toJson(reposter.get, self = user)) +
                         ("time" -> Json.toJson(post.time)) +
                         ("votes" -> Json.toJson(post.votes)) +
@@ -189,7 +189,7 @@ object Post {
                 newPost = newPost.as[JsObject] +
                     ("content" -> Json.toJson(post.data)) +
                     ("title" -> Json.toJson(post.title)) +
-                    ("board" -> Board.toJsonSingle(board.get)) +
+                    ("board" -> Board.toJsonSingle(board.get, following)) +
                     ("user" -> User.toJson(poster.get, self = user)) +
                     ("time" -> Json.toJson(post.time)) +
                     ("votes" -> Json.toJson(post.votes)) +
@@ -223,10 +223,10 @@ object Post {
         })
     }
 
-    def toJsonWithUser(posts: Seq[Post], user: Option[User]): JsValue = {
+    def toJsonWithUser(posts: Seq[Post], user: Option[User], following: Option[Boolean] = None): JsValue = {
         var json = Json.arr()
         posts.foreach { post =>
-            json = json.+:(toJsonSingle(post, user))
+            json = json.+:(toJsonSingle(post, user, following = following))
         }
         json
     }
