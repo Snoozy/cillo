@@ -4,6 +4,7 @@ import com.cillo.core.data.db.models._
 import com.cillo.utils.play.Auth.AuthAction
 import com.cillo.core.web.views.html.core
 import play.api.mvc._
+import com.cillo.core.web.views.html.components
 import play.api.libs.json.Json
 
 object MessageController extends Controller {
@@ -31,7 +32,7 @@ object MessageController extends Controller {
                         if (content.isDefined) {
                             val msg = Message.create(u.userId.get, receiver.get.userId.get, content.get)
                             if (msg.isDefined)
-                                Ok(Message.toJsonSingle(Message.find(msg.get.toInt).get))
+                                Ok(Json.obj("item_html" -> components.message(content.get, self = true).toString()))
                             else
                                 BadRequest(Json.obj("error" -> "Error creating message."))
                         } else {

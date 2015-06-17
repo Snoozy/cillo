@@ -1,6 +1,5 @@
 function collapseFirstPost() {
-    $('.post-form').css('min-height', '34px');
-    $('.post-form').css('height', '34px');
+    $('.post-form').css('max-height', '34px');
     $('.first-post-clear').addClass('displaynone');
     $('.picture_upload').addClass('displaynone');
     $('.post-title').addClass('displaynone');
@@ -12,9 +11,10 @@ function collapseFirstPost() {
 }
 
 function expandFirstPost() {
-    $('.post-form').css('min-height', '70px');
+    $('.post-form').css('min-height', '80px');
+    $('.post-form').css('max-height', 'none');
     $('.post-form').css('height', 'auto');
-    $('.post-form').trigger('autosize.resize');
+    autosize.update($('.post-form'));
     $('.first-post-clear').removeClass('displaynone');
     $('.picture_upload').removeClass('displaynone');
     $('.post-title').removeClass('displaynone');
@@ -246,6 +246,12 @@ $(document).ready(function() {
         wheelStep: 5
     });
 
+    $('.messages-wrapper').slimScroll({
+        height: "auto",
+        wheelStep: 5,
+        start: 'bottom'
+    });
+
     $('.conversations-container').on('click', '.conversation-wrapper', function() {
         $('.conversation-wrapper').removeClass('active');
         $(this).addClass('active');
@@ -260,8 +266,55 @@ $(document).ready(function() {
         }
         $('.notification-list').css('height', height);
         $(".notifications-wrapper").slimScroll({
-            height: "auto"
+            height: "auto",
+            wheelStep: 5
         });
+        $('.conversations-scroll').slimScroll({
+            height: "auto",
+            wheelStep: 5
+        });
+        $('.messages-wrapper').slimScroll({
+            height: "auto",
+            wheelStep: 5,
+            start: 'bottom'
+        });
+    });
+
+    $('.new-message-content').on('autosize:resized', function() {
+        var height = $('.message-create').outerHeight() + 34;
+        $('.messages-inner').css('height', 'calc(100% - ' + height + 'px)');
+        $('.messages-wrapper').slimScroll({
+            height: "auto",
+            wheelStep: 5,
+            start: 'bottom'
+        });
+    });
+
+    $('.new-message-content').keypress(function(e) {
+        if (e.which == 13 && !e.shiftKey) {
+            e.preventDefault();
+            var $this = $(this);
+            var content = $.trim($this.val());
+            if (content.length > 0) {
+                var to = $this.closest('.message-create').data('to');
+                $.ajax({
+                    type: 'POST',
+                    url: '/a/user/' + to + '/message',
+                    data: {'content': content},
+                    success: function (response) {
+                        $(response.item_html).hide().fadeIn(500).appendTo('.messages-wrapper');
+                        $this.val('');
+                        autosize.update($this);
+                        $('.messages-wrapper').slimScroll({
+                            scrollTo: $('.messages-wrapper').outerHeight()
+                        });
+                    },
+                    error: function () {
+                        alert('Something went wrong...');
+                    }
+                });
+            }
+        }
     });
 
     $(".navbar-notifs-wrapper .dropdown-menu").click(function(e) {
@@ -270,7 +323,7 @@ $(document).ready(function() {
 
     $('input[placeholder], textarea[placeholder]').placeholder();
 
-    $('textarea').autosize();
+    autosize($('textarea'));
 
     colorVotes('post');
 
@@ -333,7 +386,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.comment-val').autosize();
+    autosize($('.comment-val'));
 
     $(document).on('click', '.action-link-comment', function() {
 
@@ -346,7 +399,7 @@ $(document).ready(function() {
 
         $(comment_form).removeClass('displaynone');
 
-        $('.comment-val').autosize();
+        autosize($('.comment-val'));
 
         $(comment_form).find('.comment-val').focus();
 
@@ -744,5 +797,22 @@ $(document).ready(function() {
             entity_id: $('body').data('board-id')
         });
     }
+
+    $('.msg-submit-btn').click(function() {
+        var to = $(this).data('to');
+        var content = $('.msg-content').val();
+        $.ajax({
+            type: 'POST',
+            url: '/a/user/' + to + '/message',
+            data: {'content' : content},
+            complete: function() {
+                $('#msg-modal').modal('toggle');
+            }
+        });
+    });
+
+    $('.user-msg').click(function() {
+        $('#msg-modal').modal();
+    });
 
 });

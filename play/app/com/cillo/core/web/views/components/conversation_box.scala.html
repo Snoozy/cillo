@@ -1,5 +1,14 @@
-@(conversation: Conversation)
+@(user: User, preview: String, active: Boolean = false)
 
-<div class="conversation-wrapper">
-
+<div class="conversation-wrapper@if(active){ active}">
+    <div class="conversation-avatar">
+        <img src="@(user.photo + "_small")">
+    </div>
+    <div class="conversation-header">
+        @user.name
+    </div>
+    <div class="conversation-preview">
+        @preview
+    </div>
+    <div style="clear:both;"></div>
 </div>

@@ -519,12 +519,6 @@ a.repost-user-link:hover {
     margin: auto;
 }
 
-.message-content {
-    display:inline-block;
-    width:80%;
-    word-wrap:break-word;
-}
-
 .small-board-container:hover .board-name-text {
     text-decoration: underline;
 }
@@ -3270,7 +3264,6 @@ div.play-button {
     overflow-y: auto;
     overflow-x: hidden;
     display: inline-block;
-    padding: 3px 15px 15px;
     border-radius: 0 3px 3px 0;
     border-left: none;
 }
@@ -3317,4 +3310,62 @@ div.play-button {
 
 .user-message-wrapper {
     float: right;
+}
+
+.messages-inner {
+    height: calc(100% - 86px);
+    overflow-y: auto;
+    position: relative;
+}
+
+.messages-wrapper {
+    padding-top: 10px;
+}
+
+.message-content {
+    clear: both;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 3px;
+}
+
+.message-content.left .message-text {
+    text-align: left;
+    float: left;
+    background-color: #E4E4EA;
+}
+
+.message-content.right .message-text{
+    text-align: right;
+    float: right;
+    background-color: #4C83F5;
+    color: #fff;
+}
+
+.message-content:after {
+    clear: both;
+    content: ".";
+    display: block;
+    font-size: 0;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+}
+
+.message-text {
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.message-create {
+    position: fixed;
+    bottom: 0;
+    width: 569px;
+    padding: 8px 15px;
+    border-top: 1px solid #d0d1d5;
+    background-color: #f1f0f0;
+}
+
+.new-message-content {
+    min-height: 35px;
 }

@@ -56,6 +56,7 @@ CREATE TABLE conversation (
 CREATE TABLE message (
     message_id INT NOT NULL AUTO_INCREMENT,
     conversation_id INT NOT NULL,
+    content VARCHAR(5000),
     user_id INT NOT NULL,
     time BIGINT NOT NULL,
     PRIMARY KEY (`message_id`),

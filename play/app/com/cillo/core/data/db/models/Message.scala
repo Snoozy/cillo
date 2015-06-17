@@ -36,7 +36,7 @@ object Message {
     
     def byConversation(id: Int, limit: Int = 20): Seq[Message] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM message WHERE conversation_id = {conversation_id} ORDER BY time DESC LIMIT {limit}").on('conversation_id -> id).as(messageParser *)
+            SQL("SELECT * FROM message WHERE conversation_id = {conversation_id} ORDER BY time DESC LIMIT {limit}").on('conversation_id -> id, 'limit -> limit).as(messageParser *).reverse
         }
     }
     
@@ -45,8 +45,8 @@ object Message {
             val time = System.currentTimeMillis()
             val conversation = Conversation.update(sender, receiver, content)
             if (conversation.isDefined) {
-                SQL("INSERT INTO message (conversation_id, user1_id, user2_id, content, time) VALUES ({conversation_id}, {user1_id}, {user2_id}, {content}, {time})")
-                    .on('conversation_id -> conversation.get, 'user1_id -> sender, 'user2_id -> receiver, 'content -> content, 'time -> time).executeInsert()
+                SQL("INSERT INTO message (conversation_id, user_id, content, time) VALUES ({conversation_id}, {sender}, {content}, {time})")
+                    .on('conversation_id -> conversation.get, 'sender -> sender, 'content -> content, 'time -> time).executeInsert()
             } else {
                 None
             }
