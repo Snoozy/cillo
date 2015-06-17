@@ -1,6 +1,5 @@
 # Routes
 
-
 # GET
 
 GET         /v1/boards/:id/describe          com.cillo.core.api.controllers.BoardController.describe(id: Int)
@@ -19,6 +18,9 @@ GET         /v1/boards/autocomplete          com.cillo.core.api.controllers.Sear
 
 GET         /v1/me/feed                      com.cillo.core.api.controllers.UserController.getFeed
 GET         /v1/me/describe                  com.cillo.core.api.controllers.UserController.describeSelf
+GET         /v1/me/notifications             com.cillo.core.api.controllers.NotificationController.getNotifications
+
+GET         /v1/comments/:id/describe        com.cillo.core.api.controllers.CommentController.describe(id: Int)
 
 # POST
 
@@ -28,6 +30,7 @@ POST        /v1/boards/create                com.cillo.core.api.controllers.Boar
 POST        /v1/me/settings                  com.cillo.core.api.controllers.SettingController.updateSelf
 POST        /v1/me/settings/password         com.cillo.core.api.controllers.SettingController.updatePassword
 POST        /v1/board/:id/settings           com.cillo.core.api.controllers.SettingController.updateBoard(id: Int)
+POST        /v1/me/notifications/read        com.cillo.core.api.controllers.NotificationController.readNotifications
 
 POST        /v1/auth/login                   com.cillo.core.api.controllers.AuthController.login
 POST        /v1/auth/logout                  com.cillo.core.api.controllers.AuthController.logout

@@ -702,10 +702,6 @@ textarea {
     font-weight:bold;
 }
 
-.conversation-container {
-    padding-left:15px;
-}
-
 .no-messages {
     text-align:center;
 }
@@ -1263,10 +1259,6 @@ strong:hover {
 	border-top: 10px solid transparent;
 	border-bottom: 10px solid transparent;
 	border-right:10px solid white;
-}
-
-a:hover {
-    text-decoration: none;
 }
 
 .posting-user-avatar {
@@ -1959,8 +1951,8 @@ body {
 }
 
 .navbar-notifs-wrapper .dropdown-menu {
-    right: 26px;
-    top: 43px;
+    right: -3px;
+    top: 36px;
     width: 400px;
 }
 
@@ -2169,7 +2161,7 @@ strong {
 }
 
 .board-name-container {
-    margin-top: -5px;
+    margin-top: 2px;
 }
 
 .main-board-name-text {
@@ -3018,7 +3010,7 @@ a.login-link:hover {
 }
 
 .comment strong {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .anonymous-user:hover {
@@ -3252,4 +3244,77 @@ div.play-button {
 
 .videoWrapper:hover .play-button {
     background-color: rgba(0,0,0,0.75);
+}
+
+.op-post {
+    padding: 0 4px;
+    border-radius: 3px;
+    background-color: #02518A;
+    color: #fff;
+}
+
+.conversations-container {
+    background-color: #fff;
+    display: inline-block;
+    border-radius: 3px 0 0 3px;
+    width: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 1px solid rgba(0, 0, 0, .30);
+}
+
+.messages-container {
+    background-color: #fff;
+    width: 570px;
+    float: right;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: inline-block;
+    padding: 3px 15px 15px;
+    border-radius: 0 3px 3px 0;
+    border-left: none;
+}
+
+.inbox-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.conversation-avatar {
+    float: left;
+    margin-right: 6px;
+}
+
+.conversation-avatar img {
+    border-radius: 4px;
+}
+
+.conversation-header {
+    font-weight: bold;
+}
+
+.conversation-wrapper {
+    padding: 13px;
+    border-bottom: 1px solid rgb(229, 230, 233);
+}
+
+.conversation-wrapper:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.conversation-wrapper.active {
+    background-color: #02518A;
+    color: white;
+}
+
+.messages-header {
+    border-bottom: 1px solid rgb(208, 209, 213);
+    padding-bottom: 3px;
+}
+
+.user-message-wrapper {
+    float: right;
 }

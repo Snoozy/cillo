@@ -1,4 +1,4 @@
-@(conversations: Seq[Conversation], user: Option[User])
+@(conversations: Seq[Conversation], user: User)
 
 @import com.cillo.core.web.views.html.components
 @import com.cillo.utils.Etc
@@ -8,7 +8,39 @@
 }{
     <body class="main-background context-inbox">
         <div class="page">
-
+            @components.masthead(Some(user), searchBar = true)()
+            <div id="content" style="height:calc(100% - 44px);">
+                <div class="container-fluid inner-container" style="height:100%;">
+                    <div class="main-row" style="height:100%;overflow:hidden;">
+                        <div class="inbox-header">
+                            Inbox
+                        </div>
+                        <div class="conversations-container box-shadow-apply" style="height: calc(100% - 35px);">
+                            <div class="conversations-scroll">
+                                <div class="conversation-wrapper active">
+                                    <div class="conversation-avatar">
+                                        <img src="https://static.cillo.co/image/4e9e53a3-27d3-488f-93c8-8926c3ff1cb5_small">
+                                    </div>
+                                    <div class="conversation-header">
+                                        Timothy Ha
+                                    </div>
+                                    <div class="conversation-preview">
+                                        asdfaowiejfoawiejf
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="messages-container box-shadow-apply" style="height: calc(100% - 35px);">
+                            <div class="messages-header">
+                                <a href="asdf">
+                                    <strong>Timothy Ha</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 }

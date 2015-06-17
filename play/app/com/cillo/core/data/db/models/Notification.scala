@@ -133,7 +133,7 @@ object Notification {
     }
 
     /**
-     * Removes a users listener on an entity. For when a user their own comment, and does not want notifications anymore.
+     * Removes a user's listener on an entity. For when a user their own comment, and does not want notifications anymore.
      *
      * @param entityId Entity's id
      * @param entityType Entity's type
@@ -177,6 +177,20 @@ object Notification {
         }
     }
 
+    def getPreview(notification: Notification): String = {
+        notification.entityType match {
+            case EntityType.Post =>
+                val post = Post.find(notification.entityId)
+                if (post.get.title.isDefined)
+                    post.get.title.get
+                else
+                    Etc.preview(post.get.data, 50)
+            case EntityType.Comment =>
+                val comment = Comment.find(notification.entityId, status = None)
+                Etc.preview(comment.get.data, 50)
+        }
+    }
+
     def getNotifications(userId: Int, limit: Int = 15): Seq[Notification] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM notification WHERE user_id = {user_id} ORDER BY time DESC LIMIT {limit}").on('user_id -> userId, 'limit -> limit).as(notificationParser *)
@@ -184,13 +198,17 @@ object Notification {
     }
 
     def toJsonSeq(notifications: Seq[Notification]): JsValue = {
-        Json.arr(notifications.map {n => toJson(n)})
+        var json = Json.arr()
+        notifications.foreach { n =>
+            json = json.+:(toJson(n))
+        }
+        json
     }
 
     def toJson(notification: Notification): JsValue = {
-        Json.obj(
+        val json = Json.obj(
             "notification_id" -> notification.notificationId,
-            "notification_count" -> notification.count,
+            "count" -> notification.count,
             "title_user" -> User.toJsonByUserID(notification.titleUser),
             "time" -> notification.time,
             if(notification.entityType == EntityType.Post) {
@@ -199,8 +217,17 @@ object Notification {
                 "comment_id" -> notification.entityId
             },
             "read" -> notification.read,
+            "preview" -> Notification.getPreview(notification),
             "action_type" -> (if (notification.actionType == ActionType.Reply) {"reply"} else {"vote"})
         )
+        if (notification.entityType == EntityType.Comment) {
+            val comment = Comment.find(notification.entityId)
+            if (comment.isDefined)
+                json.+("post_id" -> Json.toJson(comment.get.postId))
+            else
+                json.+("post_id" -> Json.toJson(0))
+        } else
+            json
     }
 
 }

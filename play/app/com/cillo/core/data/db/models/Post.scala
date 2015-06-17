@@ -200,13 +200,14 @@ object Post {
             newPost = newPost.as[JsObject] + ("vote_value" -> Json.toJson(PostVote.getPostVoteValue(post.postId.get, user.get.userId.get)))
         }
         if (post.media.nonEmpty) {
-            var mediaArr = Json.arr()
-            post.media.foreach { mediaId =>
-                val media = Media.find(mediaId)
+            val mediaArr = Json.arr(post.media.map { id =>
+                val media = Media.find(id)
                 if (media.isDefined) {
-                    mediaArr = mediaArr.+:(Json.toJson(Media.BaseMediaURL + media.get.mediaName))
+                    Some(Json.toJson(Media.BaseMediaURL + media.get.mediaName + (if(media.get.mediaType != 1){"_med"})))
+                } else {
+                    None
                 }
-            }
+            }.filter(_.isDefined))
             newPost = newPost.as[JsObject] + ("media" -> mediaArr)
         }
         newPost

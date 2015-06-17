@@ -76,7 +76,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.yt-embed-cover', function() {
         var id = $(this).data('id');
-        $(this).replaceWith('<iframe class="yt-embed" width="500" height="281" src="https://www.youtube.com/embed/' + id + '?autoplay=1&autohide=1&border=0&wmode=opaque&enablejsapi=1" allowfullscreen></iframe>');
+        $(this).replaceWith('<iframe class="yt-embed" width="500" height="281" src="https://www.youtube.com/embed/' + id + '&autoplay=1&autohide=1&border=0&wmode=opaque&enablejsapi=1" allowfullscreen></iframe>');
     });
 
     $('.posts-wrapper').on('click', '.post-delete', function (e) {
@@ -237,7 +237,18 @@ $(document).ready(function() {
     $('.notification-list').css('height', height);
 
     $(".notifications-wrapper").slimScroll({
-        height: "auto"
+        height: "auto",
+        wheelStep: 5
+    });
+
+    $('.conversations-scroll').slimScroll({
+        height: "auto",
+        wheelStep: 5
+    });
+
+    $('.conversations-container').on('click', '.conversation-wrapper', function() {
+        $('.conversation-wrapper').removeClass('active');
+        $(this).addClass('active');
     });
 
     $(window).resize(function() {
@@ -639,7 +650,7 @@ $(document).ready(function() {
                             "user": user
                         },
                         success: function (response, textStatus, jqXHR) {
-                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post').find('a.fluidbox').fluidbox({closeTrigger: [{ selector: 'window', event: 'scroll'}],immediateOpen: false,debounceResize: true});
+                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post').find('a.fluidbox').fluidbox({immediateOpen: false,debounceResize: true});
                             $('textarea.post-form').val('');
                             $('.post-title').val('');
                             $('.post-board').val('');
@@ -716,7 +727,6 @@ $(document).ready(function() {
     });
 
     $('.fluidbox').fluidbox({
-        closeTrigger: [{ selector: 'window', event: 'scroll' }],
         immediateOpen: false,
         debounceResize: true
     });

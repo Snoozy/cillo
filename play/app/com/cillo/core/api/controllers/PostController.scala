@@ -26,7 +26,7 @@ object PostController extends Controller {
             BadRequest(Json.obj("error" -> "Post does not exist."))
         else {
             val post = postExists.get
-            Ok(Post.toJsonWithUser(Seq(post), user))
+            Ok(Post.toJsonSingle(post, user))
         }
     }
 

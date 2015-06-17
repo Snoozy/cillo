@@ -137,7 +137,11 @@
                                 @defining(Media.find(repost.get.media.head)) { m =>
                                     <div class="post-picture-container">
                                         <a class="fancybox" href="@m.get.mediaUrl">
-                                            <img src="@(m.get.mediaUrl + "_med")" class="post-picture">
+                                            @if(m.get.mediaType == 1) {
+                                                <img src="@m.get.mediaUrl" class="post-picture">
+                                            } else {
+                                                <img src="@(m.get.mediaUrl + "_med")" class="post-picture">
+                                            }
                                         </a>
                                     </div>
                                 }
@@ -226,7 +230,7 @@
                         }
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
-                            @components.comment(CommentTreeNode(comment, Seq()), user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
+                            @components.comment(CommentTreeNode(comment, Seq()), user, board, poster.userId.get)(expanded = expanded, root = true, anon = board.privacy == 1)
                             @defining(CommentTree.getCommentNumChildren(comment.commentId.get)) { n =>
                                 @if(n > 0) {
                                     <div class="view-replies-wrapper">
@@ -244,7 +248,7 @@
                         </div>
                     }
                 } else {
-                    @if(!singleComment.isDefined) {
+                    @if(singleComment.isEmpty) {
                         @defining(CommentTree.getPostCommentsTop(post.postId.get)) { comments =>
                             @if(comments.rootComments.nonEmpty) {
                                 <hr class="hr-no-margin comment-hr">
@@ -266,7 +270,7 @@
                                 }
                                 <div class="displaynone comment-start-marker"></div>
                                 @for(comment <- comments.rootComments) {
-                                    @components.comment(comment, user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
+                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true, anon = board.privacy == 1)
                                 }
                             </div>
                         }
@@ -301,7 +305,7 @@
                                 </div>
                                 <div class="displaynone comment-start-marker"></div>
                                 @for(comment <- comment.rootComments) {
-                                    @components.comment(comment, user, board)(expanded = expanded, root = true, anon = board.privacy == 1)
+                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true, anon = board.privacy == 1)
                                 }
                             </div>
 

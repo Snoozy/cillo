@@ -101,13 +101,9 @@ object User {
         }
     }
 
-    def checkUsername(s: String): Boolean = {
-        !find(s).isDefined
-    }
+    def checkUsername(s: String): Boolean = find(s).isEmpty
 
-    def checkEmail(s: String): Boolean = {
-        !findByEmail(s).isDefined
-    }
+    def checkEmail(s: String): Boolean = findByEmail(s).isEmpty
 
     /**
      * Generates valid username from valid email
@@ -117,10 +113,10 @@ object User {
      */
     def genUsername(s: String, backup: String = ""): String = {
         val gen = genRawUsername(s)
-        if (!gen.isDefined) {
+        if (gen.isEmpty) {
             if (backup != "") {
                 val b = genRawUsername(backup)
-                if (!b.isDefined) {
+                if (b.isEmpty) {
                     genRawUsername(RandomStringUtils.random(14)).get
                 } else
                     b.get
@@ -326,7 +322,7 @@ object User {
 
     def toJsonByUsername(username: String, self: Option[User] = None, email: Boolean = false): JsValue = {
         val userExists = User.find(username)
-        if (!userExists.isDefined)
+        if (userExists.isEmpty)
             Json.obj("error" -> "User does not exist.")
         else {
             val user = userExists.get

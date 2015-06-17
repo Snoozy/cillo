@@ -4,6 +4,8 @@ import anorm.SqlParser._
 import anorm._
 import play.api.Play.current
 import play.api.db._
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json
 
 case class Message (
     messageId: Option[Int],
@@ -49,6 +51,16 @@ object Message {
                 None
             }
         }
+    }
+
+    def toJsonSingle(msg: Message): JsValue = {
+        Json.obj(
+            "message_id" -> msg.messageId.get,
+            "conversation_id" -> msg.conversationId,
+            "user_id" -> msg.userId,
+            "content" -> msg.content,
+            "time" -> msg.time
+        )
     }
 
 }

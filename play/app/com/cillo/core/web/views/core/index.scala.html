@@ -23,7 +23,7 @@
 
                                         @for(post <- posts) {
                                             @defining(boards.find(b => b.boardId.get == post.boardId)) { b =>
-                                                @if(!b.isDefined) {
+                                                @if(b.isEmpty) {
                                                     @components.post(post, Some(user))()
                                                 } else {
                                                     @components.post(post, Some(user))(board = b.get)

@@ -135,8 +135,46 @@ object Etc {
             val ytMatcher = youtubeIdRegex.matcher(raw)
             if (ytMatcher.find()) {
                 val ytId = ytMatcher.group(1)
-                //"<div class=\"videoWrapper\"><iframe class=\"yt-embed\" width=\"500\" height=\"281\" src=\"https://www.youtube.com/embed/" + ytId + "\" allowfullscreen></iframe></div>"
-                "<div class=\"videoWrapper\"><div class=\"yt-embed-cover\" data-id=\"" + ytId + "\"><img class=\"youtube-thumb\" src=\"//i.ytimg.com/vi/" + ytId + "/hqdefault.jpg\"><div class=\"play-button\"></div></div></div>"
+                val time = {
+                    try {
+                        if (raw.contains("?t=")) {
+                            val start = raw.indexOf("?t=") + 3
+                            val end = {
+                                val temp = raw.indexOf("&", start)
+                                if (temp < 0)
+                                    raw.length
+                                else
+                                    temp
+                            }
+                            val rawTime = raw.substring(start, end)
+                            val sec = {
+                                val arr = rawTime.split("m")
+                                arr(0).toInt * 60 + arr(1).substring(0, arr(1).length - 1).toInt
+                            }
+                            "?start=" + sec
+                        } else if (raw.contains("&t=")) {
+                            val start = raw.indexOf("&t=") + 3
+                            val end = {
+                                val temp = raw.indexOf("&", start)
+                                if (temp < 0)
+                                    raw.length
+                                else
+                                    temp
+                            }
+                            val rawTime = raw.substring(start, end)
+                            val sec = {
+                                val arr = rawTime.split("m")
+                                arr(0).toInt * 60 + arr(1).substring(0, arr(1).length - 1).toInt
+                            }
+                            "?start=" + sec
+                        } else {
+                            "?"
+                        }
+                    } catch {
+                        case e: java.lang.NumberFormatException => "?"
+                    }
+                }
+                "<div class=\"videoWrapper\"><div class=\"yt-embed-cover\" data-id=\"" + ytId + time + "\"><img class=\"youtube-thumb\" src=\"//i.ytimg.com/vi/" + ytId + "/hqdefault.jpg\"><div class=\"play-button\"></div></div></div>"
             } else {
                 val parsed = {
                     if (raw.substring(0, 7).indexOf(':') < 0) {

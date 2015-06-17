@@ -1,4 +1,4 @@
-@(commentTreeNode: CommentTreeNode, user: Option[User], board: Board)(expanded: Boolean = false,
+@(commentTreeNode: CommentTreeNode, user: Option[User], board: Board, originalPoster: Int)(expanded: Boolean = false,
         vote: Option[CommentVote] = user.flatMap{u => CommentVote.findByCommentAndUser(commentTreeNode.comment.commentId.get, u.userId.get)},
         commenter: User = User.find(commentTreeNode.comment.userId).get,
         root: Boolean = false,
@@ -25,7 +25,7 @@
                     </a>
                 </div>
                 <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;" class="commenter-anchor">
-                    <strong style="font-weight:500;">@commenter.name</strong>
+                    <strong@if(originalPoster == commentTreeNode.comment.userId){ class="op-post"}>@commenter.name</strong>
                 </a>
             } else {
                 <div class="comment-avatar">
@@ -92,7 +92,7 @@
         <div class="comment-children-container">
             @if(expanded) {
                 @for(child <- commentTreeNode.children) {
-                    @components.comment(child, user, board)(expanded = expanded, anon = anon)
+                    @components.comment(child, user, board, originalPoster)(expanded = expanded, anon = anon)
                 }
             }
         </div>

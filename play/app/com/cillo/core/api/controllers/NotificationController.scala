@@ -9,7 +9,7 @@ object NotificationController extends Controller {
 
     def getNotifications = ApiAuthAction { implicit user => implicit request =>
             val notifs = Notification.getNotifications(user.get.userId.get)
-            Ok(Notification.toJsonSeq(notifs))
+            Ok(Json.obj("notifications" -> Notification.toJsonSeq(notifs)))
     }
 
     def readNotifications = ApiAuthAction { implicit user => implicit request =>

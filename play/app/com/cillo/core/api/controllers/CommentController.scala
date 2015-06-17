@@ -1,6 +1,6 @@
 package com.cillo.core.api.controllers
 
-import com.cillo.core.data.db.models.Comment
+import com.cillo.core.data.db.models.{CommentTree, Comment}
 import com.cillo.utils.play.Auth._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -12,23 +12,6 @@ import play.api.mvc._
  */
 
 object CommentController extends Controller {
-
-    /*
-    /**
-     * Describes the a comment.
-     *
-     * @param post_id Id of post to be described.
-     * @return Json
-     */
-    def describe(post_id: Int) = AuthAction { implicit user => implicit request =>
-        user match {
-            case None => BadRequest(Json.obj("error" -> "User authentication required."))
-            case Some(_) =>
-                val comments = CommentTree.getPostCommentsTop(post_id)
-                Ok(CommentTree.commentTreeToJson(comments, user))
-        }
-    }
-    */
 
     /**
      * Creates a new comment from the supplied parameters: parent_id, post_id, data.
@@ -54,6 +37,16 @@ object CommentController extends Controller {
                 case e: NumberFormatException => BadRequest(Json.obj("error" -> "Invalid request format."))
             }
         }.getOrElse(BadRequest(Json.obj("error" -> "Invalid request format.")))
+    }
+
+    def describe(id: Int) = ApiAuthAction { implicit user => implicit request =>
+        val comment = Comment.find(id, status = None)
+        if (comment.isDefined) {
+            val tree = CommentTree.getCommentTree(comment.get)
+            Ok(Json.obj("comment_tree" -> CommentTree.commentTreeToJson(tree)))
+        } else {
+            BadRequest(Json.obj("error" -> "Entity does not exist."))
+        }
     }
 
 }
