@@ -71,6 +71,12 @@ object User {
         }
     }
 
+    def addMail(id: Int): Unit = {
+        DB.withConnection { implicit connection =>
+            SQL("UPDATE user_info SET inbox_count = inbox_count + 1 WHERE user_id = {id}").on('id -> id).executeUpdate()
+        }
+    }
+
     def isUserAdmin(userId: Int): Boolean = {
         DB.withConnection { implicit connection =>
             val admin = SQL("SELECT * FROM admin WHERE user_id = {user}").on('user -> userId).as(scalar[Long].singleOpt)

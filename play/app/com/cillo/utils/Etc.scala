@@ -106,6 +106,7 @@ object Etc {
     }
 
     private val multiNewLineRegex: Pattern = Pattern.compile("\n{2,}")
+    private val allNewLineRegex: Pattern = Pattern.compile("\n{1,}")
     private val newLineRegex: Pattern = Pattern.compile("\n", Pattern.LITERAL)
     private val linkRegex = "(?i)\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))".r
     private val usernameRegex: Pattern = Pattern.compile("""(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z_]+[A-Za-z0-9_]+)""")
@@ -117,19 +118,23 @@ object Etc {
         parseSpecial(parseLinks(parseRaw(raw)))
     }
 
-    def parseRaw(raw: String): String = {
+    def parseMessage(raw: String): String = {
+        parseSpecial(parseLinks(allNewLineRegex.matcher(escapeHtml4(raw)).replaceAll(Matcher.quoteReplacement("<br/>"))))
+    }
+
+    private def parseRaw(raw: String): String = {
         newLineRegex.matcher(multiNewLineRegex.matcher(escapeHtml4(raw)).replaceAll("</div><div class=\"post-text\">")).replaceAll(Matcher.quoteReplacement("<br/>"))
     }
 
-    def parseSpecial(raw: String): String = {
+    private def parseSpecial(raw: String): String = {
         hashtagRegex.matcher(usernameRegex.matcher(raw).replaceAll("<a href=\"https://www.cillo.co/user/$1\" target=\"_blank\">@$1</a>")).replaceAll("<a href=\"https://www.cillo.co/$1\" target=\"_blank\">#$1</a>")
     }
 
-    def parseLinks(raw: String): String = {
+    private def parseLinks(raw: String): String = {
         linkRegex.replaceAllIn(raw, m => linkParser(m))
     }
 
-    def linkParser(m: Regex.Match): String = {
+    private def linkParser(m: Regex.Match): String = {
         val raw = m.group(0)
         if (ytCheckRegex.matcher(raw).find()) {
             val ytMatcher = youtubeIdRegex.matcher(raw)

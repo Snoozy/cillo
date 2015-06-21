@@ -4,62 +4,66 @@
 
 #GET
 
-GET         /                              com.cillo.core.web.controllers.IndexController.homePage
-GET         /signup                        com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
-GET         /user/:username                com.cillo.core.web.controllers.UserController.userPage(username: String)
-GET         /login                         com.cillo.core.web.controllers.AuthController.cleanLoginPage
-GET         /boards/create                 com.cillo.core.web.controllers.BoardController.createBoardPage
-GET         /:name/posts/:id               com.cillo.core.web.controllers.PostController.viewPostPage(name: String, id: Int)
-GET         /logout                        com.cillo.core.web.controllers.AuthController.logout
-GET         /boards/explore                com.cillo.core.web.controllers.ExploreController.explore
-GET         /settings                      com.cillo.core.web.controllers.SettingsController.userSettingsPage
-GET         /gettingstarted                com.cillo.core.web.controllers.GettingStartedController.gettingStarted
-GET         /singup                        com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
-GET         /search                        com.cillo.core.web.controllers.SearchController.searchPage
-GET         /:name/comments/:id            com.cillo.core.web.controllers.CommentController.viewSingleComment(name: String, id: Int)
-GET         /inbox                         com.cillo.core.web.controllers.MessageController.inbox
+GET         /                                com.cillo.core.web.controllers.IndexController.homePage
+GET         /signup                          com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
+GET         /user/:username                  com.cillo.core.web.controllers.UserController.userPage(username: String)
+GET         /login                           com.cillo.core.web.controllers.AuthController.cleanLoginPage
+GET         /boards/create                   com.cillo.core.web.controllers.BoardController.createBoardPage
+GET         /:name/posts/:id                 com.cillo.core.web.controllers.PostController.viewPostPage(name: String, id: Int)
+GET         /logout                          com.cillo.core.web.controllers.AuthController.logout
+GET         /boards/explore                  com.cillo.core.web.controllers.ExploreController.explore
+GET         /settings                        com.cillo.core.web.controllers.SettingsController.userSettingsPage
+GET         /gettingstarted                  com.cillo.core.web.controllers.GettingStartedController.gettingStarted
+GET         /singup                          com.cillo.core.web.controllers.RegisterController.cleanRegisterPage
+GET         /search                          com.cillo.core.web.controllers.SearchController.searchPage
+GET         /:name/comments/:id              com.cillo.core.web.controllers.CommentController.viewSingleComment(name: String, id: Int)
+GET         /inbox                           com.cillo.core.web.controllers.MessageController.inbox
 
-GET         /a/neverending                 com.cillo.core.web.controllers.PageController.neverending
-GET         /a/check_email                 com.cillo.core.web.controllers.UserController.checkEmail
-GET         /a/board/:name/delete          com.cillo.core.web.controllers.BoardController.deleteBoard(name: String)
+GET         /a/neverending                   com.cillo.core.web.controllers.PageController.neverending
+GET         /a/check_email                   com.cillo.core.web.controllers.UserController.checkEmail
+GET         /a/board/:name/delete            com.cillo.core.web.controllers.BoardController.deleteBoard(name: String)
 
-GET         /connect/facebook              com.cillo.core.web.controllers.SocialController.facebookAuth
+GET         /connect/facebook                com.cillo.core.web.controllers.SocialController.facebookAuth
 
-GET         /a/wassup                      com.cillo.core.web.controllers.EtcController.refresh
-GET         /a/debug                       com.cillo.core.web.controllers.EtcController.debug
-GET         /a/clean                       com.cillo.core.web.controllers.EtcController.cleanS3
-GET         /a/thedayisnow                 com.cillo.core.web.controllers.EtcController.reddit
+GET         /a/conversation/:id/paged        com.cillo.core.web.controllers.MessageController.getPaged(id: Int)
+GET         /a/conversation/:id/poll         com.cillo.core.web.controllers.MessageController.poll(id: Int)
+GET         /a/conversation/:id              com.cillo.core.web.controllers.MessageController.getConversation(id: Int)
+
+GET         /a/wassup                        com.cillo.core.web.controllers.EtcController.refresh
+GET         /a/debug                         com.cillo.core.web.controllers.EtcController.debug
+GET         /a/clean                         com.cillo.core.web.controllers.EtcController.cleanS3
+GET         /a/thedayisnow                   com.cillo.core.web.controllers.EtcController.reddit
 
 #POST
-POST        /signup                        com.cillo.core.web.controllers.RegisterController.attemptRegister
-POST        /login                         com.cillo.core.web.controllers.AuthController.attemptLogin
-POST        /boards/create                 com.cillo.core.web.controllers.BoardController.attemptCreateBoard
-POST        /settings                      com.cillo.core.web.controllers.SettingsController.userSettingsChange
+POST        /signup                          com.cillo.core.web.controllers.RegisterController.attemptRegister
+POST        /login                           com.cillo.core.web.controllers.AuthController.attemptLogin
+POST        /boards/create                   com.cillo.core.web.controllers.BoardController.attemptCreateBoard
+POST        /settings                        com.cillo.core.web.controllers.SettingsController.userSettingsChange
 
 #AJAX CALLS
-POST        /a/post                        com.cillo.core.web.controllers.PostController.post
-POST        /a/repost                      com.cillo.core.web.controllers.PostController.repost
-POST        /a/post/:id/upvote             com.cillo.core.web.controllers.VoteController.upvotePost(id: Int)
-POST        /a/post/:id/downvote           com.cillo.core.web.controllers.VoteController.downvotePost(id: Int)
-POST        /a/post/:id/comment            com.cillo.core.web.controllers.CommentController.createComment(id: Int)
-POST        /a/comment/:id/upvote          com.cillo.core.web.controllers.VoteController.upvoteComment(id: Int)
-POST        /a/comment/:id/downvote        com.cillo.core.web.controllers.VoteController.downvoteComment(id: Int)
-POST        /a/post/:id/delete             com.cillo.core.web.controllers.PostController.deletePost(id: Int)
-POST        /a/comment/:id/delete          com.cillo.core.web.controllers.CommentController.deleteComment(id: Int)
-POST        /a/group/:id/follow            com.cillo.core.web.controllers.BoardController.followBoard(id: Int)
-POST        /a/group/:id/unfollow          com.cillo.core.web.controllers.BoardController.unfollowBoard(id: Int)
-POST        /a/upload                      com.cillo.core.web.controllers.MediaController.upload
-POST        /a/setPass                     com.cillo.core.web.controllers.AuthController.setPassword
-POST        /a/changePass                  com.cillo.core.web.controllers.AuthController.changePassword
-POST        /a/notifications/read          com.cillo.core.web.controllers.NotificationController.readNotifications
+POST        /a/post                          com.cillo.core.web.controllers.PostController.post
+POST        /a/repost                        com.cillo.core.web.controllers.PostController.repost
+POST        /a/post/:id/upvote               com.cillo.core.web.controllers.VoteController.upvotePost(id: Int)
+POST        /a/post/:id/downvote             com.cillo.core.web.controllers.VoteController.downvotePost(id: Int)
+POST        /a/post/:id/comment              com.cillo.core.web.controllers.CommentController.createComment(id: Int)
+POST        /a/comment/:id/upvote            com.cillo.core.web.controllers.VoteController.upvoteComment(id: Int)
+POST        /a/comment/:id/downvote          com.cillo.core.web.controllers.VoteController.downvoteComment(id: Int)
+POST        /a/post/:id/delete               com.cillo.core.web.controllers.PostController.deletePost(id: Int)
+POST        /a/comment/:id/delete            com.cillo.core.web.controllers.CommentController.deleteComment(id: Int)
+POST        /a/group/:id/follow              com.cillo.core.web.controllers.BoardController.followBoard(id: Int)
+POST        /a/group/:id/unfollow            com.cillo.core.web.controllers.BoardController.unfollowBoard(id: Int)
+POST        /a/upload                        com.cillo.core.web.controllers.MediaController.upload
+POST        /a/setPass                       com.cillo.core.web.controllers.AuthController.setPassword
+POST        /a/changePass                    com.cillo.core.web.controllers.AuthController.changePassword
+POST        /a/notifications/read            com.cillo.core.web.controllers.NotificationController.readNotifications
 
-POST        /a/user/:id/message            com.cillo.core.web.controllers.MessageController.send(id: Int)
+POST        /a/user/:id/message              com.cillo.core.web.controllers.MessageController.send(id: Int)
 
 #Board catchalls
-GET         /:name                         com.cillo.core.web.controllers.BoardController.boardPage(name: String)
-GET         /:name/settings                com.cillo.core.web.controllers.SettingsController.boardSettingsPage(name: String)
+GET         /:name                           com.cillo.core.web.controllers.BoardController.boardPage(name: String)
+GET         /:name/settings                  com.cillo.core.web.controllers.SettingsController.boardSettingsPage(name: String)
 
-POST        /:name/settings                com.cillo.core.web.controllers.SettingsController.boardSettingsChange(name: String)
+POST        /:name/settings                  com.cillo.core.web.controllers.SettingsController.boardSettingsChange(name: String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                  controllers.Assets.at(path="/public", file)
+GET         /assets/*file                    controllers.Assets.at(path="/public", file)

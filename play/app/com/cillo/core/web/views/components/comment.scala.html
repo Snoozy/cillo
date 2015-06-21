@@ -24,8 +24,8 @@
                         <img src="@(commenter.photo + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
                     </a>
                 </div>
-                <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;" class="commenter-anchor">
-                    <strong@if(originalPoster == commentTreeNode.comment.userId){ class="op-post"}>@commenter.name</strong>
+                <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;" class="commenter-anchor@if(originalPoster == commentTreeNode.comment.userId){ op-post}">
+                    <strong>@commenter.name</strong>
                 </a>
             } else {
                 <div class="comment-avatar">

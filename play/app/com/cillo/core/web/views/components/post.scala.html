@@ -222,12 +222,23 @@
                                     <img class="comment-avatar anon" src="@(anonImg + "_small")">
                                 }
                                 <form class="comment-input">
-                                    <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                                    <textarea class="form-control comment-val input-xlarge" rows="1" placeholder="Write a comment..." style="height:34px;"></textarea>
                                     <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
                                     <div class="clear"></div>
                                 </form>
                             </div>
                         }
+
+                        @if(comments.nonEmpty) {
+                            <div class="view-all-comments-wrapper">
+                                <a href="/@board.name/posts/@post.postId.get">
+                                    <div class="view-all-comments">
+                                        <span class="view-all-comments-text">View all comments</span>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
                             @components.comment(CommentTreeNode(comment, Seq()), user, board, poster.userId.get)(expanded = expanded, root = true, anon = board.privacy == 1)
@@ -262,7 +273,7 @@
                                             <img class="comment-avatar anon" src="@(anonImg + "_small")">
                                         }
                                         <form class="comment-input">
-                                            <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                                            <textarea class="form-control comment-val input-xlarge" rows="1" placeholder="Write a comment..." style="height:34px;"></textarea>
                                             <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
                                             <div class="clear"></div>
                                         </form>
@@ -288,7 +299,7 @@
                                             <img class="comment-avatar anon" src="@(anonImg + "_small")">
                                         }
                                         <form class="comment-input">
-                                            <textarea class="form-control comment-val input-xlarge" data-expanded-height="50" placeholder="Write a comment..." style="height:34px;"></textarea>
+                                            <textarea class="form-control comment-val input-xlarge" rows="1" placeholder="Write a comment..." style="height:34px;"></textarea>
                                             <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
                                             <div class="clear"></div>
                                         </form>

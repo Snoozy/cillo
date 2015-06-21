@@ -246,16 +246,106 @@ $(document).ready(function() {
         wheelStep: 5
     });
 
-    $('.messages-wrapper').slimScroll({
-        height: "auto",
-        wheelStep: 5,
-        start: 'bottom'
-    });
-
     $('.conversations-container').on('click', '.conversation-wrapper', function() {
         $('.conversation-wrapper').removeClass('active');
         $(this).addClass('active');
+        $(this).children('.unread-indicator').remove();
+        changeConversation($(this).data('conversation-id'));
     });
+
+    function initConversation() {
+        var $msg = $('.messages-wrapper');
+
+        $msg.slimScroll({
+            height: "auto",
+            wheelStep: 5,
+            start: 'bottom'
+        });
+
+        $(window).resize(function() {
+            $msg.slimScroll({
+                height: "auto",
+                wheelStep: 5,
+                start: 'bottom'
+            });
+        });
+
+        $('.new-message-content').on('autosize:resized', function() {
+            var height = $('.message-create').outerHeight() + 34;
+            $('.messages-inner').css('height', 'calc(100% - ' + height + 'px)');
+            $('.messages-wrapper').slimScroll({
+                height: "auto",
+                wheelStep: 5,
+                start: 'bottom'
+            });
+        });
+
+        $('.new-message-content').keypress(function(e) {
+            if (e.which == 13 && !e.shiftKey) {
+                e.preventDefault();
+                var $this = $(this);
+                var content = $.trim($this.val());
+                if (content.length > 0) {
+                    var to = $this.closest('.message-create').data('to');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/a/user/' + to + '/message',
+                        data: {'content': content},
+                        success: function (response) {
+                            $(response.item_html).hide().fadeIn(500).appendTo('.messages-wrapper');
+                            $this.val('');
+                            autosize.update($this);
+                            $('.messages-wrapper').slimScroll({
+                                scrollTo: $('.messages-wrapper')[0].scrollHeight
+                            });
+                            var $convo = $('.conversations-container').find('.conversation-wrapper.active');
+                            $convo.find('.conversation-preview').text(response.preview);
+                            if (!$convo.is(":first-child")) {
+                                $convo.hide().fadeIn(500).prependTo('.conversations-scroll');
+                            }
+                        },
+                        error: function () {
+                            alert('Something went wrong...');
+                        }
+                    });
+                }
+            }
+        });
+
+        $('.messages-container').click(function() {
+            $('.new-message-content').focus();
+        });
+
+        $('.new-message-content').focus();
+
+    }
+
+    if ($('.messages-wrapper').length > 0) {
+        console.log('asdf');
+        setTimeout(function() {
+            console.log('qwerty');
+            var $msg = $('.messages-wrapper');
+            var convoId = $msg.data('conversation-id');
+            var after = $msg.children(':last').data('message-id');
+            $.ajax({
+                type: 'GET',
+                url: '/a/conversation/' + convoId + '/poll',
+                data: {'after' : after},
+                cache: false,
+                success: function(response) {
+                    if (response.item_html) {
+                        $(response.item_html).hide().fadeIn(500).appendTo('.messages-wrapper');
+                        $('.conversations-container').find('.conversation-wrapper.active').find('.conversation-preview').text(response.preview);
+                        $('.messages-wrapper').slimScroll({
+                            scrollTo: $('.messages-wrapper')[0].scrollHeight
+                        });
+                    }
+                }
+            });
+        }, 30000);
+    }
+
+    initConversation();
 
     $(window).resize(function() {
         var height = $(this).height() - 140;
@@ -273,49 +363,44 @@ $(document).ready(function() {
             height: "auto",
             wheelStep: 5
         });
-        $('.messages-wrapper').slimScroll({
-            height: "auto",
-            wheelStep: 5,
-            start: 'bottom'
-        });
     });
 
-    $('.new-message-content').on('autosize:resized', function() {
-        var height = $('.message-create').outerHeight() + 34;
-        $('.messages-inner').css('height', 'calc(100% - ' + height + 'px)');
-        $('.messages-wrapper').slimScroll({
-            height: "auto",
-            wheelStep: 5,
-            start: 'bottom'
-        });
-    });
 
-    $('.new-message-content').keypress(function(e) {
-        if (e.which == 13 && !e.shiftKey) {
-            e.preventDefault();
+    function bindMessageScroll() {
+        $('.messages-wrapper').scroll(function() {
             var $this = $(this);
-            var content = $.trim($this.val());
-            if (content.length > 0) {
-                var to = $this.closest('.message-create').data('to');
+            if ($this.data('done') != 'done' && $this.scrollTop() < 150) {
+                var conversation = $this.data('conversation-id');
+                var before = $this.children(':first').data('message-id');
                 $.ajax({
-                    type: 'POST',
-                    url: '/a/user/' + to + '/message',
-                    data: {'content': content},
-                    success: function (response) {
-                        $(response.item_html).hide().fadeIn(500).appendTo('.messages-wrapper');
-                        $this.val('');
-                        autosize.update($this);
-                        $('.messages-wrapper').slimScroll({
-                            scrollTo: $('.messages-wrapper').outerHeight()
-                        });
-                    },
-                    error: function () {
-                        alert('Something went wrong...');
+                    type: 'GET',
+                    url: '/a/conversation/' + conversation + '/paged',
+                    data: {'before' : before},
+                    success: function(response) {
+                        if (response.done) {
+                            $this.attr('data-done', 'done');
+                        } else {
+                            $(response.item_html).hide().fadeIn(500).prependTo($this);
+                        }
                     }
                 });
             }
-        }
-    });
+        });
+    }
+
+    bindMessageScroll();
+
+    function changeConversation(id) {
+        $.ajax({
+            type: 'GET',
+            url: '/a/conversation/' + id,
+            success: function(response) {
+                $('.messages-container').html(response.item_html);
+                initConversation();
+                $('.conversations-container').find('.conversation-wrapper.active').find('.conversation-preview').text(response.preview);
+            }
+        });
+    }
 
     $(".navbar-notifs-wrapper .dropdown-menu").click(function(e) {
         e.stopPropagation();
@@ -545,6 +630,8 @@ $(document).ready(function() {
         if ($comment_cont.find('.comment-form').length == 0) {
             $comment_cont.prepend(reply_form);
         }
+        $comment_cont.find('.comment-val')[0].removeAttribute('data-autosize-on');
+        autosize($('textarea'));
         $comment_cont.find('.comment-val').focus();
     });
 
@@ -702,8 +789,8 @@ $(document).ready(function() {
                             "media": media_ids,
                             "user": user
                         },
-                        success: function (response, textStatus, jqXHR) {
-                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post').find('a.fluidbox').fluidbox({immediateOpen: false,debounceResize: true});
+                        success: function (response) {
+                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post').find('a.fluidbox').fluidbox({closeTrigger: [{ selector: 'window', event: 'scroll' }],immediateOpen: false});
                             $('textarea.post-form').val('');
                             $('.post-title').val('');
                             $('.post-board').val('');
@@ -780,8 +867,8 @@ $(document).ready(function() {
     });
 
     $('.fluidbox').fluidbox({
-        immediateOpen: false,
-        debounceResize: true
+        closeTrigger: [{ selector: 'window', event: 'scroll' }],
+        immediateOpen: false
     });
 
     if ($('body').hasClass('context-home')) {

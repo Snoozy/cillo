@@ -34,9 +34,23 @@ object Message {
         }
     }
     
-    def byConversation(id: Int, limit: Int = 20): Seq[Message] = {
+    def byConversation(id: Int, limit: Int = 30): Seq[Message] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM message WHERE conversation_id = {conversation_id} ORDER BY time DESC LIMIT {limit}").on('conversation_id -> id, 'limit -> limit).as(messageParser *).reverse
+        }
+    }
+
+    def getPagedBefore(conversationId: Int, before: Int, limit: Int = 20): Seq[Message] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM message WHERE conversation_id = {conversation_id} AND message_id < {before} ORDER BY message_id DESC LIMIT {limit}")
+                .on('conversation_id -> conversationId, 'before -> before, 'limit -> limit).as(messageParser *)
+        }
+    }
+
+    def getPagedAfter(conversationId: Int, after: Int): Seq[Message] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM message WHERE conversation_id = {conversation_id} AND message_id > {after} ORDER BY message_id DESC")
+                .on('conversation_id -> conversationId, 'after -> after).as(messageParser *)
         }
     }
     

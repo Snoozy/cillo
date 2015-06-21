@@ -1,6 +1,9 @@
-@(user: User, preview: String, active: Boolean = false)
+@(user: User, preview: String, read: Boolean, id: Int, active: Boolean = false)
 
-<div class="conversation-wrapper@if(active){ active}">
+<div class="conversation-wrapper@if(active){ active}" data-conversation-id="@id">
+    @if(!read && !active) {
+        <div class="unread-indicator"></div>
+    }
     <div class="conversation-avatar">
         <img src="@(user.photo + "_small")">
     </div>
@@ -8,7 +11,7 @@
         @user.name
     </div>
     <div class="conversation-preview">
-        @preview
+        @if(preview.length > 50){@preview.substring(0, 49)}else{@preview}
     </div>
     <div style="clear:both;"></div>
 </div>

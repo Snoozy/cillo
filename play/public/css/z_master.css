@@ -970,7 +970,7 @@ a.masthead-nav {
 }
 
 a:hover {
-    text-decoration: underline
+    text-decoration: underline;
     color: #3876b4;
 }
 
@@ -1124,7 +1124,7 @@ strong {
 }
 
 strong:hover {
-    color: #3876b4;
+    color: #3b5998;
 }
 
 .user-actions {
@@ -2124,7 +2124,6 @@ body {
 
 .post-text-title {
     margin-bottom: 10px;
-    margin-top: 7px;
 }
 
 .post-text-title-text {
@@ -2135,6 +2134,7 @@ body {
 
 .user-name-text, .board-name-text {
     font-weight: bold;
+    color: #3b5998;
 }
 .user-name-text:hover, .board-name-text:hover {
     text-decoration: underline;
@@ -2210,25 +2210,23 @@ strong {
 
 .clear {
     clear:both;
-    height:0px;
+    height:0;
     overflow:hidden;
 }
 
-.view-all-comments-wrapper:hover {
-    background-color: #e1e8ed;
+.view-all-comments-wrapper {
+    border-radius: 3px;
 }
 
 .view-all-comments {
-    padding-bottom: 9px;
+    padding-bottom: 3px;
     line-height: 20px;
     border-radius: 2px;
     margin-bottom: 5px;
-    padding-top: 9px;
-    text-align: center;
+    padding-top: 1px;
     margin-left: 0;
     font-weight: 500;
-    margin-right: 15px;
-    font-size: 17px;
+    font-size: 13px;
 }
 
 .view-replies-wrapper {
@@ -3005,6 +3003,7 @@ a.login-link:hover {
 
 .comment strong {
     font-size: 13px;
+    color: #3b5998;
 }
 
 .anonymous-user:hover {
@@ -3025,7 +3024,7 @@ a.login-link:hover {
 }
 
 .small-board-container:hover .board-name-text, .small-board-container:hover .explore-boards {
-    color: #3876b4;
+    color: #3b5998;
 }
 
 .notification-desc-wrapper {
@@ -3286,11 +3285,15 @@ div.play-button {
 
 .conversation-header {
     font-weight: bold;
+    margin-left: 57px;
+    margin-top: 3px;
 }
 
 .conversation-wrapper {
-    padding: 13px;
+    padding: 13px 13px 13px 20px;
     border-bottom: 1px solid rgb(229, 230, 233);
+    position: relative;
+    height: 77px;
 }
 
 .conversation-wrapper:hover {
@@ -3336,7 +3339,6 @@ div.play-button {
 }
 
 .message-content.right .message-text{
-    text-align: right;
     float: right;
     background-color: #4C83F5;
     color: #fff;
@@ -3354,6 +3356,9 @@ div.play-button {
 
 .message-text {
     padding: 6px 12px;
+    max-width: 60%;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
     border-radius: 6px;
 }
 
@@ -3368,4 +3373,34 @@ div.play-button {
 
 .new-message-content {
     min-height: 35px;
+}
+
+.conversation-preview {
+    width: 204px;
+    margin-left: 58px;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.3;
+}
+
+.unread-indicator {
+    background: #02518A;
+    height: 10px;
+    width: 10px;
+    position: absolute;
+    left: 5px;
+    top: 32px;
+    border-radius: 50%;
+}
+
+.op-post:hover {
+    background-color: #31719F;
+    color: #fff;
+    text-decoration: none !important;
+}
+
+.op-post strong {
+    color: #fff;
 }

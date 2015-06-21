@@ -1,4 +1,4 @@
-@(messages: Seq[Message], me: User, other: User)
+@(messages: Seq[Message],id: Int, me: User, other: User)
 
 @import com.cillo.core.web.views.html.components
 
@@ -8,9 +8,9 @@
     </a>
 </div>
 <div class="messages-inner">
-    <div class="messages-wrapper">
+    <div class="messages-wrapper" data-conversation-id="@id">
         @for(m <- messages) {
-            @components.message(m.content, m.userId == me.userId.get)
+            @components.message(m.content, m.userId == me.userId.get, m.messageId.get)
         }
     </div>
 </div>
