@@ -5,6 +5,7 @@ import com.cillo.utils.play.Auth._
 import play.api.libs.json.{JsValue, Json}
 import com.cillo.core.data.Constants
 import play.api.mvc._
+import com.cillo.utils.play.errors._
 
 /**
  * Handles User API requests including:
@@ -75,7 +76,7 @@ object UserController extends Controller {
                         && password.isDefined && email.isDefined) {
                         val usernameExists = User.find(username.get)
                         if (usernameExists.isDefined) {
-                            BadRequest(Json.obj("error" -> "Username exists."))
+                            BadRequest(UsernameTaken.toJson)
                         } else {
                             val newUser = User.create(username.get, name.get, password.get, email.get, bio)
                             if (newUser.isDefined) {

@@ -23,7 +23,7 @@ object BoardController extends Controller {
     def describe(board_id: Int)  = ApiAuthAction { implicit user => implicit request =>
         val board = Board.find(board_id)
         if (board.isDefined)
-            Ok(Board.toJsonSingle(board.get))
+            Ok(Board.toJsonSingle(board.get, user))
         else
             BadRequest(Json.obj("error" -> "Board does not exist."))
     }
@@ -47,7 +47,7 @@ object BoardController extends Controller {
                 board_id = Board.create(name.get, descr, user.get.userId.get, photo = photo)
                 if (board_id.isDefined) {
                     Board.addFollower(user.get.userId.get, board_id.get.toInt)
-                    Ok(Board.toJsonSingle(Board.find(board_id.get.toInt).get, following = Option(true)))
+                    Ok(Board.toJsonSingle(Board.find(board_id.get.toInt).get, user, following = Option(true)))
                 } else {
                     BadRequest(Json.obj("error" -> "Board creation failed."))
                 }

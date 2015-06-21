@@ -6,4 +6,8 @@ object ErrorCode {
 
     case object UserNotAuthenticated extends Code { val id = 10 }
 
+    case object PasswordInvalid extends Code { val id = 20 }
+
+    case object UsernameTaken extends Code { val id = 30 }
+
 }

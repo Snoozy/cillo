@@ -166,16 +166,16 @@ object Post {
         if (post.repostId.isDefined) {
             val repostedPost = Post.find(post.repostId.get)
             if (repostedPost.isDefined) {
-                val board = Board.find(repostedPost.get.boardId)
+                val board = Board.find(post.boardId)
                 val poster = User.find(repostedPost.get.userId)
                 val reposter = User.find(post.userId)
-                val repost_board = Board.find(post.boardId)
-                if (board.isDefined && poster.isDefined && reposter.isDefined && repost_board.isDefined) {
+                val repostBoard = Board.find(repostedPost.get.boardId)
+                if (board.isDefined && poster.isDefined && reposter.isDefined && repostBoard.isDefined) {
                     newPost = newPost.as[JsObject] +
                         ("repost" -> Post.toJsonSingle(repostedPost.get, user)) +
                         ("content" -> Json.toJson(post.data)) +
                         ("title" -> Json.toJson(post.title)) +
-                        ("board" -> Board.toJsonSingle(repost_board.get, following)) +
+                        ("board" -> Board.toJsonSingle(board.get, user, following = following)) +
                         ("user" -> User.toJson(reposter.get, self = user)) +
                         ("time" -> Json.toJson(post.time)) +
                         ("votes" -> Json.toJson(post.votes)) +
@@ -189,13 +189,14 @@ object Post {
                 newPost = newPost.as[JsObject] +
                     ("content" -> Json.toJson(post.data)) +
                     ("title" -> Json.toJson(post.title)) +
-                    ("board" -> Board.toJsonSingle(board.get, following)) +
+                    ("board" -> Board.toJsonSingle(board.get, user, following = following)) +
                     ("user" -> User.toJson(poster.get, self = user)) +
                     ("time" -> Json.toJson(post.time)) +
                     ("votes" -> Json.toJson(post.votes)) +
                     ("comment_count" -> Json.toJson(post.commentCount))
             }
         }
+
         if (user.isDefined) {
             newPost = newPost.as[JsObject] + ("vote_value" -> Json.toJson(PostVote.getPostVoteValue(post.postId.get, user.get.userId.get)))
         }

@@ -44,6 +44,7 @@ CREATE TABLE conversation (
     created_time BIGINT NOT NULL,
     updated_time BIGINT NOT NULL,
     `read` TINYINT DEFAULT 0,
+    last_user TINYINT NOT NULL,
     preview VARCHAR(300),
     PRIMARY KEY (`conversation_id`),
     CONSTRAINT `user__conversation_user1_id_fk` FOREIGN KEY (`user1_id`) REFERENCES user(`user_id`),
@@ -66,3 +67,5 @@ CREATE TABLE message (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 ALTER TABLE user_info ADD inbox_count INT DEFAULT 0 AFTER reputation;
+
+ALTER TABLE conversation ADD last_user TINYINT AFTER `read`;

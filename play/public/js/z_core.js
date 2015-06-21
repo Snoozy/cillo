@@ -318,10 +318,11 @@ $(document).ready(function() {
 
         $('.new-message-content').focus();
 
+        bindMessageScroll();
+
     }
 
     if ($('.messages-wrapper').length > 0) {
-        console.log('asdf');
         setTimeout(function() {
             console.log('qwerty');
             var $msg = $('.messages-wrapper');
@@ -387,8 +388,6 @@ $(document).ready(function() {
             }
         });
     }
-
-    bindMessageScroll();
 
     function changeConversation(id) {
         $.ajax({

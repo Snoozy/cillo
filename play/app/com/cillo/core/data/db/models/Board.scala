@@ -188,12 +188,12 @@ object Board {
     def toJsonSeq(boards: Seq[Board], following: Option[Boolean] = None, user: Option[User] = None): JsValue = {
         var json = Json.arr()
         boards.foreach { board =>
-            json = json.+:(toJsonSingle(board, following, user))
+            json = json.+:(toJsonSingle(board, user, following = following))
         }
         json
     }
 
-    def toJsonSingle(board: Board, following: Option[Boolean] = None, user: Option[User] = None): JsValue = {
+    def toJsonSingle(board: Board, user: Option[User], following: Option[Boolean] = None): JsValue = {
         if (following.isDefined) {
             toJson(board, following.get)
         } else if (user.isDefined) {

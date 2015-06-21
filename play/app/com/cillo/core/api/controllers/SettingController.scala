@@ -75,7 +75,7 @@ object SettingController extends Controller{
                             case e: java.lang.NumberFormatException =>
                         }
                         if (Board.update(board_id, descr, pic) > 0) {
-                            Ok(Board.toJsonSingle(Board.find(board_id).get, Option(true)))
+                            Ok(Board.toJsonSingle(Board.find(board_id).get, user, following = Option(true)))
                         } else {
                             BadRequest(Json.obj("error" -> "Error updating board information."))
                         }
