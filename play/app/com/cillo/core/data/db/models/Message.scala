@@ -67,6 +67,10 @@ object Message {
         }
     }
 
+    def toJsonSeq(msgs: Seq[Message]): JsValue = {
+        Json.toJson(msgs.map{m => toJsonSingle(m)})
+    }
+
     def toJsonSingle(msg: Message): JsValue = {
         Json.obj(
             "message_id" -> msg.messageId.get,

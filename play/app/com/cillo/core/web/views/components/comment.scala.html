@@ -2,7 +2,6 @@
         vote: Option[CommentVote] = user.flatMap{u => CommentVote.findByCommentAndUser(commentTreeNode.comment.commentId.get, u.userId.get)},
         commenter: User = User.find(commentTreeNode.comment.userId).get,
         root: Boolean = false,
-        anon: Boolean = false,
         anonImg: String = "https://static.cillo.co/image/anon")
 
 @import com.cillo.utils.Etc
@@ -18,23 +17,14 @@
                 [deleted]
             </strong>
         } else {
-            @if(!anon) {
-                <div class="comment-avatar">
-                    <a href="/user/@commenter.username">
-                        <img src="@(commenter.photo + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
-                    </a>
-                </div>
-                <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;" class="commenter-anchor@if(originalPoster == commentTreeNode.comment.userId){ op-post}">
-                    <strong>@commenter.name</strong>
+            <div class="comment-avatar">
+                <a href="/user/@commenter.username">
+                    <img src="@(commenter.photo + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
                 </a>
-            } else {
-                <div class="comment-avatar">
-                    <img src="@(anonImg + "_small")" class="avatar" style="height:32px;width:32px;border-radius:3px;"/>
-                </div>
-                <strong style="font-weight:500;margin-right:2px;margin-left:5px;" class="anonymous-user">
-                    Anonymous
-                </strong>
-            }
+            </div>
+            <a href="/user/@commenter.username" style="margin-right:2px;margin-left:5px;" class="commenter-anchor@if(originalPoster == commentTreeNode.comment.userId){ op-post}">
+                <strong>@commenter.name</strong>
+            </a>
         }
         ·
         <span class="comment-timestamp">
@@ -92,7 +82,7 @@
         <div class="comment-children-container">
             @if(expanded) {
                 @for(child <- commentTreeNode.children) {
-                    @components.comment(child, user, board, originalPoster)(expanded = expanded, anon = anon)
+                    @components.comment(child, user, board, originalPoster)(expanded = expanded)
                 }
             }
         </div>

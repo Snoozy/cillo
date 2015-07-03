@@ -1,5 +1,6 @@
 function collapseFirstPost() {
-    $('.post-form').css('max-height', '34px');
+    $('.post-form').css('min-height', '34px');
+    $('.post-form').css('height', '34px');
     $('.first-post-clear').addClass('displaynone');
     $('.picture_upload').addClass('displaynone');
     $('.post-title').addClass('displaynone');
@@ -789,7 +790,9 @@ $(document).ready(function() {
                             "user": user
                         },
                         success: function (response) {
-                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post').find('a.fluidbox').fluidbox({closeTrigger: [{ selector: 'window', event: 'scroll' }],immediateOpen: false});
+                            $(response.item_html).hide().fadeIn(1000).css('display', 'block').insertAfter('.first-post').find('a.fluidbox').fluidbox({immediateOpen: true})
+                                .on('openstart', function() {$('html').addClass('noscroll');})
+                                .on('closeend', function() {$('html').removeClass('noscroll');});
                             $('textarea.post-form').val('');
                             $('.post-title').val('');
                             $('.post-board').val('');
@@ -866,9 +869,9 @@ $(document).ready(function() {
     });
 
     $('.fluidbox').fluidbox({
-        closeTrigger: [{ selector: 'window', event: 'scroll' }],
-        immediateOpen: false
-    });
+        immediateOpen: true
+    }).on('openstart', function() {$('html').addClass('noscroll');})
+        .on('closeend', function() {$('html').removeClass('noscroll');});
 
     if ($('body').hasClass('context-home')) {
         $('.context-home .posts').neverending();

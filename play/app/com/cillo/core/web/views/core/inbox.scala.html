@@ -31,6 +31,10 @@
                                             @components.conversation_box(User.find(c.user2Id).get, c.preview, c.read != 0 || c.lastUser == 2, c.conversationId.get)
                                         }
                                     }
+                                } else {
+                                    <div class="no-conversations">
+                                        No conversations to show...
+                                    </div>
                                 }
                             </div>
                         </div>
@@ -44,6 +48,10 @@
                                         @components.messages(m, conversations.head.conversationId.get, User.find(conversations.head.user2Id).get, User.find(conversations.head.user1Id).get)
                                     }
                                 }
+                            } else {
+                                <div class="no-messages">
+                                    No messages...
+                                </div>
                             }
                         </div>
                     </div>

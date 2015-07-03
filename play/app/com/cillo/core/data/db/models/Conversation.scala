@@ -6,6 +6,8 @@ import play.api.Play.current
 import play.api.db._
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json
 import scala.concurrent.duration._
 
 case class Conversation (
@@ -90,6 +92,28 @@ object Conversation {
                     .on('user1_id -> sender, 'user2_id -> receiver, 'time -> time, 'preview -> parsed).executeInsert(scalar[Long].singleOpt).map(_.toInt)
             }
         }
+    }
+
+    def toJsonSeq(conversations: Seq[Conversation], self: Int): JsValue = {
+        Json.toJson(conversations.map{c => toJsonSingle(c, self)})
+    }
+
+    def toJsonSingle(c: Conversation, self: Int): JsValue = {
+        val user = {
+            if (self == c.user1Id)
+                User.find(c.user2Id)
+            else
+                User.find(c.user1Id)
+        }
+        Json.obj(
+            "conversation_id" -> c.conversationId.get,
+            "user" -> User.toJson(user.get),
+            "create_time" -> c.created,
+            "update_time" -> c.updated,
+            "read" -> (c.read != 1),
+            "last_user" -> c.lastUser,
+            "preview" -> c.preview
+        )
     }
 
 }

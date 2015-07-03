@@ -56,58 +56,6 @@
         });
     </script>
 
-    <script type="text/javascript" charset="utf-8">
-
-        var colCount = 0;
-        var colWidth = 213;
-        var margin = 30;
-        var spaceLeft = 0;
-        var windowWidth = 0;
-        var blocks = [];
-
-        $(function(){
-            $(window).resize(setupBlocks);
-            $('.block').addClass('load');
-        });
-
-        function setupBlocks() {
-            windowWidth = $(window).width();
-            blocks = [];
-
-            // Calculate the margin so the blocks are evenly spaced within the window
-            colCount = Math.floor(windowWidth/(colWidth+margin*2));
-            spaceLeft = (windowWidth - ((colWidth*colCount)+(margin*(colCount-1)))) / 2;
-
-            for(var i=0;i<colCount;i++){
-                blocks.push(margin);
-            }
-            positionBlocks();
-        }
-
-        function positionBlocks() {
-            $('.block').each(function(i){
-                var min = Array.min(blocks);
-                var index = $.inArray(min, blocks);
-                var leftPos = margin+(index*(colWidth+margin));
-                $(this).css({
-                    'left':(leftPos+spaceLeft-90)+'px',
-                    'top': 440+min+'px'
-                });
-                blocks[index] = min+$(this).outerHeight()+margin;
-            });
-        }
-
-        // Function to get the Min value in Array
-        Array.min = function(array) {
-            return Math.min.apply(Math, array);
-        };
-
-        function showBlocks() {
-            $('.block').css("opacity", "1");
-        }
-
-    </script>
-
     @components.fb_init()
 
     <script>
@@ -204,9 +152,9 @@
 
 } {
 
-    <body class="main-background logged-out" style="margin:0" onload="setupBlocks();showBlocks();">
+    <body class="main-background logged-out" style="margin:0">
         <!----Page Start---->
-        <div class="page" style="">
+        <div class="page" style="min-width: 800px;">
             @components.welcome_masthead()
             <div class="main-container-wrapper" style="padding-top:25px;">
                 <div class="container" style="border: 1px solid rgba(200,200,200,1);padding-bottom:20px;margin-top:0;">
@@ -246,6 +194,10 @@
                                         </div>
                                     </a>
                                 </div>
+                            </div>
+                            <div style="clear:both"></div>
+                            <div class="welcome-legal" style="margin-top:10px;margin-bottom:-17px;text-align:center;font-size:11px;text-shadow:0 1px rgba(0,0,0,0.18);color:#aaa;">
+                                Creating an account means you agree to Cillo's <a href="/legal/tos.html" target="_blank">Terms of Service</a> and <a href="/legal/privacy.html" target="_blank">Privacy Policy</a>.
                             </div>
                         </div>
                     </div>

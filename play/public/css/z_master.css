@@ -696,10 +696,6 @@ textarea {
     font-weight:bold;
 }
 
-.no-messages {
-    text-align:center;
-}
-
 .popup {
     padding:20px;
     width:35%;
@@ -929,7 +925,10 @@ form.form-search {
 
 .noscroll {
     overflow-y: hidden;
+    height: 100%;
     width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .masthead {
@@ -2335,11 +2334,10 @@ strong {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 20px;
     padding-bottom: 5px;
     text-align: center;
-    width: 440px;
-    margin: auto;
-    margin-bottom: 7px;
+    margin: auto auto 7px;
 }
 
 h2 {
@@ -2750,10 +2748,6 @@ a.login-link:hover {
     height: 256px;
     /*position: absolute;
     left: -30px;*/
-}
-
-.trending-topics-wrapper {
-    overflow: auto;
 }
 
 .trending-board-wrapper {
@@ -3262,6 +3256,7 @@ div.play-button {
     float: right;
     overflow-y: auto;
     overflow-x: hidden;
+    position: relative;
     display: inline-block;
     border-radius: 0 3px 3px 0;
     border-left: none;
@@ -3403,4 +3398,33 @@ div.play-button {
 
 .op-post strong {
     color: #fff;
+}
+
+.no-conversations {
+    color: #66757f;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.no-messages {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -59px;
+    text-align: center;
+    font-weight: bold;
+    color: #66757f;
+    font-size: 16px;
+}
+
+.footer, .footer a {
+    color: #9197a3;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
 }

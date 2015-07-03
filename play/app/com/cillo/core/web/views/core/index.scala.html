@@ -60,7 +60,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                @if(boards.size > 0) {
+                                @if(boards.nonEmpty) {
                                     @for(b <- boards) {
                                         @components.small_board(b)
                                     }
@@ -70,6 +70,7 @@
                                     </div>
                                 }
                             </div>
+                            @components.footer()
                         </div>
                     </div>
                 </div>

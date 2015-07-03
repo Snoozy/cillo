@@ -216,11 +216,7 @@
 
                         @if(user.isDefined) {
                             <div class="comment-form">
-                                @if(board.privacy == 0) {
-                                    <img class="comment-avatar" src="@(user.get.photo + "_small")">
-                                } else {
-                                    <img class="comment-avatar anon" src="@(anonImg + "_small")">
-                                }
+                                <img class="comment-avatar" src="@(user.get.photo + "_small")">
                                 <form class="comment-input">
                                     <textarea class="form-control comment-val input-xlarge" rows="1" placeholder="Write a comment..." style="height:34px;"></textarea>
                                     <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
@@ -241,7 +237,7 @@
 
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
-                            @components.comment(CommentTreeNode(comment, Seq()), user, board, poster.userId.get)(expanded = expanded, root = true, anon = board.privacy == 1)
+                            @components.comment(CommentTreeNode(comment, Seq()), user, board, poster.userId.get)(expanded = expanded, root = true)
                             @defining(CommentTree.getCommentNumChildren(comment.commentId.get)) { n =>
                                 @if(n > 0) {
                                     <div class="view-replies-wrapper">
@@ -267,11 +263,7 @@
                             <div class="comments-container">
                                 @if(user.isDefined) {
                                     <div class="comment-form">
-                                        @if(board.privacy == 0) {
-                                            <img class="comment-avatar" src="@(user.get.photo + "_small")">
-                                        } else {
-                                            <img class="comment-avatar anon" src="@(anonImg + "_small")">
-                                        }
+                                        <img class="comment-avatar" src="@(user.get.photo + "_small")">
                                         <form class="comment-input">
                                             <textarea class="form-control comment-val input-xlarge" rows="1" placeholder="Write a comment..." style="height:34px;"></textarea>
                                             <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
@@ -281,7 +273,7 @@
                                 }
                                 <div class="displaynone comment-start-marker"></div>
                                 @for(comment <- comments.rootComments) {
-                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true, anon = board.privacy == 1)
+                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true)
                                 }
                             </div>
                         }
@@ -293,11 +285,7 @@
                             <div class="comments-container">
                                 @if(user.isDefined) {
                                     <div class="comment-form">
-                                        @if(board.privacy == 0) {
-                                            <img class="comment-avatar" src="@(user.get.photo + "_small")">
-                                        } else {
-                                            <img class="comment-avatar anon" src="@(anonImg + "_small")">
-                                        }
+                                        <img class="comment-avatar" src="@(user.get.photo + "_small")">
                                         <form class="comment-input">
                                             <textarea class="form-control comment-val input-xlarge" rows="1" placeholder="Write a comment..." style="height:34px;"></textarea>
                                             <input type="submit" class="btn btn-primary comment-submit-btn displaynone" value="Comment">
@@ -316,7 +304,7 @@
                                 </div>
                                 <div class="displaynone comment-start-marker"></div>
                                 @for(comment <- comment.rootComments) {
-                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true, anon = board.privacy == 1)
+                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true)
                                 }
                             </div>
 

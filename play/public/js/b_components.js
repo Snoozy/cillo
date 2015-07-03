@@ -42,7 +42,9 @@ $(function() {
                             },
                             async: false,
                             success: function (response) {
-                                $this.append(response.item_html).find('a.fluidbox').fluidbox({closeTrigger: [{ selector: 'window', event: 'scroll'}],immediateOpen: false,debounceResize: true});
+                                $this.append(response.item_html).find('a.fluidbox').fluidbox({immediateOpen: false})
+                                    .on('openstart', function() {$('html').addClass('noscroll');})
+                                    .on('closeend', function() {$('html').removeClass('noscroll');});
 
                                 if (response.item_html === "") {
                                     more = false;

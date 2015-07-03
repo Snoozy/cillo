@@ -65,5 +65,6 @@ GET         /:name/settings                  com.cillo.core.web.controllers.Sett
 
 POST        /:name/settings                  com.cillo.core.web.controllers.SettingsController.boardSettingsChange(name: String)
 
+GET         /legal/*file                     controllers.Assets.at(path="/public/legal", file)
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.at(path="/public", file)

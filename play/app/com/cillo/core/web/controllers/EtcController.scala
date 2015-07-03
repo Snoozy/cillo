@@ -32,7 +32,7 @@ object EtcController extends Controller {
     }
 
     def refresh = AuthAction { implicit user => implicit request =>
-        if (user.isDefined && user.get.admin) {
+        if ((user.isDefined && user.get.admin) || Play.isDev) {
             Redis.del("gettingStarted_cache")
             Redis.del("welcome_cache")
             Ok("done.")

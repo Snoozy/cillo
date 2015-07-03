@@ -68,4 +68,4 @@ CREATE TABLE message (
 
 ALTER TABLE user_info ADD inbox_count INT DEFAULT 0 AFTER reputation;
 
-ALTER TABLE conversation ADD last_user TINYINT AFTER `read`;
+ALTER TABLE conversation ADD last_user TINYINT NOT NULL AFTER `read`;

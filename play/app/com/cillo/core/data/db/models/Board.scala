@@ -50,7 +50,7 @@ object Board {
 
     def find(id: Int):Option[Board] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM board WHERE board_id = {id}").on('id -> id).as(boardParser.singleOpt)
+            SQL("SELECT * FROM board WHERE board_id = {id} LIMIT 1").on('id -> id).as(boardParser.singleOpt)
         }
     }
 

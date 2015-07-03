@@ -13,13 +13,13 @@
             <div id="content">
                 <div class="container-fluid inner-container" style="width:870px;">
                     <div class="main-row search-row" style="margin-right: 13px;">
-                        <div class="big-container">
+                        <div class="big-container box-shadow-apply">
                             <h2 class="search-header">
                                 Board results for <span class="search-query-text">@query</span>
                             </h2>
                             <div class="search-content">
                                 <ol class="search-boards-container">
-                                    @if(boards.length > 0) {
+                                    @if(boards.nonEmpty) {
                                         @for(b <- boards) {
                                             <div class="board-wrapper">
                                                 <a href="/@b.name" class="no-dec" style="display:inline;color:#000000;">
@@ -50,13 +50,13 @@
                         </div>
                     </div>
                     <div class="main-row search-row" style="">
-                        <div class="big-container">
+                        <div class="big-container box-shadow-apply">
                             <h2 class="search-header">
                                 User results for <span class="search-query-text">@query</span>
                             </h2>
                             <div class="search-content">
                                 <ol class="search-boards-container">
-                                @if(users.length > 0) {
+                                @if(users.nonEmpty) {
                                     @for(u <- users) {
                                         <div class="board-wrapper">
                                             <a href="/user/@u.username" class="no-dec" style="display:inline;color:#000000">

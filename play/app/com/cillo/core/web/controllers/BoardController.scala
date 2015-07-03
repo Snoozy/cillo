@@ -97,13 +97,8 @@ object BoardController extends Controller {
                             val nameMatcher = whiteSpace.matcher(board_name.get)
                             if (!nameMatcher.find()) {
                                 val boardExists = Board.find(board_name.get)
-                                if (!boardExists.isDefined) {
-                                    val privacy = {
-                                        if (board_type == "anonymous")
-                                            1
-                                        else
-                                            0
-                                    }
+                                if (boardExists.isEmpty) {
+                                    val privacy = 0
                                     val boardId = Board.create(board_name.get, board_descr, user.get.userId.get, privacy = privacy)
                                     if (boardId.isDefined) {
                                         val newBoard = Board.find(boardId.get.toInt)
