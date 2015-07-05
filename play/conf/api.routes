@@ -26,12 +26,14 @@ GET         /v1/me/conversations                  com.cillo.core.api.controllers
 GET         /v1/conversations/:id/messages        com.cillo.core.api.controllers.MessageController.getMessages(id: Int)
 GET         /v1/conversations/:id/paged           com.cillo.core.api.controllers.MessageController.getPaged(id: Int)
 GET         /v1/conversations/:id/poll            com.cillo.core.api.controllers.MessageController.poll(id: Int)
+GET         /v1/user/:id/messages                 com.cillo.core.api.controllers.MessageController.getMessagesByUser(id: Int)
 
 # POST
 
 POST        /v1/users/register                    com.cillo.core.api.controllers.UserController.create
 POST        /v1/boards/create                     com.cillo.core.api.controllers.BoardController.create
 
+POST        /v1/me/inbox/read                     com.cillo.core.api.controllers.MessageController.readInbox
 POST        /v1/me/settings                       com.cillo.core.api.controllers.SettingController.updateSelf
 POST        /v1/me/settings/password              com.cillo.core.api.controllers.SettingController.updatePassword
 POST        /v1/board/:id/settings                com.cillo.core.api.controllers.SettingController.updateBoard(id: Int)

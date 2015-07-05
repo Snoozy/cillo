@@ -102,13 +102,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="board-related-boards-container box-shadow-apply">
-                            <div class="small-board-header">
-                                <b style="font-size:16px;">Related Boards</b>
+                        <div class="column2">
+                            <div class="board-related-boards-container box-shadow-apply">
+                                <div class="small-board-header">
+                                    <b style="font-size:16px;">Related Boards</b>
+                                </div>
+                                @for(b <- trending) {
+                                    @components.small_board(b)
+                                }
                             </div>
-                            @for(b <- trending) {
-                                @components.small_board(b)
-                            }
+                            @components.footer()
                         </div>
                     </div>
                 </div>

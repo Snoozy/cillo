@@ -100,19 +100,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="board-related-boards-container box-shadow-apply">
-                            <div class="small-board-header">
-                                <b style="font-size:16px;">Following</b>
-                            </div>
-                            @if(boards.size > 0) {
-                                @for(b <- boards) {
-                                    @components.small_board(b)
-                                }
-                            } else {
-                                <div class="no-boards">
-                                    No boards.
+                        <div class="column2">
+                            <div class="board-related-boards-container box-shadow-apply">
+                                <div class="small-board-header">
+                                    <b style="font-size:16px;">Following</b>
                                 </div>
-                            }
+                                @if(boards.nonEmpty) {
+                                    @for(b <- boards) {
+                                        @components.small_board(b)
+                                    }
+                                } else {
+                                    <div class="no-boards">
+                                        No boards.
+                                    </div>
+                                }
+                            </div>
+                            @components.footer()
                         </div>
                     </div>
                 </div>

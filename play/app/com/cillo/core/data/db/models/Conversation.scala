@@ -110,7 +110,7 @@ object Conversation {
             "user" -> User.toJson(user.get),
             "create_time" -> c.created,
             "update_time" -> c.updated,
-            "read" -> (c.read != 1),
+            "read" -> (c.read != 0),
             "last_user" -> c.lastUser,
             "preview" -> c.preview
         )

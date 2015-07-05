@@ -104,7 +104,7 @@ object S3 {
             val urlObj = new URL(url)
             FileUtils.copyURLToFile(urlObj, tempUrl.file)
             if (tempUrl.file.length() < 4000000) {
-                upload(tempUrl.file)
+                upload(tempUrl.file, profile = profile)
             } else {
                 None
             }

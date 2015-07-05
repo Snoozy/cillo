@@ -9,7 +9,7 @@
 
         var colCount = 0;
         var colWidth = 205;
-        var margin = 15;
+        var margin = 25;
         var spaceLeft = 0;
         var windowWidth = 0;
         var blocks = [];
@@ -83,27 +83,25 @@
                         <div class="trending-topics-centering">
                         @for(b <- boards) {
                             <div class="trending-group-wrapper block" onclick="window.location.href='/@b.name'" style="opacity:0;">
-                                <div class="trending-group-content">
-                                    <div class="trending-group-avatar-wrapper">
-                                        <a href="/@b.name">
+                                <a href="/@b.name" class="trending-anchor">
+                                    <div class="trending-group-content">
+                                        <div class="trending-group-avatar-wrapper">
                                             <img class="trending-group-avatar" src="@(b.photo + "_prof")">
-                                        </a>
-                                    </div>
-                                    <div class="trending-group-bottom">
-                                        <div class="trending-group-header">
-                                            <a href="/@b.name" class="no-dec">
+                                        </div>
+                                        <div class="trending-group-bottom">
+                                            <div class="trending-group-header">
                                                 <span class="trending-group-name">
                                                     @b.name
                                                 </span>
-                                            </a>
-                                        </div>
-                                        <div class="trending-group-descr">
-                                            <span class="trending-group-descr-content">
-                                            @Etc.ellipsize(b.description, 52)
-                                            </span>
+                                            </div>
+                                            <div class="trending-group-descr">
+                                                <span class="trending-group-descr-content">
+                                                    @Etc.ellipsize(b.description, 67)
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         }
                         </div>

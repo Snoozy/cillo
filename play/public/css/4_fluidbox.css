@@ -1,17 +1,3 @@
-@-webkit-keyframes fluidboxLoading {
-  0.00% {
-    -webkit-transform: translate(-50%, -50%) rotateX(0) rotateY(0); }
-  50% {
-    -webkit-transform: translate(-50%, -50%) rotateX(-180deg) rotateY(0); }
-  100% {
-    -webkit-transform: translate(-50%, -50%) rotateX(-180deg) rotateY(-180deg); } }
-@keyframes fluidboxLoading {
-  0.00% {
-    transform: translate(-50%, -50%) rotateX(0) rotateY(0); }
-  50% {
-    transform: translate(-50%, -50%) rotateX(-180deg) rotateY(0); }
-  100% {
-    transform: translate(-50%, -50%) rotateX(-180deg) rotateY(-180deg); } }
 .fluidbox {
   outline: none; }
 
@@ -54,6 +40,7 @@
     transition-delay: 0.00s, 0.00s; }
 
 .fluidbox-loader {
+  display: none;
   perspective: 200px;
   position: absolute;
   top: 0;
@@ -62,7 +49,6 @@
   right: 0;
 }
   .fluidbox-loader::before {
-    background: rgba(10, 10, 10, .9)  url(//static.cillo.co/fancybox_loading.gif) no-repeat center center;
     content: '';
     opacity: 0;
     position: absolute;

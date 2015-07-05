@@ -91,8 +91,13 @@ object Board {
     def getRecommended(userId: Int, limit: Int = 3): Seq[Board] = {
         DB.withConnection { implicit connection =>
             val boardIds = User.getBoardIDs(userId)
-            SQL("SELECT * FROM board WHERE board_id NOT IN ({board_ids}) ORDER BY followers DESC LIMIT {limit}")
-                .on('board_ids -> boardIds, 'limit -> limit).as(boardParser *)
+            if (boardIds.nonEmpty) {
+                SQL("SELECT * FROM board WHERE board_id NOT IN ({board_ids}) ORDER BY followers DESC LIMIT {limit}")
+                    .on('board_ids -> boardIds, 'limit -> limit).as(boardParser *)
+            } else {
+                SQL("SELECT * FROM board ORDER BY followers DESC LIMIT {limit}")
+                    .on('board_ids -> boardIds, 'limit -> limit).as(boardParser *)
+            }
         }
     }
 
@@ -179,9 +184,10 @@ object Board {
         }
     }
 
-    def getTopPosts(boardId: Int, limit: Int = 10): Seq[Post] = {
+    def getTopPosts(boardId: Int, limit: Int = 10, time: Int = 604800000): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY votes DESC LIMIT {limit}").on('board_id -> boardId, 'limit -> limit).as(postParser *)
+            val t = System.currentTimeMillis() - time
+            SQL("SELECT * FROM post WHERE board_id = {board_id} AND time > {time} ORDER BY votes DESC LIMIT {limit}").on('board_id -> boardId, 'limit -> limit, 'time -> t).as(postParser *)
         }
     }
 

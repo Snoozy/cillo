@@ -64,14 +64,16 @@
                                                     <img class="avatar search" style="margin-left:-63px;margin-right:0px;" alt="Board Picture" src="@u.photo">
                                                     <div class="board-desc-wrapper">
                                                         <span class="follower-count">
-                                                            @u.reputation Reputation
+                                                            @u.reputation <span class="stat" style="margin-right:0;font-size:11px;">rep</span>
                                                         </span>
-                                                        <span class="entity-text">
-                                                            <strong style="font-size:16px;" class="search-board-name-text">@u.name</strong>
-                                                        </span>
-                                                        <span class="username-text">
+                                                        <div class="entity-wrapper">
+                                                            <span class="entity-text">
+                                                                <strong style="font-size:16px;" class="search-board-name-text">@u.name</strong>
+                                                            </span>
+                                                            <span class="username-text">
                                                             @@@u.username
-                                                        </span>
+                                                            </span>
+                                                        </div>
                                                         <p class="description" style="word-wrap:break-word;margin-top:-4px;line-height:1.4;margin-right:7px;">
                                                             @if(u.bio.length > 0) {
                                                                 @Etc.ellipsize(u.bio, 80)

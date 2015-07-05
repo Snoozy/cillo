@@ -272,11 +272,11 @@ body {
 
 .block {
     opacity: 0;
-    -webkit-transition: opacity 1.75s ease-in;
-    -moz-transition: opacity 1.75s ease-in;
-    -o-transition: opacity 1.75s ease-in;
-    -ms-transition: opacity 1.75s ease-in;
-    transition: opacity 1.75s ease-in;
+    -webkit-transition: opacity 0.5s ease-in;
+    -moz-transition: opacity 0.5s ease-in;
+    -o-transition: opacity 0.5s ease-in;
+    -ms-transition: opacity 0.5s ease-in;
+    transition: opacity 0.5s ease-in;
 }
 
 .load {
@@ -2107,10 +2107,6 @@ body {
 }
 
 .board-related-boards-container {
-    display: inline-block;
-    margin-top: 10px;
-    vertical-align: top;
-    width: 254px;
     border-radius: 4px;
     padding-top: 5px;
     background-color: #fdfdfd;
@@ -2460,7 +2456,7 @@ a.no-dec:hover, a.no-dec:focus, a.no-dec:active, a.no-dec {
     display: inline-block;
     text-transform: uppercase;
     margin-right: 15px;
-    font-size: 13px;
+    font-size: 12px;
     color: #999;
 }
 
@@ -2825,8 +2821,8 @@ a.login-link:hover {
 .trending-group-wrapper {
     display: block;
     float: left;
-    box-shadow: 3px 3px 6px rgba(0,0,0,0.2);
     width: 213px;
+    border-radius: 4px;
     margin-left: 50px;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -2871,7 +2867,7 @@ a.login-link:hover {
 .trending-group-descr-content {
     -ms-word-wrap: break-word;
     word-wrap: break-word;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .fb-login-container {
@@ -3427,4 +3423,31 @@ div.play-button {
     text-align: center;
     margin-top: 10px;
     font-size: 12px;
+}
+
+.column2 {
+    display: inline-block;
+    width: 254px;
+    vertical-align: top;
+    margin-top: 10px;
+}
+
+.entity-wrapper {
+    width: 230px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trending-anchor:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.trending-anchor {
+    color: black;
+}
+
+.trending-group-wrapper:hover .trending-group-content {
+    opacity: 0.7;
 }

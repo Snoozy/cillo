@@ -48,7 +48,7 @@ object SocialController extends Controller {
                 val user = User.findByEmail(fbEmail.get)
                 if (user.isDefined) {
                     val social = SocialUser.findFbUserId(fbId)
-                    if (!social.isDefined) {
+                    if (social.isEmpty) {
                         SocialUser.createFBUser(fbId, user.get.userId.get)
                     }
                     val admin = User.isUserAdmin(user.get.userId.get)

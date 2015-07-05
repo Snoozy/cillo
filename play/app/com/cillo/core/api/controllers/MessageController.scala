@@ -18,9 +18,30 @@ object MessageController extends Controller {
         }
     }
 
+    def readInbox = ApiAuthAction { implicit user => implicit request =>
+        user.get.readInbox()
+        Ok(Json.obj("success" -> "success"))
+    }
+
+    def getMessagesByUser(id: Int) = ApiAuthAction { implicit user => implicit request =>
+        val other = User.find(id)
+        if (other.isDefined) {
+            val conversation = Conversation.byUsers(user.get.userId.get, other.get.userId.get)
+            if (conversation.isDefined && (conversation.get.user1Id == user.get.userId.get || conversation.get.user2Id == user.get.userId.get)) {
+                val messages = Message.byConversation(conversation.get.conversationId.get)
+                Conversation.read(conversation.get, user.get.userId.get)
+                Ok(Json.obj("messages" -> Message.toJsonSeq(messages)))
+            } else {
+                Ok(Json.obj("messages" -> "[]"))
+            }
+        } else {
+            BadRequest(Json.obj("error" -> "Entity does not exist."))
+        }
+    }
+
     def getConversations = ApiAuthAction { implicit user => implicit request =>
         val convos = Conversation.byUser(user.get.userId.get)
-        Ok(Json.obj("conversations" -> Conversation.toJsonSeq(convos, user.get.userId.get)))
+        Ok(Json.obj("conversations" -> Conversation.toJsonSeq(convos, user.get.userId.get), "inbox_count" -> user.get.inboxCount))
     }
 
     def getPaged(conversationId: Int) = ApiAuthAction { implicit user => implicit request =>
