@@ -27,6 +27,7 @@
     transition: opacity 0.00s ease-in-out 0.25s; }
 
 .fluidbox-ghost {
+  cursor: pointer;
   background-size: 100% 100%;
   background-position: center center;
   position: absolute;

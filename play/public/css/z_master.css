@@ -1275,10 +1275,6 @@ strong:hover {
     padding-top: 15px;
 }
 
-.trending-topics-container {
-    margin-top: 10px;
-}
-
 .trending-topics-text {
     font-size: 25px;
     font-weight: bold;
@@ -1443,6 +1439,15 @@ strong:hover {
             box-shadow: 0 0 2px #F0EFE7;
 }
 
+.carousel-control-prev:active,
+.carousel-control-next:active,
+.carousel-control-prev:focus,
+.carousel-control-next:focus {
+    outline: none;
+    color: #fff;
+    text-decoration: none;
+}
+
 .carousel-control-prev {
     left: 10px;
 }
@@ -1459,6 +1464,7 @@ strong:hover {
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
     color: white;
+    text-decoration: none;
     text-shadow: 0 0 10px #fff;
 }
 
@@ -1592,19 +1598,18 @@ strong:hover {
 
 .register-container {
     border-radius: 6px;
-    width: 450px;
+    width: 380px;
     border: 1px solid rgba(200,200,200,1);
     background: #fff;
     margin: 55px auto 35px;
 }
 
-.register-inner {
-    padding: 20px 30px;
+.register-header {
+    margin: 30px 40px 15px;
 }
 
-.register-header {
-    text-align: center;
-    margin-bottom: 15px;
+.welcome_signup {
+    padding: 20px 40px 30px;
 }
 
 body.modal-open {
@@ -2235,7 +2240,7 @@ strong {
     margin-bottom: 5px;
     margin-left: 0;
     margin-right: 15px;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .comment-val {
@@ -2713,32 +2718,6 @@ input.signup-input:focus, input.signup-input:active {
     padding: 0 20px 0 15px;
 }
 
-.login-link {
-
-}
-
-a.login-link:hover {
-}
-
-.trending-topics-container {
-    /*position: relative;
-    background: white;
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#ddd));
-    background:-moz-linear-gradient(top,#fff 0,#ddd 100%);
-    background: -ms-linear-gradient(top,#fff 0,#ddd 100%);
-    background: -o-linear-gradient(top,#fff 0,#ddd 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#dddddd',GradientType=0);
-    background: -webkit-linear-gradient(top,#fff 0,#ddd 100%);
-    width: 85%;
-    margin: 0 auto;
-    margin-top: 20px;
-    border-radius: 6px;
-    border-left: solid 1px #eee;
-    border-right: solid 1px #eee;
-    border-bottom: solid 1px #ccc;
-    */
-}
-
 .trending-board-avatar {
     width: 256px;
     height: 256px;
@@ -3108,6 +3087,10 @@ a.login-link:hover {
     visibility: visible;
 }
 
+.profile-pic-change:hover {
+    text-decoration: none;
+}
+
 .profile-pic-selector:hover {
     background: rgba(0, 0, 0, .9) !important;
 }
@@ -3422,6 +3405,7 @@ div.play-button {
 .footer {
     text-align: center;
     margin-top: 10px;
+    margin-bottom: 10px;
     font-size: 12px;
 }
 
@@ -3450,4 +3434,54 @@ div.play-button {
 
 .trending-group-wrapper:hover .trending-group-content {
     opacity: 0.7;
+}
+
+.welcome-ribbon {
+    width: 580px;
+    border: 1px solid;
+    background: #fdfdfd;
+    border-radius: 3px;
+    padding: 9px 17px;
+    z-index: 998;
+    position: absolute;
+    left: 50%;
+    margin: -1px auto 10px -290px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.22);
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+}
+
+.welcome-descr {
+    font-weight: bold;
+    font-size: 20px;
+    display: inline-block;
+}
+
+.welcome-descr-small {
+    font-weight: normal;
+    font-size: 16px;
+}
+
+.welcome-btns {
+    margin-top: 9px;
+    margin-left: 67px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.signup-button, .login-button {
+    padding: 8px 14px;
+    font-size: 16px;
+}
+
+.login-button {
+    margin-left: 20px;
+}
+
+.welcome-ribbon.fixed {
+    left: 50%;
+    margin-left: -290px;
+}
+
+.settings-inner {
+    padding: 0 40px 20px;
 }

@@ -78,7 +78,7 @@
                                     @if(b.isDefined) {
                                         <li>
                                             <div class="trending-group-wrapper" style="margin-left:15px;margin-right:15px;">
-                                                <div class="trending-group-content">
+                                                <div class="trending-group-content" style="opacity:1;">
                                                     <div class="trending-group-avatar">
                                                         <a href="/@b.get.name" target="_blank">
                                                             <img class="trending-group-avatar" src="@(b.get.photo + "_prof")">
@@ -100,9 +100,9 @@
                                                     </div>
                                                     <div class="follow-container">
                                                         <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.boardId.get">
-                                                            <span class="btn-text follow-text">Follow</span>
-                                                            <span class="btn-text following-text">Following</span>
-                                                            <span class="btn-text unfollow-text">Unfollow</span>
+                                                            <span class="btn-text follow-text">Join</span>
+                                                            <span class="btn-text following-text">Joined</span>
+                                                            <span class="btn-text unfollow-text">Leave</span>
                                                         </button>
                                                     </div>
                                                 </div>
@@ -132,7 +132,7 @@
                                             @if(b.isDefined) {
                                                 <li>
                                                     <div class="trending-group-wrapper" style="margin-left:15px;margin-right:15px;">
-                                                        <div class="trending-group-content">
+                                                        <div class="trending-group-content" style="opacity:1;">
                                                             <div class="trending-group-avatar">
                                                                 <a href="/@b.get.name" target="_blank">
                                                                     <img class="trending-group-avatar" src="@b.get.photo">
@@ -154,9 +154,9 @@
                                                             </div>
                                                             <div class="follow-container">
                                                                 <button class="btn btn-default follow-btn notfollowing" data-group-id="@b.get.boardId.get">
-                                                                    <span class="btn-text follow-text">Follow</span>
-                                                                    <span class="btn-text following-text">Following</span>
-                                                                    <span class="btn-text unfollow-text">Unfollow</span>
+                                                                    <span class="btn-text follow-text">Join</span>
+                                                                    <span class="btn-text following-text">Joined</span>
+                                                                    <span class="btn-text unfollow-text">Leave</span>
                                                                 </button>
                                                             </div>
                                                         </div>

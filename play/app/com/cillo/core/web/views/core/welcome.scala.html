@@ -33,17 +33,17 @@
     </script>
 
     <style>
-        .container {
-            box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
-            -moz-box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
-            -webkit-box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
-        }
-        .trending-group-descr {
-            color: black;
-        }
-        .main-welcome {
+    .container {
+    box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
+    -moz-box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
+    -webkit-box-shadow: 4px 4px 9px rgba(0,0,0,0.2);;
+    }
+    .trending-group-descr {
+    color: black;
+    }
+    .main-welcome {
 
-        }
+    }
     </style>
 
     <script type="text/javascript">
@@ -61,164 +61,56 @@
     <script>
         $(function() {
 
-            $('.welcome_signup').submit(function() {
-                var email = $('.input-email').val();
-                var submit_form = false;
-                if ($.trim(email).length) {
-                    $.ajax({
-                        url: '/a/check_email?email=' + email,
-                        dataType: 'json',
-                        async: false,
-                        success: function() {
-                            submit_form = true;
-                        },
-                        error: function() {
-                            $('.email-form').addClass('has-error');
-                            $('.email-form').tooltip({'title': 'Email already taken.', 'placement': 'right', 'trigger': 'manual'});
-                            $('.email-form').tooltip('show');
-                            submit_form = false;
-                        }
-                    });
-                }
-                if (submit_form && !$.trim($('.input-email').val()).length && !$.trim($('.input-name').val()).length && !$.trim($('.input-password').val()).length) {
-                    submit_form = true;
-                }
-                if (!submit_form) {
-                    if (!$.trim($('.input-email').val()).length) {
-                        $('.email-form').addClass('has-error');
-                        $('.email-form').tooltip({'title': 'Email required.', 'placement': 'right', 'trigger': 'manual'});
-                        $('.email-form').tooltip('show');
-                    }
-                    if (!$.trim($('.input-name').val()).length) {
-                        $('.name-form').addClass('has-error');
-                        $('.name-form').tooltip({'title': 'Name required.', 'placement': 'right', 'trigger': 'manual'});
-                        $('.name-form').tooltip('show');
-                    }
-                    if (!$.trim($('.input-password').val()).length) {
-                        $('.password-form').addClass('has-error');
-                        $('.password-form').tooltip({'title': 'Password required.', 'placement': 'right', 'trigger': 'manual'});
-                        $('.password-form').tooltip('show');
-                    }
-                }
-                return submit_form;
-            });
-
-            $('.form-control').keydown(function() {
-                $(this).parent().removeClass('has-error');
-                $(this).parent().tooltip('destroy');
-            });
-
-            var rerequest_email = false;
-            $('.fb-signup-button').click(function(e) {
-                e.preventDefault();
-                if (!rerequest_email) {
-                    FB.login(function(response) {
-                        if (response.status === 'connected') {
-                            FB.api('/me/permissions', function (r) {
-                                for (i = 0; i < r.data.length; i++) {
-                                    var p = r.data[i];
-                                    if (p.permission === "email" && p.status === "granted") {
-                                        window.location.href = '/connect/facebook?fb_token=' + response.authResponse.accessToken
-                                    } else if (p.permission === "email" && p.status === "declined") {
-                                        $('.fb-signup-button').tooltip({'title' : 'Oops! We need your email! Please try again.', 'trigger': 'manual'});
-                                        $('.fb-signup-button').tooltip('show');
-                                        rerequest_email = true;
-                                    }
-                                }
-                            });
-                        }
-                    }, {scope: 'email,public_profile,user_friends'});
+            var $ribbon = $('.welcome-ribbon');
+            $(window).scroll(function() {
+                var height = $(this).scrollTop();
+                if (height > 50) {
+                    $ribbon.addClass('fixed');
                 } else {
-                    FB.login(function(response) {
-                        if (response.status === 'connected') {
-                            FB.api('/me/permissions', function (r) {
-                                for (i = 0; i < r.data.length; i++) {
-                                    var p = r.data[i];
-                                    if (p.permission === "email" && p.status === "granted") {
-                                        window.location.href = '/connect/facebook?fb_token=' + response.authResponse.accessToken
-                                    } else if (p.permission === "email" && p.status === "declined") {
-                                        $('.fb-signup-button').tooltip({'title' : 'Oops! We need your email! Please try again.', 'trigger': 'manual'});
-                                        $('.fb-signup-button').tooltip('show');
-                                        rerequest_email = true;
-                                    }
-                                }
-                            });
-                        }
-                    }, {scope: 'email', auth_type: "rerequest"});
+                    $ribbon.removeClass('fixed');
                 }
             });
+
         });
     </script>
 
 } {
 
     <body class="main-background logged-out" style="margin:0">
-        <!----Page Start---->
+            <!----Page Start---->
         <div class="page" style="min-width: 800px;">
             @components.welcome_masthead()
-            <div class="main-container-wrapper" style="padding-top:25px;">
-                <div class="container" style="border: 1px solid rgba(200,200,200,1);padding-bottom:20px;margin-top:0;">
-                    <div class="main-wrapper">
-                        <div class="main-header" style="text-align: center">
-                            <p class="main-welcome">
-                                Welcome to Cillo
-                            </p>
-                            <p class="main-description">
-                                Find communities for the interests you love.
-                            </p>
-                        </div>
-                        <div class="signup-form-wrapper">
-                            <form role="form" method="post" action="/signup" class="welcome_signup" style="float: left;width: 255px;">
-                                <div class="form-group name-form">
-                                    <input type="text" class="form-control input-name" name="name" placeholder="Name">
-                                </div>
-                                <div class="form-group email-form">
-                                    <input type="email" class="form-control input-email" name="email" placeholder="Email">
-                                </div>
-                                <div class="form-group password-form">
-                                    <input type="password" class="form-control input-password" name="password" placeholder="Password">
-                                </div>
-                                <button type="submit" class="btn btn-primary signup-submit" name="submit" style="width:253px;margin-top:5px;">Sign Up for Cillo</button>
-                            </form>
-                            <div class="social-signup-wrapper" style="margin-bottom:60px;width:274px;border-left:solid 1px #EEE;position:relative;">
-                                <div class="or">OR</div>
-                                <div class="fb-signup">
-                                    <a href="#" class="fb-signup-button no-dec">
-                                        <div class="fb-register-fill">
-                                            <img alt="Facebook Signup" src="https://static.cillo.co/facebookLogo.png" style="margin: 10px 5px;margin-left:10px;margin-bottom:15px;">
-                                            <div class="fb-register-text">
-                                                <span class="register-bold">Continue</span>
-                                                with
-                                                <span class="register-bold">Facebook</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div style="clear:both"></div>
-                            <div class="welcome-legal" style="margin-top:10px;margin-bottom:-17px;text-align:center;font-size:11px;text-shadow:0 1px rgba(0,0,0,0.18);color:#aaa;">
-                                Creating an account means you agree to Cillo's <a href="/legal/tos.html" target="_blank">Terms of Service</a> and <a href="/legal/privacy.html" target="_blank">Privacy Policy</a>.
-                            </div>
-                        </div>
+            <div class="welcome-ribbon">
+                <div class="welcome-descr">
+                    Cillo is a community platform.
+                    <div class="welcome-descr-small">
+                        Find communities for interests you love.
                     </div>
                 </div>
+                <div class="welcome-btns">
+                    <a href="/signup" class="signup-button btn btn-primary">
+                        Sign up »
+                    </a>
+                    <a href="/login" class="login-button btn btn-default">
+                        Login
+                    </a>
+                </div>
             </div>
-            <div class="trending-topics-container">
+            <div class="trending-topics-container" style="margin-top:80px;">
                 <div class="trending-topics-wrapper">
                     <div class="trending-topics-inner">
-                        <div class="trending-topics-header">
-                            <span class="trending-topics-text">Trending Posts</span>
-                        </div>
                         <div class="trending-topics-content">
                             <div class="trending-topics-centering">
-                                @for(post <- posts) {
-                                    @components.post(post, None)()
-                                }
+                            @for(post <- posts) {
+                                @components.post(post, None)()
+                            }
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @components.footer()
+            <div style="margin-top: 10px;"></div>
         </div>
         <div class="modal hide fade displaynone" id="modal" style="top:50%;">
             <div class="modal-header" style="text-align:center;">
