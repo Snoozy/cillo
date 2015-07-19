@@ -2,7 +2,7 @@
         fixed: Boolean = true, buttons: Boolean = true, small: Boolean = false)(notifications: Option[Seq[Notification]] = user.map(u => Notification.getNotifications(u.userId.get)))
 
 @import com.cillo.utils.Etc
-@import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.views.html.desktop.components
 
 @if(fixed && !small) {
     <div style="height:44px;" class="masthead-displacement"></div>

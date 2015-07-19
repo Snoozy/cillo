@@ -8,13 +8,12 @@ import com.cillo.utils.play.Auth
 import com.cillo.utils.play.Auth.AuthAction
 import play.Play
 import play.api.mvc._
-import com.cillo.core.social.FB
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object RegisterController extends Controller {
 
     def cleanRegisterPage = AuthAction { implicit user => implicit request =>
-        Ok(com.cillo.core.web.views.html.core.register())
+        Ok(com.cillo.core.web.views.html.desktop.core.register())
     }
 
     def attemptRegister = AuthAction { implicit user => implicit request =>

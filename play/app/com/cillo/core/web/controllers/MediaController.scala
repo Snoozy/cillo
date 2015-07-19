@@ -1,7 +1,6 @@
 package com.cillo.core.web.controllers
 
 import com.cillo.core.data.aws.S3
-import com.cillo.core.data.db.models.Media
 import com.cillo.utils.play.Auth.AuthAction
 import play.api.libs.json.Json
 import com.cillo.core.data.Constants
@@ -35,7 +34,7 @@ object MediaController extends Controller {
                                 -1
                             else {
                                 val id = S3.upload(mediaFile)
-                                if (!id.isDefined)
+                                if (id.isEmpty)
                                     -1
                                 else {
                                     id.get

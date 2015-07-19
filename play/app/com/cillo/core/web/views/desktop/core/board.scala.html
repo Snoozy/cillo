@@ -1,13 +1,10 @@
-@(board: Board, user: Option[User],
-        posts: Seq[Post])(trending: Seq[Board] = Board.getTrendingBoards(limit = 7),
+@(board: Board, user: Option[User], posts: Seq[Post])(trending: Seq[Board] = Board.getTrendingBoards(limit = 7),
         postCount: Int = Board.getPostsCount(board.boardId.get),
         following: Boolean = user.exists{ u => User.userIsFollowing(u.userId.get, board.boardId.get)}
         )
 
-@import com.cillo.core.web.views.html.components
-@import com.cillo.core.web.controllers.RemoteURLController
+@import com.cillo.core.web.views.html.desktop.components
 @import com.cillo.core.data.db.models._
-@import com.cillo.utils.Etc
 
 @components.base(board.name + " | Cillo") {
 

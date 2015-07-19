@@ -1,13 +1,12 @@
 package com.cillo.core.web.controllers
 
 import com.cillo.core.data.db.models._
-import com.cillo.core.web.views.html
+import com.cillo.core.web.views.html.desktop.core
 import com.cillo.utils.play.Auth._
 import com.cillo.utils.play.EmailDoesNotExist
 import play.api.mvc._
 import play.api.libs.json.Json
 import com.cillo.utils.Etc
-import play.api.Logger
 import com.cillo.core.data.cache.Session
 
 object AuthController extends Controller {
@@ -17,7 +16,7 @@ object AuthController extends Controller {
             case Some(_) => Redirect("/")
             case None =>
                 val next = request.getQueryString("next")
-                Ok(html.core.login(next = next))
+                Ok(core.login(next = next))
         }
     }
 
@@ -86,8 +85,8 @@ object AuthController extends Controller {
             if (email.isDefined && password.isDefined && email.get.trim.length > 0 && password.get.trim.length > 0) {
                 try {
                     val token = logInSession(email.get, password.get)
-                    if (!token.isDefined) {
-                        Ok(html.core.login(error = true, errorMessage = "Hmm, wrong password. Try again!", email = email.get))
+                    if (token.isEmpty) {
+                        Ok(core.login(error = true, errorMessage = "Hmm, wrong password. Try again!", email = email.get))
                     }
                     else {
                         val admin = User.isUserAdmin(User.findByEmail(email.get).get.userId.get)
@@ -104,12 +103,12 @@ object AuthController extends Controller {
                     }
                 } catch {
                     case e: EmailDoesNotExist =>
-                        Ok(html.core.login(error = true, errorMessage = "Hmm, seems like that email does not exist.", email = email.get))
+                        Ok(core.login(error = true, errorMessage = "Hmm, seems like that email does not exist.", email = email.get))
                 }
             } else {
-                Ok(html.core.login(error = true, errorMessage = "You need to fill in your email and password."))
+                Ok(core.login(error = true, errorMessage = "You need to fill in your email and password."))
             }
-        }.getOrElse(Ok(html.core.login(error = true, errorMessage = "Something went wrong... Please try again.")))
+        }.getOrElse(Ok(core.login(error = true, errorMessage = "Something went wrong... Please try again.")))
     }
 
 }

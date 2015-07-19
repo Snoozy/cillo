@@ -9,7 +9,7 @@
         media: Seq[Option[Media]] = post.media.map(m => Media.find(m))
         )
 
-@import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.views.html.desktop.components
 @import com.cillo.utils.Etc
 
 <li class="post box-shadow-apply" data-item-id="@post.postId.get">
@@ -294,12 +294,10 @@
                                     </div>
                                 }
                                 <div class="alert alert-info single-comment-warning" style="margin-bottom: 10px;padding: 8px 15px;">
-                                        You are viewing a single comment's thread
+                                    You are viewing a single comment's thread
                                     <a href="/@board.name/posts/@post.postId.get">
                                         <div class="single-comment-link">
-                                            <i class="glyphicon glyphicon-share-alt" style="margin-right: -1px;"></i>
-                                            View the rest of the comments
-                                        </div>
+                                            <i class="glyphicon glyphicon-share-alt" style="margin-right:2px;"> </i>View the rest of the comments</div>
                                     </a>
                                 </div>
                                 <div class="displaynone comment-start-marker"></div>

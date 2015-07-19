@@ -5,7 +5,7 @@ import anorm._
 import com.cillo.core.data.db.models.Comment.commentParser
 import com.cillo.core.data.db.models.Enum.EntityType
 import com.cillo.utils.Etc.{bool2int, int2bool}
-import com.cillo.core.web.views.html.components
+import com.cillo.core.web.views.html.desktop.components
 import com.cillo.core.data.Constants
 import play.api.Play.current
 import play.api.db._

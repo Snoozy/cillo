@@ -12,7 +12,7 @@ object SettingsController extends Controller {
     def userSettingsPage = AuthAction { implicit user => implicit request =>
         user match {
             case None => Found("/login")
-            case Some(_) => Ok(com.cillo.core.web.views.html.core.settings(user.get))
+            case Some(_) => Ok(com.cillo.core.web.views.html.desktop.core.settings(user.get))
         }
     }
 
@@ -23,7 +23,7 @@ object SettingsController extends Controller {
                 val board = Board.find(name)
                 if (board.isDefined) {
                     if (board.get.creatorId == user.get.userId.get || user.get.admin) {
-                        Ok(com.cillo.core.web.views.html.core.board_settings(user.get, board.get))
+                        Ok(com.cillo.core.web.views.html.desktop.core.board_settings(user.get, board.get))
                     } else {
                         NotFound("Permission denied.")
                     }

@@ -12,7 +12,7 @@ object SearchController extends Controller {
         if (q.isDefined) {
             val boards = Search.boardSearch(q.get)
             val users = Search.userSearch(q.get)
-            Ok(com.cillo.core.web.views.html.core.search(user, boards, users, q.get))
+            Ok(com.cillo.core.web.views.html.desktop.core.search(user, boards, users, q.get))
         } else {
             Found("/")
         }

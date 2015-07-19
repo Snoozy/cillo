@@ -16,7 +16,7 @@ object IndexController extends Controller {
                 } else {
                     val boards = User.getBoards(user.get.userId.get)
                     val posts = User.getFeed(user.get.userId.get, boardIds = Some(boards.map(_.boardId.get)))
-                    Ok(com.cillo.core.web.views.html.core.index(posts, user.get, boards)())
+                    Ok(com.cillo.core.web.views.html.desktop.core.index(posts, user.get, boards)())
                 }
             case None =>
                 cachedWelcomeHtml
@@ -28,7 +28,7 @@ object IndexController extends Controller {
         if (cached.isDefined) {
             Ok(cached.get).as(HTML)
         } else {
-            val comp = com.cillo.core.web.views.html.core.getting_started(Constants.GettingStartedBoards, Constants.FeaturedBoards)
+            val comp = com.cillo.core.web.views.html.desktop.core.getting_started(Constants.GettingStartedBoards, Constants.FeaturedBoards)
             Redis.setex("gettingStarted_cache", comp.toString(), expire = 3600)
             Ok(comp)
         }
@@ -39,7 +39,7 @@ object IndexController extends Controller {
         if (cached.isDefined) {
             Ok(cached.get).as(HTML)
         } else {
-            val comp = com.cillo.core.web.views.html.core.welcome(getWelcomeBoards)
+            val comp = com.cillo.core.web.views.html.desktop.core.welcome(getWelcomeBoards)
             Redis.setex("welcome_cache", comp.toString(), expire = 3600)
             Ok(comp)
         }

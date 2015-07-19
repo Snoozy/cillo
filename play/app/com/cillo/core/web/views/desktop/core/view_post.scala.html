@@ -3,7 +3,7 @@
         repost: Option[Post] = post.repostId.flatMap(Post.find),
         media: Seq[Option[Media]] = post.media.map(m => Media.find(m)))
 
-@import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.views.html.desktop.components
 @import com.cillo.core.web.controllers.RemoteURLController
 @import com.cillo.core.data.db.models._
 @import com.cillo.utils.Etc

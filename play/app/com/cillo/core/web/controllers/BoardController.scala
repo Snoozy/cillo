@@ -1,7 +1,7 @@
 package com.cillo.core.web.controllers
 
 import com.cillo.core.data.db.models._
-import com.cillo.core.web.views.html.core
+import com.cillo.core.web.views.html.desktop.core
 import com.cillo.utils.play.Auth.AuthAction
 import java.util.regex.Pattern
 import com.cillo.core.data.Constants
@@ -17,13 +17,13 @@ object BoardController extends Controller {
                 MovedPermanently("/" + board.get.name)
             } else {
                 val posts = Board.getFeed(board.get.boardId.get)
-                val following = {
+                val followingBool = {
                     if (user.isDefined)
                         User.userIsFollowing(user.get.userId.get, board.get.boardId.get)
                     else
                         false
                 }
-                Ok(core.board(board.get, user, posts)(following = following))
+                Ok(core.board(board.get, user, posts)(following = followingBool))
             }
         } else {
             NotFound("Board not found.")

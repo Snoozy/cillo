@@ -1,8 +1,8 @@
 @(name: String = "", password : String = "", email: String = "", username: String = "")
 
-@import com.cillo.core.web.views.html.components
+@import com.cillo.core.web.views.html.desktop.components
 
-@com.cillo.core.web.views.html.components.base("Sign Up for Cillo") {
+@com.cillo.core.web.views.html.desktop.components.base("Sign Up for Cillo") {
 
     @components.fb_init()
 
@@ -107,7 +107,7 @@
     </style>
 }{
     <body class="main-background">
-        @com.cillo.core.web.views.html.components.welcome_masthead(login = false)
+        @com.cillo.core.web.views.html.desktop.components.welcome_masthead(login = false)
         <div class="page-container">
             <div class="register-container">
                 <div class="register-inner">
