@@ -165,7 +165,7 @@ object EtcController extends Controller {
     }
 
     def redirectHttp = Action { implicit request =>
-        MovedPermanently("https://" + request.host + request.uri).withHeaders(("Strict-Transport-Security", "max-age=31536000"))
+        MovedPermanently("https://" + request.host + request.uri)
     }
 
 }

@@ -21,10 +21,16 @@ if [ -e "$package_path" ]; then
     tmp=$(mktemp -dt "$0")
     cat ../play/public/desktop/js/*.js > ${tmp}/bundle-desktop.js
     cat ../play/public/desktop/css/*.css > ${tmp}/bundle-desktop.css
+    cat ../play/public/mobile/js/*.js > ${tmp}/bundle-mobile.js
+    cat ../play/public/mobile/css/*.css > ${tmp}/bundle-mobile.css
     yuicompressor ${tmp}/bundle-desktop.css > ${tmp}/bundle-desktop.min.css
     yuicompressor ${tmp}/bundle-desktop.js > ${tmp}/bundle-desktop.min.js
+    yuicompressor ${tmp}/bundle-mobile.css > ${tmp}/bundle-mobile.min.css
+    yuicompressor ${tmp}/bundle-mobile.js > ${tmp}/bundle-mobile.min.js
     ../scripts/upload_static  ${tmp}/bundle-desktop.min.js -js "bundle-desktop-${prefix}.js"
-    ../scripts/upload_static ${tmp}/bundle-desktop.min.css -css "${prefix}-bundle.css"
+    ../scripts/upload_static ${tmp}/bundle-desktop.min.css -css "bundle-desktop-${prefix}.css"
+    ../scripts/upload_static  ${tmp}/bundle-mobile.min.js -js "bundle-mobile-${prefix}.js"
+    ../scripts/upload_static ${tmp}/bundle-mobile.min.css -css "bundle-mobile-${prefix}.css"
     cp $HOME/.cillo/prod_web.conf ${tmp}
     echo "static.prefix=\"${prefix}\"" >> ${tmp}/prod_web.conf
     for server in "$server_ips"

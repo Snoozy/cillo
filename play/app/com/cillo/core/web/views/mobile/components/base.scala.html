@@ -6,9 +6,10 @@
 
 <html>
     <head>
+        <meta charset="utf-8">
         <title>@title</title>
-        <meta name="description" content="Cillo is a platform that allows you to find communities about topics you love."/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="canonical" href="https://www.cillo.co/" >
         <link rel="image_src" href="https://static.cillo.co/cillo-logo-gray.png">
         <link rel="apple-touch-icon" sizes="57x57" href="https://static.cillo.co/apple-touch-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="https://static.cillo.co/apple-touch-icon-60x60.png">
@@ -32,10 +33,11 @@
         <meta name="msapplication-TileImage" content="https://static.cillo.co/mstile-144x144.png">
         <meta name="msapplication-config" content="https://static.cillo.co/browserconfig.xml">
         <meta name="theme-color" content="#fcfcfc">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
 
-        @Html(RemoteURLController.desktopCss)
-
-        @Html(RemoteURLController.desktopJs)
+        @Html(RemoteURLController.mobileCss)
+        @Html(RemoteURLController.mobileJs)
 
         @extraHeader
 

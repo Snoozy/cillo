@@ -3,26 +3,46 @@ package com.cillo.core.web
 import com.cillo.core.data.cache.Redis
 import com.cillo.core.web.controllers.EtcController
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor
-import com.googlecode.htmlcompressor.compressor.ClosureJavaScriptCompressor
 import com.mohiva.play.htmlcompressor._
 import play.api.Play.current
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Application, GlobalSettings, Play}
 import com.cillo.core.social.FB
+import scala.concurrent.ExecutionContext.Implicits.global
 import play.filters.gzip.GzipFilter
-
+import com.cillo.utils.UAgentInfo
 import scala.concurrent.Future
 
 object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with GlobalSettings {
 
+    override def doFilter(action: EssentialAction): EssentialAction = EssentialAction { request =>
+        action.apply(request).map(_.withHeaders(
+            "Strict-Transport-Security" -> "max-age=31536000; includeSubdomains; preload"
+        ))
+    }
+
     override def onRouteRequest(request: RequestHeader): Option[Handler] = {
         val x = request.headers.get("X-Forwarded-Proto")
         val ua = request.headers.get("User-Agent")
-        if (Play.isProd && (!x.isDefined || x.size == 0 || !x.get.contains("https")) && !(ua.isDefined && ua.get.startsWith("ELB-HealthChecker"))) {
+        val host = request.host
+        if (Play.isProd && (x.isEmpty || !x.get.contains("https")) && !(ua.isDefined && ua.get.startsWith("ELB-HealthChecker"))) {
             Some(com.cillo.core.web.controllers.EtcController.redirectHttp)
+        } else if (host == "cillo.co") {
+            Some(Action{MovedPermanently("https://www.cillo.co")})
         } else if (ua.isDefined && ua.get.startsWith("ELB-HealthChecker")) {
             Some(EtcController.healthCheck)
+        } else if (ua.isDefined) {
+            val uaInfo = new UAgentInfo(ua.get, request.headers.get("Accept").getOrElse(""))
+            if (uaInfo.isMobilePhone) {
+                if (!host.startsWith("m.")) {
+                    Some(Action{MovedPermanently("https://m." + host)})
+                } else {
+                    super.onRouteRequest(request)
+                }
+            } else {
+                super.onRouteRequest(request)
+            }
         } else {
             super.onRouteRequest(request)
         }
@@ -41,7 +61,7 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         Redis.init(addr)
 
         val staticPrefix = Play.current.configuration.getString("static.prefix")
-        if (Play.isProd && !staticPrefix.isDefined) {
+        if (Play.isProd && staticPrefix.isEmpty) {
             throw new StaticPrefixMissing("Static prefix is missing.")
         }
 

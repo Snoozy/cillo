@@ -1,7 +1,6 @@
 @(posts: Seq[Post], user: User, boards: Seq[Board])(recommended: Seq[Board] = Board.getRecommended(user.userId.get))
 
 @import com.cillo.core.web.views.html.desktop.components
-@import com.cillo.utils.Etc
 
 @components.base("Cillo") {
     <script>

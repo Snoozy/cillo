@@ -17,7 +17,7 @@ object RemoteURLController extends Controller {
 
     private def js(platform: String) = {
         Play.isProd match {
-            case true => "<script type=\"text/javascript\" src=\"" + CdnUrl + "js/bundle-" + platform + "-" + staticPrefix + ".js" + "\"></script>"
+            case true => "<script type=\"text/javascript\" src=\"" + CdnUrl + "js/bundle-" + platform + "-" + staticPrefix + ".js" + "\" async defer></script>"
             case false =>
                 val files = Play.getFile("public/" + platform + "/js")
                 files.list.toList.sortWith(_ < _).map { s =>

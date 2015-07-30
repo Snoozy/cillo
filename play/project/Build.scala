@@ -33,5 +33,4 @@ object Build extends Build {
         TwirlKeys.templateImports += "com.cillo.core.data.db.models._",
         unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
     ).enablePlugins(PlayScala)
-
 }
