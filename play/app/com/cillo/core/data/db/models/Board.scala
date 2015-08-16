@@ -187,7 +187,7 @@ object Board {
     def getTopPosts(boardId: Int, limit: Int = 10, time: Int = 604800000): Seq[Post] = {
         DB.withConnection { implicit connection =>
             val t = System.currentTimeMillis() - time
-            SQL("SELECT * FROM post WHERE board_id = {board_id} AND time > {time} ORDER BY votes DESC LIMIT {limit}").on('board_id -> boardId, 'limit -> limit, 'time -> t).as(postParser *)
+            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY votes DESC LIMIT {limit}").on('board_id -> boardId, 'limit -> limit, 'time -> t).as(postParser *)
         }
     }
 

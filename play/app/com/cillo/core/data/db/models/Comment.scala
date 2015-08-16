@@ -58,6 +58,15 @@ object Comment {
         }
     }
 
+    def userHasCommented(userId: Int, commentId: Int): Boolean = {
+        DB.withConnection { implicit connection =>
+            val comment = Comment.find(commentId, status = None)
+            val path = comment + "/" + EncodeDecode.encodeNum(commentId)
+            val exists = SQL("SELECT comment_id FROM comment WHERE path = {path} AND user_id = {user_id} LIMIT 2").on('path -> (path + "%"), 'user_id -> userId).as(scalar[Int] *)
+            exists.length > 1
+        }
+    }
+
     def mostRecentVoter(commentId: Int): Option[Int] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT user_id FROM comment_vote WHERE comment_id = {comment_id} ORDER BY time DESC LIMIT 1").on('comment_id -> commentId).as(scalar[Int].singleOpt)
@@ -78,7 +87,6 @@ object Comment {
             case Some(_) =>
                 val parent = Comment.find(parentId.get, status = None).getOrElse(return None)
                 parent.path + "/" + EncodeDecode.encodeNum(parent.commentId.get)
-
         }
 
         val time = System.currentTimeMillis()

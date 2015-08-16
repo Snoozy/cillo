@@ -131,7 +131,7 @@ object UserController extends Controller {
                     User.getComments(describingUser.userId.get)
                 }
             }
-            Ok(Json.obj("comments" -> Comment.toJsonSeqWithUser(comments, user)))
+            Ok(Json.obj("comments" -> Comment.toJsonSeqWithUser(comments.reverse, user)))
         }
     }
 
@@ -155,7 +155,7 @@ object UserController extends Controller {
                     User.getPosts(describingUser.userId.get)
                 }
             }
-            Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user, following = Option(true))))
+            Ok(Json.obj("posts" -> Post.toJsonWithUser(posts.reverse, user, following = Option(true))))
         }
     }
 
@@ -167,11 +167,11 @@ object UserController extends Controller {
     def getFeed = ApiAuthAction { implicit user => implicit request =>
         val afterPost = request.getQueryString("after")
         val posts = {
-            if (afterPost.isDefined)
+            if (afterPost.isDefined && afterPost.get != "")
                 User.getFeedPaged(user.get.userId.get, afterPost.get.toInt)
             else
                 User.getFeed(user.get.userId.get)
         }
-        Ok(Json.obj("posts" -> Post.toJsonWithUser(posts, user, following = Option(true))))
+        Ok(Json.obj("posts" -> Post.toJsonWithUser(posts.reverse, user, following = Option(true))))
     }
 }

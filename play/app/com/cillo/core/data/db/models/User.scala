@@ -302,7 +302,7 @@ object User {
 
     def toJsonByUserID(userId: Int, self: Option[User] = None, email: Boolean = false): JsValue = {
         val userExists = User.find(userId)
-        if (!userExists.isDefined)
+        if (userExists.isEmpty)
             Json.obj("error" -> "User does not exist.")
         else {
             val user = userExists.get

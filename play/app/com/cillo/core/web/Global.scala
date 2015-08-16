@@ -16,11 +16,11 @@ import scala.concurrent.Future
 
 object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with GlobalSettings {
 
-    override def doFilter(action: EssentialAction): EssentialAction = EssentialAction { request =>
+    override def doFilter(action: EssentialAction): EssentialAction = super.doFilter(EssentialAction { request =>
         action.apply(request).map(_.withHeaders(
             "Strict-Transport-Security" -> "max-age=31536000; includeSubdomains; preload"
         ))
-    }
+    })
 
     override def onRouteRequest(request: RequestHeader): Option[Handler] = {
         val x = request.headers.get("X-Forwarded-Proto")

@@ -50,7 +50,15 @@ object Notification {
         }
     }
 
-    def create(entityId: Int, entityType: EntityType, actionType: ActionType, titleUser: Int): Unit = {
+    /**
+     * Creates a notification for the given parameters. Will not change anything if user has already created a notification of the same type.
+     *
+     * @param entityId Id of entity for notification
+     * @param entityType Type of entity for notification
+     * @param actionType Type of the action for notification
+     * @param userId User that may be used in the title of the notification
+     */
+    def create(entityId: Int, entityType: EntityType, actionType: ActionType, userId: Int): Unit = {
         Akka.system.scheduler.scheduleOnce(10.milliseconds) {
             DB.withConnection { implicit connection =>
                 val time = System.currentTimeMillis()
@@ -58,24 +66,39 @@ object Notification {
                 val exists = SQL("SELECT * FROM notification WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND action_type = {action_type} AND time > {oneday} LIMIT 1")
                     .on('entity_id -> entityId, 'entity_type -> entityType.id, 'action_type -> actionType.id, 'oneday -> oneday).as(notificationParser.singleOpt)
                 if (exists.isDefined) {
-                    if (exists.get.count < 101) {
-                        SQL("UPDATE notification SET count = count + 1, title_user = {user}, time = {time}, `read` = 0 WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND action_type = {action_type} AND time > {oneday} LIMIT 1")
-                            .on('entity_id -> entityId, 'entity_type -> entityType.id, 'action_type -> actionType.id, 'user -> titleUser, 'time -> time, 'oneday -> oneday).executeUpdate()
-                    } else {
-                        SQL("UPDATE notification SET title_user = {user}, time = {time}, `read` = 0 WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND action_type = {action_type} AND time > {oneday} LIMIT 1")
-                            .on('entity_id -> entityId, 'entity_type -> entityType.id, 'action_type -> actionType.id, 'user -> titleUser, 'time -> time, 'oneday -> oneday).executeUpdate()
+                    if (actionType == ActionType.Vote || userHasReplied(entityId, entityType, userId)) {
+                        if (exists.get.count < 101) {
+                            SQL("UPDATE notification SET count = count + 1, title_user = {user}, time = {time}, `read` = 0 WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND action_type = {action_type} AND time > {oneday} LIMIT 1")
+                                .on('entity_id -> entityId, 'entity_type -> entityType.id, 'action_type -> actionType.id, 'user -> userId, 'time -> time, 'oneday -> oneday).executeUpdate()
+                        } else {
+                            SQL("UPDATE notification SET title_user = {user}, time = {time}, `read` = 0 WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND action_type = {action_type} AND time > {oneday} LIMIT 1")
+                                .on('entity_id -> entityId, 'entity_type -> entityType.id, 'action_type -> actionType.id, 'user -> userId, 'time -> time, 'oneday -> oneday).executeUpdate()
+                        }
                     }
                 } else {
                     val time = System.currentTimeMillis()
                     val listeners = SQL("SELECT user_id FROM notification_listener WHERE entity_id = {entity_id} AND entity_type = {entity_type} AND user_id != {user}")
-                        .on('entity_id -> entityId, 'entity_type -> entityType.id, 'user -> titleUser).as(scalar[Int] *)
+                        .on('entity_id -> entityId, 'entity_type -> entityType.id, 'user -> userId).as(scalar[Int] *)
                     listeners.par map { l =>
                         SQL("INSERT INTO notification (entity_id, entity_type, title_user, action_type, count, user_id, time) VALUES ({entity_id}, {entity_type}, {title_user}," +
                             " {action_type}, 0, {user_id}, {time})")
-                            .on('entity_id -> entityId, 'entity_type -> entityType.id, 'title_user -> titleUser, 'action_type -> actionType.id, 'user_id -> l, 'time -> time).executeInsert()
+                            .on('entity_id -> entityId, 'entity_type -> entityType.id, 'title_user -> userId, 'action_type -> actionType.id, 'user_id -> l, 'time -> time).executeInsert()
                     }
                 }
             }
+        }
+    }
+
+    def userHasReplied(entityId: Int, entityType: EntityType, userId: Int): Boolean = {
+        entityType match {
+            case EntityType.Post =>
+                DB.withConnection { implicit connection =>
+                    val exists = SQL("SELECT comment_id FROM comment WHERE post_id = {post_id} AND user_id = {user_id} LIMIT 2")
+                        .on('post_id -> entityId, 'user_id -> userId).as(scalar[Int] *)
+                    exists.length > 1
+                }
+            case EntityType.Comment =>
+                Comment.userHasCommented(userId, entityId)
         }
     }
 
@@ -150,6 +173,12 @@ object Notification {
         }
     }
 
+    /**
+     * Marks a user's notifications as read.
+     *
+     * @param userId User id to mark notifications as read
+     * @return Boolean for operation success
+     */
     def read(userId: Int): Boolean = {
         DB.withConnection { implicit connection =>
             SQL("UPDATE notification SET `read` = 1 WHERE user_id = {user_id}").on('user_id -> userId).executeUpdate()
@@ -157,6 +186,12 @@ object Notification {
         }
     }
 
+    /**
+     * Gets the details of a notification.
+     *
+     * @param notification Notification to get the details of
+     * @return String, string tuple where first is the url redirect of the notification and second is the description of the notification
+     */
     def getDetails(notification: Notification): (String, String) = {
         notification.entityType match {
             case EntityType.Post =>
@@ -177,6 +212,12 @@ object Notification {
         }
     }
 
+    /**
+     * Gets and formats a notification's preview.
+     *
+     * @param notification Notification to get preview for
+     * @return String of preview for notification
+     */
     def getPreview(notification: Notification): String = {
         notification.entityType match {
             case EntityType.Post =>
@@ -197,6 +238,12 @@ object Notification {
         }
     }
 
+    /**
+     * Change sequence of notifications to json format
+     *
+     * @param notifications Seq of notifications to be converted
+     * @return JsValue of converted json
+     */
     def toJsonSeq(notifications: Seq[Notification]): JsValue = {
         var json = Json.arr()
         notifications.foreach { n =>

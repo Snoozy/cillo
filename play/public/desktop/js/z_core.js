@@ -70,6 +70,8 @@ $(document).ready(function() {
         return htmls.join("<br>");
     }
 
+    $('.create-board-anchor').tooltip();
+
     $(document).on('click', 'a.boomerang', function(e) {
         window.location.href = UpdateQueryString("next", encodeURIComponent(window.location.href), $(this).attr('href'));
         return false;
