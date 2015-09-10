@@ -19,6 +19,7 @@ GET         /v1/boards/autocomplete               com.cillo.core.api.controllers
 GET         /v1/me/feed                           com.cillo.core.api.controllers.UserController.getFeed
 GET         /v1/me/describe                       com.cillo.core.api.controllers.UserController.describeSelf
 GET         /v1/me/notifications                  com.cillo.core.api.controllers.NotificationController.getNotifications
+GET         /v1/me/boards/trending                com.cillo.core.api.controllers.BoardController.getTrending
 
 GET         /v1/comments/:id/describe             com.cillo.core.api.controllers.CommentController.describe(id: Int)
 

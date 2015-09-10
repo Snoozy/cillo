@@ -40,7 +40,7 @@ def upload():
         content_type = 'text/css'
         headers = {'Content-Encoding' : 'gzip'}
     conn = S3Connection(aws_key, aws_secret)
-    bucket = conn.get_bucket('cillo-static')
+    bucket = conn.get_bucket('cillo')
     key = Key(bucket)
     g = gzip.open('/tmp/' + ntpath.basename(path), 'wb', 5)
     f = open(path, 'rb')

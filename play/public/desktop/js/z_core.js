@@ -72,6 +72,8 @@ $(document).ready(function() {
 
     $('.create-board-anchor').tooltip();
 
+    $('.picture_upload').tooltip({'title':'Add a photo'});
+
     $(document).on('click', 'a.boomerang', function(e) {
         window.location.href = UpdateQueryString("next", encodeURIComponent(window.location.href), $(this).attr('href'));
         return false;
@@ -744,7 +746,9 @@ $(document).ready(function() {
 
     $(".post-submit").click(function () {
 
-        if ($('.post-form').val() == "") {
+        var post_title = $('.post-title').val();
+
+        if ($('.post-form').val() == "" && post_tile == "") {
             $('.post-submit').shake(3, 15, 250);
             $('.post-form').addClass('error-border');
             return false;
@@ -758,7 +762,6 @@ $(document).ready(function() {
         }
 
         var post_content = $('.post-form').val();
-        var post_title = $('.post-title').val();
         var post_board = $('#post-board-select option:selected').text();
         var user = $('.post-user').val();
 

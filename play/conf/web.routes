@@ -18,6 +18,7 @@ GET         /singup                          com.cillo.core.web.controllers.Regi
 GET         /search                          com.cillo.core.web.controllers.SearchController.searchPage
 GET         /:name/comments/:id              com.cillo.core.web.controllers.CommentController.viewSingleComment(name: String, id: Int)
 GET         /inbox                           com.cillo.core.web.controllers.MessageController.inbox
+GET         /support                         com.cillo.core.web.controllers.StaticController.support
 
 GET         /a/neverending                   com.cillo.core.web.controllers.PageController.neverending
 GET         /a/check_email                   com.cillo.core.web.controllers.UserController.checkEmail

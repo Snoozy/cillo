@@ -37,7 +37,7 @@ object PostVote {
     def votePost(postId: Int, userId: Int, value: Int): Boolean = {
         val post = Post.find(postId)
         val voteExists = PostVote.findByPostAndUser(postId, userId)
-        if (post.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
+        if (post.isDefined && (value == -1 || value == 1) && voteExists.isEmpty) {
             DB.withConnection { implicit connection =>
                 if (value == 1 && (userId != post.get.userId)) {
                     SQL("UPDATE user_info SET reputation = reputation + 20 WHERE user_id = {user}")

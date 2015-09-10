@@ -23,7 +23,6 @@ case class Post (
     votes: Int,
     commentCount: Int,
     time: Long,
-    postType: Int,
     media: Seq[Int]
 )
 
@@ -41,11 +40,10 @@ object Post {
             get[Int]("votes") ~
             get[Int]("comment_count") ~
             get[Long]("time") ~
-            get[Int]("post_type") ~
             get[String]("media") map {
-            case postId ~ userId ~ title ~ data ~ boardId ~ repostId ~ votes ~ commentCount ~ time ~ postType ~ media =>
+            case postId ~ userId ~ title ~ data ~ boardId ~ repostId ~ votes ~ commentCount ~ time ~ media =>
                 val media_ids = media.split("~").filter(_ != "").map(_.toInt)
-                Post(postId, userId, title, data, boardId, repostId, votes, commentCount, time, postType, media_ids)
+                Post(postId, userId, title, data, boardId, repostId, votes, commentCount, time, media_ids)
         }
     }
 
@@ -78,8 +76,8 @@ object Post {
         }
 
         DB.withConnection { implicit connection =>
-            val id: Option[Long] = SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, post_type, comment_count) VALUES ({user_id}, {title}, {data}," +
-                " {board_id}, {repost_id}, 0, {time}, 0, 0)").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
+            val id: Option[Long] = SQL("INSERT INTO post (user_id, title, data, board_id, repost_id, votes, time, comment_count) VALUES ({user_id}, {title}, {data}," +
+                " {board_id}, {repost_id}, 0, {time}, 0)").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
                     'board_id -> boardId, 'repost_id -> repostId, 'time -> time).executeInsert()
             if (id.isDefined) {
                 Notification.addListener(id.get.toInt, EntityType.Post, userId)
@@ -103,8 +101,8 @@ object Post {
         }
 
         DB.withConnection { implicit connection =>
-            val id: Option[Long] = SQL("INSERT INTO post (user_id, title, data, board_id, votes, time, post_type, comment_count, media) values ({user_id}, {title}, {data}," +
-                " {board_id}, 0, {time}, 0, 1, {media})").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
+            val id: Option[Long] = SQL("INSERT INTO post (user_id, title, data, board_id, votes, time, comment_count, media) values ({user_id}, {title}, {data}," +
+                " {board_id}, 0, {time}, 0, {media})").on('user_id -> userId, 'title -> titleParsed, 'data -> data,
                     'board_id -> boardId, 'time -> time, 'media -> mediaString).executeInsert()
             if (id.isDefined) {
                 Notification.addListener(id.get.toInt, EntityType.Post, userId)
@@ -204,7 +202,7 @@ object Post {
             val mediaArr = post.media.map { id =>
                 val media = Media.find(id)
                 if (media.isDefined) {
-                    Some(Json.toJson(Media.BaseMediaURL + media.get.mediaName + (if(media.get.mediaType != 1){"_med"})))
+                    Some(Json.toJson(Media.BaseMediaURL + media.get.mediaName + (if(media.get.mediaType != 1){"_med"}else{""})))
                 } else {
                     None
                 }

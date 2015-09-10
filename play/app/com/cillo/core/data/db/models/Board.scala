@@ -193,7 +193,7 @@ object Board {
 
     def toJsonSeq(boards: Seq[Board], following: Option[Boolean] = None, user: Option[User] = None): JsValue = {
         var json = Json.arr()
-        boards.foreach { board =>
+        boards.reverse.foreach { board =>
             json = json.+:(toJsonSingle(board, user, following = following))
         }
         json

@@ -246,7 +246,7 @@ object Notification {
      */
     def toJsonSeq(notifications: Seq[Notification]): JsValue = {
         var json = Json.arr()
-        notifications.foreach { n =>
+        notifications.reverse.foreach { n =>
             json = json.+:(toJson(n))
         }
         json

@@ -19,7 +19,7 @@ import com.sksamuel.scrimage._
 
 object S3 {
 
-    private final val bucketName = "cillo-static"
+    private final val bucketName = "cillo"
 
     def uploadImg(img: Image, profile: Boolean = false, file: Option[File] = None, original: Option[Image] = None, uuid: String = UUID.randomUUID().toString, format: String = "jpeg"): Option[Int] = {
         val aws_key = Play.current.configuration.getString("aws.key")

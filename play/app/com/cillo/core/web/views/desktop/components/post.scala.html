@@ -6,7 +6,8 @@
         full: Boolean = false,
         anonImg: String = "https://static.cillo.co/image/anon",
         expanded: Boolean = false,
-        media: Seq[Option[Media]] = post.media.map(m => Media.find(m))
+        media: Seq[Option[Media]] = post.media.map(m => Media.find(m)),
+        timestamp: Boolean = true
         )
 
 @import com.cillo.core.web.views.html.desktop.components
@@ -29,12 +30,6 @@
                             <i class="icon-drop-arrow" style="margin-right:0;width:1em;"></i>
                         </a>
                         <ul class="dropdown-menu post-dropdown pull-right">
-                            @*<li>
-                            <a class="post-edit" href="#">
-                            <i class="icon-edit"></i>
-                            Edit
-                            </a>
-                            </li>*@
                             <li>
                                 <a class="post-delete" href="#">
                                     <span class="glyphicon glyphicon-trash"></span>
@@ -56,12 +51,14 @@
                             <strong class="hover-blue board-name-text">@board.name</strong>
                         </a>
                     </label>
-                    <div class="timestamp-wrapper">
-                        ·
-                        <a class="post-timestamp" href="/@board.name/posts/@post.postId.get">
+                    @if(timestamp) {
+                        <div class="timestamp-wrapper">
+                            ·
+                            <a class="post-timestamp" href="/@board.name/posts/@post.postId.get">
                             @Etc.convertEpochToTimestamp(post.time.longValue)
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
 
@@ -237,7 +234,7 @@
 
                         <div class="displaynone comment-start-marker"></div>
                         @for(comment <- comments.take(3)) {
-                            @components.comment(CommentTreeNode(comment, Seq()), user, board, poster.userId.get)(expanded = expanded, root = true)
+                            @components.comment(CommentTreeNode(comment, Seq()), user, board, poster.userId.get)(expanded = expanded, root = true, timestamp = timestamp)
                             @defining(CommentTree.getCommentNumChildren(comment.commentId.get)) { n =>
                                 @if(n > 0) {
                                     <div class="view-replies-wrapper">
@@ -273,7 +270,7 @@
                                 }
                                 <div class="displaynone comment-start-marker"></div>
                                 @for(comment <- comments.rootComments) {
-                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true)
+                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true, timestamp = timestamp)
                                 }
                             </div>
                         }
@@ -302,7 +299,7 @@
                                 </div>
                                 <div class="displaynone comment-start-marker"></div>
                                 @for(comment <- comment.rootComments) {
-                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true)
+                                    @components.comment(comment, user, board, poster.userId.get)(expanded = expanded, root = true, timestamp = timestamp)
                                 }
                             </div>
 

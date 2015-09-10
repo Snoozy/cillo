@@ -2,7 +2,9 @@
         vote: Option[CommentVote] = user.flatMap{u => CommentVote.findByCommentAndUser(commentTreeNode.comment.commentId.get, u.userId.get)},
         commenter: User = User.find(commentTreeNode.comment.userId).get,
         root: Boolean = false,
-        anonImg: String = "https://static.cillo.co/image/anon")
+        anonImg: String = "https://static.cillo.co/image/anon",
+        timestamp: Boolean = true
+        )
 
 @import com.cillo.utils.Etc
 @import com.cillo.core.web.views.html.desktop.components
@@ -26,12 +28,14 @@
                 <strong>@commenter.name</strong>
             </a>
         }
-        ·
-        <span class="comment-timestamp">
-            <a class="post-timestamp" href="/@board.name/comments/@commentTreeNode.comment.commentId.get">
+        @if(timestamp) {
+            ·
+            <span class="comment-timestamp">
+                <a class="post-timestamp" href="/@board.name/comments/@commentTreeNode.comment.commentId.get">
                 @Etc.convertEpochToTimestamp(commentTreeNode.comment.time)
-            </a>
-        </span>
+                </a>
+            </span>
+        }
         <p class="comment-content">
             @if(commentTreeNode.comment.status != 1) {
                 @Html(Etc.parseHTML(commentTreeNode.comment.data))

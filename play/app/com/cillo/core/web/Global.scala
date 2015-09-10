@@ -29,7 +29,7 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         if (Play.isProd && (x.isEmpty || !x.get.contains("https")) && !(ua.isDefined && ua.get.startsWith("ELB-HealthChecker"))) {
             Some(com.cillo.core.web.controllers.EtcController.redirectHttp)
         } else if (host == "cillo.co") {
-            Some(Action{MovedPermanently("https://www.cillo.co")})
+            Some(Action{MovedPermanently("https://www.cillo.co" + request.uri)})
         } else if (ua.isDefined && ua.get.startsWith("ELB-HealthChecker")) {
             Some(EtcController.healthCheck)
         } else if (ua.isDefined) {

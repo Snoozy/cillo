@@ -77,7 +77,7 @@ object CommentTree {
 
     private def commentTreeJsonRecurse(nodes: Seq[CommentTreeNode], user: Option[User]): JsValue = {
         var json = Json.arr()
-        nodes.foreach { node =>
+        nodes.reverse.foreach { node =>
             val comment = node.comment
             var newComment: JsValue = Comment.toJson(comment, user = user).as[JsObject] + ("children" -> commentTreeJsonRecurse(node.children, user))
             if (user.isDefined)

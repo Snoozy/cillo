@@ -2146,8 +2146,8 @@ body {
     display: inline-block;
     height: 9px;
     width: 8px;
-    margin-left: 4px;
-    margin-right: 2px;
+    margin-left: 7px;
+    margin-right: 5px;
 }
 
 strong {
@@ -3109,7 +3109,6 @@ li [class^="icon-"] {
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 170px;
-    display: inline-block;
 }
 
 .autocomplete-avatar {
@@ -3120,6 +3119,14 @@ li [class^="icon-"] {
     border-radius: 3px;
     margin-right: 3px;
     display: inline-block;
+}
+
+.cropper-view-box {
+    outline: none !important;
+}
+
+.cropper-modal {
+    background-color: #fff;
 }
 
 .chosen-avatar {
@@ -3412,7 +3419,7 @@ div.play-button {
 .column2 {
     display: inline-block;
     width: 254px;
-    margin-left: -4px;
+    margin-left: 0px;
     vertical-align: top;
     margin-top: 10px;
 }

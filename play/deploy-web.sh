@@ -12,7 +12,7 @@ filename=${fullfile%????}
 
 echo "Package is located at ${package_path}"
 
-server_ips="54.187.215.200"
+server_ips="52.25.154.110"
 
 echo 'Starting deployment...'
 
@@ -40,13 +40,13 @@ if [ -e "$package_path" ]; then
         rsync -avz ${tmp}/prod_web.conf ubuntu@${server}:/home/ubuntu/
         ssh ubuntu@${server} bash -c "'
             unzip -o cillo-web.zip
-            sudo rm -rf cillo-backup/
-            mv cillo/ cillo-backup/
-            mv ${filename}/ cillo/
-            chmod 755 ./cillo/bin/cillo
+            sudo rm -rf cillo-web-backup/
+            mv cillo-web/ cillo-web-backup/
+            mv ${filename}/ cillo-web/
+            chmod 755 ./cillo-web/bin/cillo
             rm cillo-web.zip
-            kill \$(head -n 1 /home/ubuntu/cillo-backup/RUNNING_PID)
-            ./cillo/bin/cillo -J-Xms128M -J-Xmx750M -J-server -Dconfig.file=/home/ubuntu/prod_web.conf &
+            kill \$(head -n 1 /home/ubuntu/cillo-web-backup/RUNNING_PID)
+            ./cillo-web/bin/cillo -J-Xms128M -J-Xmx750M -J-server -Dconfig.file=/home/ubuntu/prod_web.conf &
             disown
         '"
     done

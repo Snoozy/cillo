@@ -106,4 +106,9 @@ object BoardController extends Controller {
         }
     }
 
+    def getTrending = ApiAuthAction { implicit user => implicit request =>
+        val boards = Board.getRecommended(user.get.userId.get, limit = 8)
+        Ok(Json.obj("trending" -> Board.toJsonSeq(boards, following = Some(false))))
+    }
+
 }

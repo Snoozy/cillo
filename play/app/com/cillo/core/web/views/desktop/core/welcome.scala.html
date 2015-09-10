@@ -101,7 +101,7 @@
                         <div class="trending-topics-content">
                             <div class="trending-topics-centering">
                             @for(post <- posts) {
-                                @components.post(post, None)()
+                                @components.post(post, None)(timestamp = false)
                             }
                             </div>
                         </div>
