@@ -235,8 +235,14 @@ object User {
                     User.getBoardIDs(userId)
             }
             if (boards.nonEmpty) {
-                SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
-                    .on('board_ids -> boards, 'limit -> limit).as(postParser *)
+                val blockedUsers = UserBlock.getBlockedUserIds(userId)
+                if (blockedUsers.nonEmpty) {
+                    SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) AND user_id NOT IN ({blocked_ids}) ORDER BY time DESC LIMIT {limit}")
+                        .on('board_ids -> boards, 'blocked_ids -> blockedUsers, 'limit -> limit).as(postParser *)
+                } else {
+                    SQL("SELECT * FROM post WHERE board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
+                        .on('board_ids -> boards, 'limit -> limit).as(postParser *)
+                }
             } else {
                 Seq[Post]()
             }
@@ -251,8 +257,16 @@ object User {
             else {
                 val afterPost = Post.find(after)
                 if (afterPost.isDefined) {
-                    val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
-                        .on('board_ids -> boardIds, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                    val posts = {
+                        val blockedUsers = UserBlock.getBlockedUserIds(userId)
+                        if (blockedUsers.nonEmpty) {
+                            SQL("SELECT * FROM post WHERE time < {time} AND board_id IN ({board_ids}) AND user_id NOT IN ({blocked_ids}) ORDER BY time DESC LIMIT {limit}")
+                                .on('board_ids -> boardIds, 'time -> afterPost.get.time, 'blocked_ids -> blockedUsers, 'limit -> limit).as(postParser *)
+                        } else {
+                            SQL("SELECT * FROM post WHERE time < {time} AND board_id IN ({board_ids}) ORDER BY time DESC LIMIT {limit}")
+                                .on('board_ids -> boardIds, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                        }
+                    }
                     if (posts.length < limit)
                         posts
                     else

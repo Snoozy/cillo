@@ -71,9 +71,9 @@ object BoardController extends Controller {
             val after = request.getQueryString("after")
             val posts = {
                 if (after.isDefined && after.get != "") {
-                    Board.getFeedPaged(board_id, after.get.toInt)
+                    Board.getFeedPaged(board_id, after.get.toInt, user.get.userId)
                 } else {
-                    Board.getFeed(board_id)
+                    Board.getFeed(board_id, user.get.userId)
                 }
             }
             Ok(Json.obj("posts" -> Post.toJsonWithUser(posts.reverse, user)))

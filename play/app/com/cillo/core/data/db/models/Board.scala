@@ -162,18 +162,45 @@ object Board {
         }
     }
 
-    def getFeed(boardId: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getFeed(boardId: Int, userId: Option[Int], limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY time DESC LIMIT {limit}").on('board_id -> boardId, 'limit -> limit).as(postParser *)
+            val blockedUsers = {
+                if (userId.isDefined) {
+                    UserBlock.getBlockedUserIds(userId.get)
+                } else {
+                    Seq()
+                }
+            }
+            if (blockedUsers.nonEmpty) {
+                SQL("SELECT * FROM post WHERE board_id = {board_id} AND user_id NOT IN ({blocked_users}) ORDER BY time DESC LIMIT {limit}")
+                    .on('board_id -> boardId, 'blocked_users -> blockedUsers, 'limit -> limit).as(postParser *)
+            } else {
+                SQL("SELECT * FROM post WHERE board_id = {board_id} ORDER BY time DESC LIMIT {limit}")
+                    .on('board_id -> boardId, 'limit -> limit).as(postParser *)
+            }
         }
     }
 
-    def getFeedPaged(boardId: Int, after: Int, limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getFeedPaged(boardId: Int, after: Int, userId: Option[Int], limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
             val afterPost = Post.find(after)
             if (afterPost.isDefined) {
-                val posts = SQL("SELECT * FROM post WHERE time < {time} AND board_id = {board_id} ORDER BY time DESC LIMIT {limit}")
-                    .on('board_id -> boardId, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                val blockedUsers = {
+                    if (userId.isDefined) {
+                        UserBlock.getBlockedUserIds(userId.get)
+                    } else {
+                        Seq()
+                    }
+                }
+                val posts = {
+                    if (blockedUsers.nonEmpty) {
+                        SQL("SELECT * FROM post WHERE time < {time} AND board_id = {board_id} AND user_id NOT IN ({blocked_ids}) ORDER BY time DESC LIMIT {limit}")
+                            .on('board_id -> boardId, 'time -> afterPost.get.time, 'blocked_ids -> blockedUsers, 'limit -> limit).as(postParser *)
+                    } else {
+                        SQL("SELECT * FROM post WHERE time < {time} AND board_id = {board_id} ORDER BY time DESC LIMIT {limit}")
+                            .on('board_id -> boardId, 'time -> afterPost.get.time, 'limit -> limit).as(postParser *)
+                    }
+                }
                 if (posts.length < limit)
                     posts
                 else

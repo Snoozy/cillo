@@ -43,9 +43,9 @@ object PageController extends Controller {
                 if (board.isDefined) {
                     val posts = {
                         if (afterPost.isDefined) {
-                                Board.getFeedPaged(board.get.boardId.get, afterPost.get.toInt)
+                                Board.getFeedPaged(board.get.boardId.get, afterPost.get.toInt, user.get.userId)
                         } else {
-                            Board.getFeed(board.get.boardId.get)
+                            Board.getFeed(board.get.boardId.get, user.get.userId)
                         }
                     }
                     Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))
