@@ -2,7 +2,6 @@ package com.cillo.core.api.controllers
 
 import com.cillo.core.data.db.models.{UserBlock, CommentFlag, PostFlag}
 import com.cillo.utils.play.Auth._
-import com.cillo.utils.play.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 

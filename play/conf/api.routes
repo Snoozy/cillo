@@ -56,3 +56,7 @@ POST        /v1/posts/:id/upvote                  com.cillo.core.api.controllers
 POST        /v1/posts/:id/downvote                com.cillo.core.api.controllers.VoteController.downvotePost(id: Int)
 
 POST        /v1/user/:id/message                  com.cillo.core.api.controllers.MessageController.send(id: Int)
+
+POST        /v1/report/post                       com.cillo.core.api.controllers.AbuseController.flagPost
+POST        /v1/report/comment                    com.cillo.core.api.controllers.AbuseController.flagComment
+POST        /v1/block/user                        com.cillo.core.api.controllers.AbuseController.blockUser
