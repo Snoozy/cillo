@@ -36,7 +36,7 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
             val uaInfo = new UAgentInfo(ua.get, request.headers.get("Accept").getOrElse(""))
             if (uaInfo.isMobilePhone) {
                 if (!host.startsWith("m.")) {
-                    Some(Action{MovedPermanently("https://m." + host)})
+                    Some(Action{MovedPermanently("https://m.cillo.co" + request.uri)})
                 } else {
                     super.onRouteRequest(request)
                 }

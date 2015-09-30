@@ -3,6 +3,7 @@ package com.cillo.core.api.controllers
 import com.cillo.utils.play.Auth._
 import com.cillo.utils.play.errors._
 import play.api.libs.json.{JsValue, Json}
+import com.cillo.core.data.db.models.User
 import play.api.mvc._
 
 /**
@@ -42,7 +43,7 @@ object AuthController extends Controller {
         if (token.isEmpty)
             BadRequest(PasswordInvalid.toJson)
         else {
-            Ok(Json.obj("auth_token" -> token.get))
+            Ok(Json.obj("auth_token" -> token.get, "user" -> User.toJson(User.findByEmail(email).get)))
         }
     }
 

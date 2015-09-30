@@ -5,6 +5,7 @@ import anorm._
 import play.api.Play.current
 import play.api.db._
 import com.cillo.utils.security.SecureRand
+import com.cillo.core.email
 
 case class PasswordReset (
     resetId: Option[Int],

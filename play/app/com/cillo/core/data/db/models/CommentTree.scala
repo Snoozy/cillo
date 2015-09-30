@@ -30,7 +30,8 @@ object CommentTree {
     }
 
     def commentTreeToJson(tree: CommentTree, user: Option[User] = None): JsValue = {
-        Json.obj("post_id" -> tree.postId, "comments" -> commentTreeJsonRecurse(tree.rootComments, user))
+        val blockedUserIds = if (user.isDefined) UserBlock.getBlockedUserIds(user.get.userId.get) else Seq()
+        Json.obj("post_id" -> tree.postId, "comments" -> commentTreeJsonRecurse(tree.rootComments, user, blockedUserIds))
     }
 
     def getTopRootComments(postId: Int): Seq[Comment] = {
@@ -75,15 +76,18 @@ object CommentTree {
         }.toList
     }
 
-    private def commentTreeJsonRecurse(nodes: Seq[CommentTreeNode], user: Option[User]): JsValue = {
+    private def commentTreeJsonRecurse(nodes: Seq[CommentTreeNode], user: Option[User], blockedUserIds: Seq[Int]): JsValue = {
         var json = Json.arr()
         nodes.reverse.foreach { node =>
             val comment = node.comment
-            var newComment: JsValue = Comment.toJson(comment, user = user).as[JsObject] + ("children" -> commentTreeJsonRecurse(node.children, user))
+            var newComment: JsValue = Comment.toJson(comment, user = user).as[JsObject] + ("children" -> commentTreeJsonRecurse(node.children, user, blockedUserIds))
             if (user.isDefined)
                 newComment = newComment.as[JsObject] + ("vote_value" -> Json.toJson(CommentVote.getCommentVoteValue(user.get.userId.get, comment.commentId.get)))
             else
                 newComment = newComment.as[JsObject] + ("vote_value" -> Json.toJson(0))
+            if (blockedUserIds.contains(comment.userId)) {
+                newComment = newComment.as[JsObject] + ("blocked" -> Json.toJson(1))
+            }
             json = json.+:(newComment) // Adds it to json array
         }
         json

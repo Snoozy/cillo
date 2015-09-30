@@ -19,6 +19,7 @@ GET         /search                          com.cillo.core.web.controllers.Sear
 GET         /:name/comments/:id              com.cillo.core.web.controllers.CommentController.viewSingleComment(name: String, id: Int)
 GET         /inbox                           com.cillo.core.web.controllers.MessageController.inbox
 GET         /support                         com.cillo.core.web.controllers.StaticController.support
+GET         /login/reset                     com.cillo.core.web.controllers.AuthController.resetPasswordPage
 
 GET         /a/neverending                   com.cillo.core.web.controllers.PageController.neverending
 GET         /a/check_email                   com.cillo.core.web.controllers.UserController.checkEmail
@@ -40,6 +41,7 @@ POST        /signup                          com.cillo.core.web.controllers.Regi
 POST        /login                           com.cillo.core.web.controllers.AuthController.attemptLogin
 POST        /boards/create                   com.cillo.core.web.controllers.BoardController.attemptCreateBoard
 POST        /settings                        com.cillo.core.web.controllers.SettingsController.userSettingsChange
+POST        /login/reset                     com.cillo.core.web.controllers.AuthController.resetPasswordPost
 
 #AJAX CALLS
 POST        /a/post                          com.cillo.core.web.controllers.PostController.post

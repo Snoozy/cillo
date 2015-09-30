@@ -1,8 +1,9 @@
 package com.cillo.core.api.controllers
 
 import com.cillo.core.data.db.models.{Comment, Board, Post, User}
+import com.cillo.utils.play.Auth
 import com.cillo.utils.play.Auth._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import com.cillo.core.data.Constants
 import play.api.mvc._
 import com.cillo.utils.play.errors._
@@ -80,7 +81,9 @@ object UserController extends Controller {
                         } else {
                             val newUser = User.create(username.get, name.get, password.get, email.get, bio)
                             if (newUser.isDefined) {
-                                Ok(User.toJsonByUserID(newUser.get.toInt))
+                                val auth_token = Auth.getNewUserSessionId(newUser.get.toInt)
+                                    Ok(Json.obj("user" -> User.toJsonByUserID(newUser.get.toInt),
+                                        "auth_token" -> Json.toJson(auth_token)))
                             }
                             else
                                 BadRequest(Json.obj("error" -> "User creation failed."))

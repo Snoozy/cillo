@@ -44,6 +44,7 @@
 
 .form-control {
     border-radius: 3px;
+    height: 40px;
 }
 
 body {
@@ -1543,9 +1544,13 @@ strong:hover {
     color: red;
     font-size: 18px;
     font-weight: bold;
-    text-align: center;
     margin-top: -8px;
     margin-bottom: 5px;
+}
+
+.error-message-text {
+    color: red;
+    font-weight: bold;
 }
 
 .admin-content {
@@ -3492,4 +3497,11 @@ div.play-button {
 
 .settings-inner {
     padding: 0 40px 20px;
+}
+
+.default-box-styling {
+    border:1px solid #ccc;
+    border-radius:6px;
+    background-color:#fff;
+    padding: 30px 40px;
 }

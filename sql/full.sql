@@ -180,3 +180,31 @@ CREATE TABLE message (
     CONSTRAINT `user__message_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),
     INDEX `message_time_idx` (`time`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE comment_flag (
+    comment_flag_id INT NOT NULL AUTO_INCREMENT,
+    comment_id INT NOT NULL,
+    user_id INT NOT NULL,
+    CONSTRAINT `comment_flag__user_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),
+    CONSTRAINT `comment_flag__comment_fk` FOREIGN KEY (`comment_id`) REFERENCES comment(`comment_id`),
+    PRIMARY KEY (`comment_flag_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE post_flag (
+    post_flag_id INT NOT NULL AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    CONSTRAINT `post_flag__user_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`),
+    CONSTRAINT `post_flag__comment_fk` FOREIGN KEY (`post_id`) REFERENCES post(`post_id`),
+    PRIMARY KEY (`post_flag_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE user_block (
+    block_id INT NOT NULL AUTO_INCREMENT,
+    blocker_id INT NOT NULL,
+    blockee_id INT NOT NULL,
+    CONSTRAINT `user_blocker__user_fk` FOREIGN KEY (`blocker_id`) REFERENCES user(`user_id`),
+    CONSTRAINT `user_blockee__user_fk` FOREIGN KEY (`blockee_id`) REFERENCES user(`user_id`),
+    PRIMARY KEY (`block_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+

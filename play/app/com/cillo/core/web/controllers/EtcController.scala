@@ -3,10 +3,12 @@ package com.cillo.core.web.controllers
 import java.util.regex.Pattern
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.s3.AmazonS3Client
+import scala.concurrent.ExecutionContext.Implicits.global
+import com.cillo.core.email.{AsyncMailer, EmailAddress, Email}
 import play.api.Play.current
 import com.amazonaws.services.s3.model.{DeleteObjectRequest, S3ObjectSummary}
 import com.cillo.core.data.cache.Redis
-import play.api.Play
+import play.api.{Logger, Play}
 import play.api.mvc._
 import com.cillo.utils.play.Auth._
 import com.cillo.utils.reddit.Reddit
@@ -28,7 +30,8 @@ object EtcController extends Controller {
     }
 
     def debug = Action { implicit request =>
-        Ok(request.getQueryString("next").get)
+        testResetEmail
+        Ok("asdf")
     }
 
     def refresh = AuthAction { implicit user => implicit request =>
@@ -40,6 +43,18 @@ object EtcController extends Controller {
             Found("/")
         }
     }
+
+    def testResetEmail = {
+        val sendEmail = Email(
+            subject = "Welcome to Cillo!",
+            from = EmailAddress("Cillo", "info@cillo.co"),
+            text = "adsf",
+            htmlText = com.cillo.core.web.views.html.email.password_reset("asdf").toString
+        ).to("Bob", "danielli803@gmail.com")
+        AsyncMailer.sendEmail(sendEmail)
+        Logger.debug("email sent.")
+    }
+
 
     def reddit = AuthAction { implicit user => implicit request =>
         subreddits.foreach {

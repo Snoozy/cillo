@@ -29,7 +29,7 @@ object PostVote {
 
     def findByPostAndUser(postId: Int, userId: Int): Option[PostVote] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post_vote WHERE user_id = {user} AND post_id = {post}").on('user -> userId, 'post -> postId)
+            SQL("SELECT * FROM post_vote WHERE user_id = {user} AND post_id = {post} LIMIT 1").on('user -> userId, 'post -> postId)
                 .as(postVoteParser.singleOpt)
         }
     }

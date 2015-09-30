@@ -154,7 +154,7 @@ object Board {
         DB.withConnection { implicit connection =>
             val res = SQL("SELECT * FROM board WHERE privacy = 0 ORDER BY followers DESC LIMIT {limit}").on('limit -> limit).as(boardParser *)
             if (artificialTrending.nonEmpty) {
-                val art: Seq[Board] = artificialTrending.map(b => Board.find(b).get)
+                val art: Seq[Board] = artificialTrending.flatMap(b => Board.find(b))
                 (art ++ res.take(limit)).distinct
             } else {
                 res.take(limit)

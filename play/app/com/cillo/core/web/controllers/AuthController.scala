@@ -4,6 +4,7 @@ import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html.desktop.core
 import com.cillo.utils.play.Auth._
 import com.cillo.utils.play.EmailDoesNotExist
+import play.api.Logger
 import play.api.mvc._
 import play.api.libs.json.Json
 import com.cillo.utils.Etc
@@ -53,6 +54,36 @@ object AuthController extends Controller {
                         BadRequest(Json.obj("error" -> "Request needs to contain current and new password."))
                     }
                 }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
+        }
+    }
+
+    def resetPasswordPage = AuthAction { implicit user => implicit request =>
+        user match {
+            case Some(_) => Redirect("/")
+            case None =>
+                Ok(core.password_reset(None))
+        }
+    }
+
+    def resetPasswordPost = AuthAction { implicit user => implicit request =>
+        user match {
+            case Some(_) => Redirect("/")
+            case None =>
+                val body = request.body
+                body.asFormUrlEncoded.map { form =>
+                    val email = form.get("email").map(_.head)
+                    if (email.isDefined && email.get != "") {
+                        val user = User.findByEmail(email.get)
+                        if (user.isDefined) {
+                            PasswordReset.newReset(user.get.userId.get)
+                            Ok(core.password_reset(None, success = true))
+                        } else {
+                            Ok(core.password_reset(Some("Email does not exist")))
+                        }
+                    } else {
+                        Ok(core.password_reset(Some("Email required.")))
+                    }
+                }.getOrElse(BadRequest("Request format incorrect."))
         }
     }
 
