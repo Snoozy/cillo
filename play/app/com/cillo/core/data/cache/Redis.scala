@@ -21,7 +21,7 @@ object Redis {
     }
 
     def get[A](key: String)(implicit format: Format, parse: Parse[A]): Option[A] = {
-        if (!addr.isDefined)
+        if (addr.isEmpty)
             throw new RedisAddressUndefined("Redis client not initialized.")
         clients.withClient {
             client => {
@@ -31,7 +31,7 @@ object Redis {
     }
 
     def lrange[A](key: String, start: Int, end: Int)(implicit format: Format, parse: Parse[A]): Option[List[Option[A]]] = {
-        if (!addr.isDefined)
+        if (addr.isEmpty)
             throw new RedisAddressUndefined("Redis client not initialized.")
         clients.withClient {
             client => {
@@ -41,7 +41,7 @@ object Redis {
     }
 
     def set[A](key: String, value: Any) = {
-        if (!addr.isDefined)
+        if (addr.isEmpty)
             throw new RedisAddressUndefined("Redis client not initialized.")
         clients.withClient {
             client => {
@@ -51,7 +51,7 @@ object Redis {
     }
 
     def setex[A](key: String, value: Any, expire: Int = 86400) = {
-        if (!addr.isDefined)
+        if (addr.isEmpty)
             throw new RedisAddressUndefined("Redis client not initialized.")
         clients.withClient {
             client => {
@@ -61,7 +61,7 @@ object Redis {
     }
 
     def lpush[A](key: String, values: List[A]) = {
-        if (!addr.isDefined)
+        if (addr.isEmpty)
             throw new RedisAddressUndefined("Redis client not initialized.")
         clients.withClient {
             client => {
@@ -71,7 +71,7 @@ object Redis {
     }
 
     def llen(key: String): Option[Int] = {
-        if (!addr.isDefined)
+        if (addr.isEmpty)
             throw new RedisAddressUndefined("Redis client not initialized.")
         clients.withClient {
             client => {
@@ -81,7 +81,7 @@ object Redis {
     }
 
     def del(key: String) = {
-        if (!addr.isDefined)
+        if (addr.isEmpty)
             throw new RedisAddressUndefined("Redis client is not initialized.")
         clients.withClient {
             client => {

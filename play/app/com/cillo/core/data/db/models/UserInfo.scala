@@ -61,7 +61,8 @@ object UserInfo {
             val id = SQL("SELECT photo FROM user WHERE user_id = {user}").on('user -> userId).as(scalar[Int].singleOpt)
             if (id.isDefined && id.get != 0) {
                 val media = Media.find(id.get)
-                SQL("UPDATE user SET photo_name = {photoName} WHERE user_id = {user}").on('photoName -> media.get.mediaName, 'user -> userId).executeUpdate()
+                SQL("UPDATE user SET photo_name = {photoName} WHERE user_id = {user}")
+                    .on('photoName -> media.get.mediaName, 'user -> userId).executeUpdate()
             }
         }
     }

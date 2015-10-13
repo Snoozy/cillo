@@ -20,6 +20,7 @@ GET         /:name/comments/:id              com.cillo.core.web.controllers.Comm
 GET         /inbox                           com.cillo.core.web.controllers.MessageController.inbox
 GET         /support                         com.cillo.core.web.controllers.StaticController.support
 GET         /login/reset                     com.cillo.core.web.controllers.AuthController.resetPasswordPage
+GET         /password/reset                  com.cillo.core.web.controllers.AuthController.resetPasswordAuth
 
 GET         /a/neverending                   com.cillo.core.web.controllers.PageController.neverending
 GET         /a/check_email                   com.cillo.core.web.controllers.UserController.checkEmail
@@ -36,12 +37,14 @@ GET         /a/debug                         com.cillo.core.web.controllers.EtcC
 GET         /a/clean                         com.cillo.core.web.controllers.EtcController.cleanS3
 GET         /a/thedayisnow                   com.cillo.core.web.controllers.EtcController.reddit
 
+
 #POST
 POST        /signup                          com.cillo.core.web.controllers.RegisterController.attemptRegister
 POST        /login                           com.cillo.core.web.controllers.AuthController.attemptLogin
 POST        /boards/create                   com.cillo.core.web.controllers.BoardController.attemptCreateBoard
 POST        /settings                        com.cillo.core.web.controllers.SettingsController.userSettingsChange
 POST        /login/reset                     com.cillo.core.web.controllers.AuthController.resetPasswordPost
+POST        /password/reset                  com.cillo.core.web.controllers.AuthController.resetPasswordAttempt
 
 #AJAX CALLS
 POST        /a/post                          com.cillo.core.web.controllers.PostController.post

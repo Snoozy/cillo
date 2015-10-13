@@ -3,10 +3,11 @@ package com.cillo.core.web.controllers
 import com.cillo.core.data.db.models._
 import com.cillo.core.web.views.html.desktop.core
 import com.cillo.utils.play.Auth._
-import com.cillo.utils.play.EmailDoesNotExist
-import play.api.Logger
+import com.cillo.utils.play.{Auth, EmailDoesNotExist}
 import play.api.mvc._
+import com.cillo.core.email._
 import play.api.libs.json.Json
+import scala.concurrent.ExecutionContext.Implicits.global
 import com.cillo.utils.Etc
 import com.cillo.core.data.cache.Session
 
@@ -75,7 +76,8 @@ object AuthController extends Controller {
                     if (email.isDefined && email.get != "") {
                         val user = User.findByEmail(email.get)
                         if (user.isDefined) {
-                            PasswordReset.newReset(user.get.userId.get)
+                            val token = PasswordReset.newReset(user.get.userId.get)
+                            sendPasswordResetEmail(user.get.email, Etc.parseFirstName(user.get.name), token)
                             Ok(core.password_reset(None, success = true))
                         } else {
                             Ok(core.password_reset(Some("Email does not exist")))
@@ -84,6 +86,56 @@ object AuthController extends Controller {
                         Ok(core.password_reset(Some("Email required.")))
                     }
                 }.getOrElse(BadRequest("Request format incorrect."))
+        }
+    }
+
+    def sendPasswordResetEmail(email: String, firstName: String, token: String) = {
+        val sendEmail = Email(
+            subject = "Cillo Password Reset",
+            from = EmailAddress("Cillo", "reset@cillo.co"),
+            text = "asdf",
+            htmlText = com.cillo.core.web.views.html.email.password_reset("https://www.cillo.co/password/reset?token=" + token, firstName).toString()
+        ).to(firstName, email)
+        AsyncMailer.sendEmail(sendEmail)
+    }
+
+    def resetPasswordAuth = AuthAction { implicit user => implicit request =>
+        user match {
+            case Some(_) => Redirect("/")
+            case None =>
+                val token = request.getQueryString("token")
+                if (token.isDefined) {
+                    val reset = PasswordReset.byToken(token.get)
+                    if (reset.isDefined) {
+                        Ok(core.password_reset(None, token = Some(token.get)))
+                    } else {
+                        Redirect("/")
+                    }
+                } else {
+                    Redirect("/")
+                }
+        }
+    }
+
+    def resetPasswordAttempt = AuthAction { implicit user => implicit request =>
+        user match {
+            case Some(_) => Redirect("/")
+            case None =>
+                request.body.asFormUrlEncoded.map { form =>
+                    val token = form.get("token").map(_.head)
+                    if (token.isDefined) {
+                        val reset = PasswordReset.byToken(token.get)
+                        val password = form.get("password").map(_.head)
+                        if (reset.isDefined && password.isDefined) {
+                            User.updatePassword(reset.get.userId, password.get)
+                            Redirect("/").withCookies(Cookie("auth_token", Auth.getNewUserSessionId(reset.get.userId)))
+                        } else {
+                            Redirect("/")
+                        }
+                    } else {
+                        Redirect("/")
+                    }
+                }.getOrElse(Redirect("/"))
         }
     }
 

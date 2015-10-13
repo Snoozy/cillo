@@ -60,7 +60,6 @@ object Auth {
 
     def getNewUserSessionId(id: Int): String = {
         val newSeshId = SecureRand.newSessionId()
-        val currTime = System.currentTimeMillis().toString
         new Session(newSeshId).newSession(id.toString)
         newSeshId
     }

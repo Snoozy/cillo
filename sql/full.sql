@@ -208,3 +208,19 @@ CREATE TABLE user_block (
     PRIMARY KEY (`block_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+CREATE TABLE password_reset (
+    reset_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    token VARCHAR(30) NOT NULL,
+    time BIGINT NOT NULL,
+    PRIMARY KEY (`reset_id`),
+    CONSTRAINT `password_reset_user__user_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE apple_device_token (
+    device_token_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    token VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`device_token_id`),
+    CONSTRAINT `apple_device_token__user_fk` FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;

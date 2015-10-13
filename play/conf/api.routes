@@ -43,6 +43,8 @@ POST        /v1/me/notifications/read             com.cillo.core.api.controllers
 POST        /v1/auth/login                        com.cillo.core.api.controllers.AuthController.login
 POST        /v1/auth/logout                       com.cillo.core.api.controllers.AuthController.logout
 
+POST        /v1/me/ping                           com.cillo.core.api.controllers.AuthController.ping
+
 POST        /v1/posts/create                      com.cillo.core.api.controllers.PostController.create
 POST        /v1/comments/create                   com.cillo.core.api.controllers.CommentController.create
 POST        /v1/media/upload                      com.cillo.core.api.controllers.MediaController.upload

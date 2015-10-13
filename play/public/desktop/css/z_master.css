@@ -925,7 +925,7 @@ form.form-search {
 }
 
 .noscroll {
-    overflow-y: hidden;
+    overflow: hidden;
     height: 100%;
     width: 100%;
     margin: 0;
@@ -942,7 +942,7 @@ form.form-search {
     z-index: 999;
     -webkit-font-smoothing: antialiased;
     margin-top:-1px;
-    background: rgba(75,75,75,0.95);
+    background: rgba(75,75,75,0.98);
 }
 
 .main-nav {

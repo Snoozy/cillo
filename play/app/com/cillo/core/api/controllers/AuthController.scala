@@ -3,7 +3,7 @@ package com.cillo.core.api.controllers
 import com.cillo.utils.play.Auth._
 import com.cillo.utils.play.errors._
 import play.api.libs.json.{JsValue, Json}
-import com.cillo.core.data.db.models.User
+import com.cillo.core.data.db.models.{UserInfo, User, AppleDeviceToken}
 import play.api.mvc._
 
 /**
@@ -21,8 +21,10 @@ object AuthController extends Controller {
                 body.asFormUrlEncoded.map { form =>
                     val email = form.get("email").map(_.head)
                     val password = form.get("password").map(_.head)
-                    if (email.isDefined && password.isDefined)
+                    if (email.isDefined && password.isDefined) {
+                        val iosId = form.get("ios_id").map(_.head)
                         attemptLogin(email.get, password.get)
+                    }
                     else
                         BadRequest(Json.obj("error" -> "Request format invalid."))
                 }.getOrElse(BadRequest(Json.obj("error" -> "Request format invalid.")))
@@ -38,12 +40,28 @@ object AuthController extends Controller {
         }
     }
 
+    def ping = AuthAction { implicit user => implicit request =>
+        user match {
+            case None =>
+                Ok(Json.obj("error" -> "User not logged in."))
+            case Some(_) =>
+                request.body.asFormUrlEncoded.map { form =>
+                    val deviceToken = form.get("device_token").map(_.head)
+                    if (deviceToken.isDefined && AppleDeviceToken.getDeviceTokens(user.get.userId.get).contains(deviceToken.get)) {
+                        AppleDeviceToken.createToken(user.get.userId.get, deviceToken.get)
+                    }
+                    Ok(Json.obj("success" -> "Ping acknowledged"))
+                }.getOrElse(BadRequest(Json.obj("error" -> "Ping format incorrect.")))
+        }
+    }
+
     private def attemptLogin(email: String, password: String): Result = {
         val token = logInSession(email, password)
         if (token.isEmpty)
             BadRequest(PasswordInvalid.toJson)
         else {
-            Ok(Json.obj("auth_token" -> token.get, "user" -> User.toJson(User.findByEmail(email).get)))
+            val user = User.findByEmail(email).get
+            Ok(Json.obj("auth_token" -> token.get, "user" -> User.toJson(user)))
         }
     }
 

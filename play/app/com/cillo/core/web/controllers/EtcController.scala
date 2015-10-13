@@ -30,7 +30,6 @@ object EtcController extends Controller {
     }
 
     def debug = Action { implicit request =>
-        testResetEmail
         Ok("asdf")
     }
 
@@ -43,18 +42,6 @@ object EtcController extends Controller {
             Found("/")
         }
     }
-
-    def testResetEmail = {
-        val sendEmail = Email(
-            subject = "Welcome to Cillo!",
-            from = EmailAddress("Cillo", "info@cillo.co"),
-            text = "adsf",
-            htmlText = com.cillo.core.web.views.html.email.password_reset("asdf").toString
-        ).to("Bob", "danielli803@gmail.com")
-        AsyncMailer.sendEmail(sendEmail)
-        Logger.debug("email sent.")
-    }
-
 
     def reddit = AuthAction { implicit user => implicit request =>
         subreddits.foreach {

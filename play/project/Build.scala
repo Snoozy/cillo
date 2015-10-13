@@ -27,6 +27,7 @@ object Build extends Build {
             "com.mohiva" %% "play-html-compressor" % "0.3.1" exclude("rhino", "js"),
             "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" exclude("rhino", "js"),
             "com.github.jreddit" % "jreddit" % "1.0.2",
+            "com.notnoop.apns" % "apns" % "1.0.0.Beta6",
             "com.sksamuel.scrimage" %% "scrimage-canvas" % "1.4.2"
         ),
         doc in Compile <<= target.map(_ / "none"),
