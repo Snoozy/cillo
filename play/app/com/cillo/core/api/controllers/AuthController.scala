@@ -47,10 +47,12 @@ object AuthController extends Controller {
             case Some(_) =>
                 request.body.asFormUrlEncoded.map { form =>
                     val deviceToken = form.get("device_token").map(_.head)
-                    if (deviceToken.isDefined && AppleDeviceToken.getDeviceTokens(user.get.userId.get).contains(deviceToken.get)) {
+                    if (deviceToken.isDefined && !AppleDeviceToken.getDeviceTokens(user.get.userId.get).contains(deviceToken.get)) {
                         AppleDeviceToken.createToken(user.get.userId.get, deviceToken.get)
+                        Ok(Json.obj("success" -> "Device token acknowledged"))
+                    } else {
+                        Ok(Json.obj("success" -> "Ping acknowledged"))
                     }
-                    Ok(Json.obj("success" -> "Ping acknowledged"))
                 }.getOrElse(BadRequest(Json.obj("error" -> "Ping format incorrect.")))
         }
     }

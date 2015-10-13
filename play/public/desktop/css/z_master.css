@@ -2864,7 +2864,7 @@ input.signup-input:focus, input.signup-input:active {
     border:1px solid #ccc;
     border-radius:6px;
     background-color:#fff;
-    margin: 100px auto 0;
+    margin: 50px auto 0;
 }
 
 .login-logo-wrapper {
@@ -2888,8 +2888,8 @@ input.signup-input:focus, input.signup-input:active {
 }
 
 .user-login-form {
-    padding: 20px 40px 30px;
     border-top:1px solid #dfdfdf;
+    padding: 20px 40px 15px;
 }
 
 .signup-modal-logo {
@@ -3504,4 +3504,18 @@ div.play-button {
     border-radius:6px;
     background-color:#fff;
     padding: 30px 40px;
+}
+
+.forgot-password {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.forgot-password-anchor {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.forgot-password-anchor:hover {
+    color: #aaa;
 }

@@ -29,6 +29,8 @@ GET         /v1/conversations/:id/paged           com.cillo.core.api.controllers
 GET         /v1/conversations/:id/poll            com.cillo.core.api.controllers.MessageController.poll(id: Int)
 GET         /v1/user/:id/messages                 com.cillo.core.api.controllers.MessageController.getMessagesByUser(id: Int)
 
+GET         /v1/asdf/qwer                         com.cillo.core.api.controllers.EtcController.etc
+
 # POST
 
 POST        /v1/users/register                    com.cillo.core.api.controllers.UserController.create
