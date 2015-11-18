@@ -45,7 +45,7 @@ object PageController extends Controller {
                         if (afterPost.isDefined) {
                                 Board.getFeedPaged(board.get.boardId.get, afterPost.get.toInt, user.get.userId)
                         } else {
-                            Board.getFeed(board.get.boardId.get, user.get.userId)
+                            Board.getFeed(board.get.boardId.get, user)
                         }
                     }
                     Ok(Json.obj("item_html" -> compressHtml(Post.toHTMLWIthUser(posts, user))))

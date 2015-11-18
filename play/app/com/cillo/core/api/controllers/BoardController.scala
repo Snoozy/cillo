@@ -73,7 +73,7 @@ object BoardController extends Controller {
                 if (after.isDefined && after.get != "") {
                     Board.getFeedPaged(board_id, after.get.toInt, user.get.userId)
                 } else {
-                    Board.getFeed(board_id, user.get.userId)
+                    Board.getFeed(board_id, user)
                 }
             }
             Ok(Json.obj("posts" -> Post.toJsonWithUser(posts.reverse, user)))

@@ -77,6 +77,16 @@ object PostVote {
         } else false
     }
 
+    def unVotePost(postId: Int, userId: Int): Unit = {
+        val post = Post.find(postId)
+        val vote = PostVote.findByPostAndUser(postId, userId)
+        if (post.isDefined && vote.isDefined) {
+            DB.withConnection { implicit connection =>
+                SQL("DELETE FROM post_vote WHERE post_id = {post} AND user_id = {user}").on('post -> postId, 'user -> userId).executeUpdate()
+            }
+        }
+    }
+
     def getPostVotesByUserAndPost(userId: Int, postIds: Seq[Int]): Seq[PostVote] = {
         DB.withConnection { implicit connection =>
             if (postIds.isEmpty)

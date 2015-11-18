@@ -36,4 +36,10 @@ object AppleDeviceToken {
         }
     }
 
+    def deleteToken(token: String): Unit = {
+        DB.withConnection { implicit connection =>
+            SQL("DELETE FROM apple_device_token WHERE token = {token}").on('token -> token).executeUpdate()
+        }
+    }
+
 }

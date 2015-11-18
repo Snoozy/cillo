@@ -16,7 +16,7 @@ object BoardController extends Controller {
             if (name != board.get.name) {
                 MovedPermanently("/" + board.get.name)
             } else {
-                val posts = Board.getFeed(board.get.boardId.get, user.get.userId)
+                val posts = Board.getFeed(board.get.boardId.get, user)
                 val followingBool = {
                     if (user.isDefined)
                         User.userIsFollowing(user.get.userId.get, board.get.boardId.get)

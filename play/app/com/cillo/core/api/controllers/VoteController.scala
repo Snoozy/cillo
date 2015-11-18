@@ -43,6 +43,16 @@ object VoteController extends Controller {
      */
     def downvotePost(postId: Int) = votePost(postId, -1)
 
+    def unVotePost(postId: Int) = ApiAuthAction { implicit user => implicit request =>
+        PostVote.unVotePost(postId, user.get.userId.get)
+        Ok(Json.obj("success" -> "Post unvote successful."))
+    }
+
+    def unVoteComment(commentId: Int) = ApiAuthAction { implicit user => implicit request =>
+        CommentVote.unVoteComment(commentId, user.get.userId.get)
+        Ok(Json.obj("success" -> "Comment unvote successful."))
+    }
+
     /**
      * Votes on a comment.
      *

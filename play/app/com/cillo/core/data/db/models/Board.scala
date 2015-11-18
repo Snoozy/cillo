@@ -162,11 +162,11 @@ object Board {
         }
     }
 
-    def getFeed(boardId: Int, userId: Option[Int], limit: Int = Post.DefaultPageSize): Seq[Post] = {
+    def getFeed(boardId: Int, user: Option[User], limit: Int = Post.DefaultPageSize): Seq[Post] = {
         DB.withConnection { implicit connection =>
             val blockedUsers = {
-                if (userId.isDefined) {
-                    UserBlock.getBlockedUserIds(userId.get)
+                if (user.isDefined) {
+                    UserBlock.getBlockedUserIds(user.get.userId.get)
                 } else {
                     Seq()
                 }

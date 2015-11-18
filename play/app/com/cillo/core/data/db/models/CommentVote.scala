@@ -37,7 +37,7 @@ object CommentVote {
     def voteComment(commentId: Int, userId: Int, value: Int): Boolean = {
         val comment = Comment.find(commentId)
         val voteExists = CommentVote.findByCommentAndUser(commentId, userId)
-        if (comment.isDefined && (value == -1 || value == 1) && !voteExists.isDefined) {
+        if (comment.isDefined && (value == -1 || value == 1) && voteExists.isEmpty) {
             DB.withConnection { implicit connection =>
                 if (value == 1 && (userId != comment.get.userId)) {
                     SQL("UPDATE user_info SET reputation = reputation + 10 WHERE user_id = {user}")
@@ -75,6 +75,16 @@ object CommentVote {
                 true
             } else false
         } else false
+    }
+
+    def unVoteComment(commentId: Int, userId: Int): Unit = {
+        val comment = Comment.find(commentId)
+        val vote = CommentVote.findByCommentAndUser(commentId, userId)
+        if (comment.isDefined && vote.isDefined) {
+            DB.withConnection { implicit connection =>
+                SQL("DELETE FROM comment_vote WHERE user_id = {user} AND comment_id = {comment}").on('user -> userId, 'comment -> commentId).executeUpdate()
+            }
+        }
     }
 
     def getCommentVotesByUserAndPost(userId: Int, commentIds: Seq[Int]): Seq[CommentVote] = {
