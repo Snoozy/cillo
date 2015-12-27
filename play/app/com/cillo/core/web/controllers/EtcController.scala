@@ -170,4 +170,5 @@ object EtcController extends Controller {
         MovedPermanently("https://" + request.host + request.uri)
     }
 
+
 }

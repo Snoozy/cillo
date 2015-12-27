@@ -12,6 +12,7 @@ import com.cillo.core.social.FB
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.filters.gzip.GzipFilter
 import com.cillo.utils.UAgentInfo
+import com.cillo.core.CilloConfig
 import scala.concurrent.Future
 
 object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with GlobalSettings {
@@ -26,13 +27,13 @@ object Global extends WithFilters(new GzipFilter(), HTMLCompressorFilter()) with
         val x = request.headers.get("X-Forwarded-Proto")
         val ua = request.headers.get("User-Agent")
         val host = request.host
-        if (Play.isProd && (x.isEmpty || !x.get.contains("https")) && !(ua.isDefined && ua.get.startsWith("ELB-HealthChecker"))) {
-            Some(com.cillo.core.web.controllers.EtcController.redirectHttp)
-        } else if (host == "cillo.co") {
-            Some(Action{MovedPermanently("https://www.cillo.co" + request.uri)})
-        } else if (ua.isDefined && ua.get.startsWith("ELB-HealthChecker")) {
+        if (ua.isDefined && ua.get.startsWith("ELB-HealthChecker") && CilloConfig.HealthCheck) {
             Some(EtcController.healthCheck)
-        } else if (ua.isDefined) {
+        } else if (Play.isProd && CilloConfig.RedirectHttp && (x.isEmpty || !x.get.contains("https")) ) {
+            Some(com.cillo.core.web.controllers.EtcController.redirectHttp)
+        } else if (host == "cillo.co" && CilloConfig.RedirectToWWW) {
+            Some(Action{MovedPermanently("https://www.cillo.co" + request.uri)})
+        } else if (ua.isDefined && CilloConfig.RedirectMobile) {
             val uaInfo = new UAgentInfo(ua.get, request.headers.get("Accept").getOrElse(""))
             if (uaInfo.isMobilePhone) {
                 if (!host.startsWith("m.")) {
