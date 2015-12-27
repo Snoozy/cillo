@@ -154,7 +154,10 @@ object Etc {
                             val rawTime = raw.substring(start, end)
                             val sec = {
                                 val arr = rawTime.split("m")
-                                arr(0).toInt * 60 + arr(1).substring(0, arr(1).length - 1).toInt
+                                if (arr.length > 1)
+                                    arr(0).toInt * 60 + arr(1).substring(0, arr(1).length - 1).toInt
+                                else
+                                    arr(0).toInt * 60
                             }
                             "?start=" + sec
                         } else if (raw.contains("&t=")) {
