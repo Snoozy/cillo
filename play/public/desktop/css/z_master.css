@@ -212,7 +212,6 @@ body {
 .btn-blue {
     background-color: #019ad2;
     background-repeat: repeat-x;
-    background-image: -khtml-gradient(linear,left top,left bottom,from(#33bcef),to(#019ad2));
     background-image: -moz-linear-gradient(#33bcef,#019ad2);
     background-image: -ms-linear-gradient(#33bcef,#019ad2);
     background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#33bcef),color-stop(100%,#019ad2));
@@ -232,7 +231,6 @@ body {
     color: #fff;
     background-color: #0271bf;
     background-repeat: repeat-x;
-    background-image: -khtml-gradient(linear,left top,left bottom,from(#2daddc),to(#0271bf));
     background-image: -moz-linear-gradient(#2daddc,#0271bf);
     background-image: -ms-linear-gradient(#2daddc,#0271bf);
     background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#2daddc),color-stop(100%,#0271bf));
@@ -596,12 +594,9 @@ textarea {
 
 .sign-in-dialog {
     background-color:white;
-    padding:10px
     border:1px solid #ccc;
     border-radius:15px;
-    padding-top:20px;
-    padding-left:20px;
-    padding-right:5px;
+    padding: 20px 5px 10px 20px;
 }
 
 .message-container {
